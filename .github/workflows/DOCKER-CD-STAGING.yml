@@ -34,13 +34,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: application.yml 생성
-        run: |
-          mkdir -p ./src/main/resources && cd $_
-          touch ./application.yml
-          echo "${{ secrets.YML_ACTIVE_STAGING }}" > ./application.yml
-          cat ./application.yml
-        working-directory: ${{ env.working-directory }}
+#      - name: application.yml 생성
+#        run: |
+#          mkdir -p ./src/main/resources && cd $_
+#          touch ./application.yml
+#          echo "${{ secrets.YML_ACTIVE_STAGING }}" > ./application.yml
+#          cat ./application.yml
+#        working-directory: ${{ env.working-directory }}
 
       - name: application-staging.yml 생성
         run: |
