@@ -5,8 +5,8 @@ on:
 
 jobs:
   ci:
-    # Using Environment - prod 환경 사용
-    # environment: prod
+    # Using Environment - staging 환경 사용
+    # environment: staging
     runs-on: ubuntu-24.04
     env:
       working-directory: .
@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir -p ./src/main/resources && cd $_
           touch ./application.yml
-          echo "${{ secrets.YML }}" > ./application.yml
+          echo "${{ secrets.YML_ACTIVE_STAGING }}" > ./application.yml
           cat ./application.yml
         working-directory: ${{ env.working-directory }}
 
@@ -46,7 +46,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-staging.yml
-          echo "${{ secrets.PROD_YML }}" > ./application-staging.yml
+          echo "${{ secrets.STAGING_YML }}" > ./application-staging.yml
         working-directory: ${{ env.working-directory }}
 
       - name: 빌드
@@ -62,8 +62,8 @@ jobs:
       - name: login docker hub
         uses: docker/login-action@v2.2.0
         with:
-          username: ${{ secrets.STAGING_DOCKER_LOGIN_USERNAME }}
-          password: ${{ secrets.STAGING_DOCKER_LOGIN_ACCESSTOKEN }}
+          username: ${{ secrets.PROD_DOCKER_LOGIN_USERNAME }}
+          password: ${{ secrets.PROD_DOCKER_LOGIN_ACCESSTOKEN }}
 
       - name: docker image 빌드 및 푸시
         run: |
