@@ -44,6 +44,7 @@ jobs:
 
       - name: application-staging.yml 생성
         run: |
+          mkdir -p ./src/main/resources
           cd ./src/main/resources
           touch ./application-staging.yml
           echo "${{ secrets.STAGING_YML }}" > ./application-staging.yml
