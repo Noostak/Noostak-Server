@@ -192,3 +192,6 @@ src/main/resources/
 
 # Q-Class
 src/main/generated
+
+# Git attributes file
+.gitattributes
