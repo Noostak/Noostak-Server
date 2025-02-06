@@ -45,6 +45,17 @@ public class S3Service {
         return key;
     }
 
+    public void deleteImage(String key) throws IOException {
+        final S3Client s3Client = awsConfig.getS3Client();
+
+        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(awsConfig.getS3BucketName())
+                .key(key)
+                .build();
+
+        s3Client.deleteObject(deleteRequest);
+    }
+
     private String generateImageFileName() {
         return UUID.randomUUID() + ".jpg";
     }
