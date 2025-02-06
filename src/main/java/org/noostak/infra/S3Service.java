@@ -26,4 +26,40 @@ public class S3Service {
         this.awsConfig = awsConfig;
     }
 
+    public String uploadImage(String directoryPath, MultipartFile image) throws IOException {
+        final String key = directoryPath + generateImageFileName();
+        final S3Client s3Client = awsConfig.getS3Client();
+
+        validateExtension(image);
+        validateFileSize(image);
+
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(awsConfig.getS3BucketName())
+                .key(key)
+                .contentType(image.getContentType())
+                .contentDisposition("inline")
+                .build();
+
+        RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
+        s3Client.putObject(request, requestBody);
+        return key;
+    }
+
+    private String generateImageFileName() {
+        return UUID.randomUUID() + ".jpg";
+    }
+
+    private void validateExtension(MultipartFile image) {
+        String contentType = image.getContentType();
+        if (!IMAGE_EXTENSIONS.contains(contentType)) {
+            throw new S3UploadException(S3UploadErrorCode.INVALID_EXTENSION);
+        }
+    }
+
+    private void validateFileSize(MultipartFile image) {
+        if (image.getSize() > awsConfig.getMaxFileSize()) {
+            throw new S3UploadException(S3UploadErrorCode.FILE_SIZE_EXCEEDED);
+        }
+    }
+
 }
