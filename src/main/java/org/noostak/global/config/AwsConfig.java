@@ -49,4 +49,9 @@ public class AwsConfig {
             throw new IllegalArgumentException("Invalid max file size format: " + maxFileSize, e);
         }
     }
+
+    @Bean
+    public String getS3BucketName(){
+        return this.s3BucketName;
+    }
 }
