@@ -4,6 +4,7 @@ package org.noostak.infra;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.noostak.global.config.AwsConfig;
 import org.noostak.infra.error.S3UploadErrorCode;
 import org.noostak.infra.error.S3UploadException;
@@ -22,10 +23,16 @@ import static org.mockito.Mockito.*;
 
 class S3ServiceTest {
 
-    private final AwsConfig awsConfig = mock(AwsConfig.class);
     private final S3Client s3Client = mock(S3Client.class);
+    private final String bucketName = "test-bucket";
+    private final long maxFileSize = 2L * 1024 * 1024; // 2MB 제한
 
-    private final S3Service s3Service = new S3Service(awsConfig);
+    private final S3Storage s3Storage =
+            FakeS3StorageImpl.of(s3Client,
+                    bucketName,
+                    maxFileSize);
+
+    private final S3Service s3Service = S3Service.of(s3Storage);
 
     @Nested
     @DisplayName("이미지 업로드 테스트")
@@ -43,16 +50,12 @@ class S3ServiceTest {
                     new byte[]{1, 2, 3, 4}
             );
 
-            when(awsConfig.getS3Client()).thenReturn(s3Client);
-            when(awsConfig.getS3BucketName()).thenReturn("test-bucket");
-            when(awsConfig.getMaxFileSize()).thenReturn(1024L * 1024 * 2);
-
             // When
             String result = s3Service.uploadImage(directoryPath, image);
 
             // Then
             assertThat(result).startsWith(directoryPath).endsWith(".jpg");
-            verify(s3Client).putObject(any(PutObjectRequest.class), any(RequestBody.class));
+            verify(s3Storage.getS3Client()).putObject(any(PutObjectRequest.class), any(RequestBody.class));
         }
 
 
@@ -85,7 +88,6 @@ class S3ServiceTest {
                     "image/jpeg",
                     new byte[3 * 1024 * 1024]
             );
-            when(awsConfig.getMaxFileSize()).thenReturn(2L * 1024 * 1024);
 
             // When & Then
             assertThatThrownBy(() -> s3Service.uploadImage(directoryPath, image))
@@ -100,17 +102,15 @@ class S3ServiceTest {
 
         @Test
         @DisplayName("이미지 삭제 - 성공")
-        void deleteImage_success() throws IOException {
+        void deleteImage_success() {
             // Given
             String key = "images/test.jpg";
-            when(awsConfig.getS3Client()).thenReturn(s3Client);
-            when(awsConfig.getS3BucketName()).thenReturn("test-bucket");
 
             // When
             s3Service.deleteImage(key);
 
             // Then
-            verify(s3Client).deleteObject(any(DeleteObjectRequest.class));
+            verify(s3Storage.getS3Client()).deleteObject(any(DeleteObjectRequest.class));
         }
     }
 }
