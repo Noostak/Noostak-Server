@@ -1,76 +1,28 @@
 package org.noostak.infra;
 
-import org.noostak.global.config.AwsConfig;
-import org.noostak.infra.error.S3UploadErrorCode;
-import org.noostak.infra.error.S3UploadException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @Component
 public class S3Service {
 
-    private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("image/jpeg", "image/png", "image/jpg", "image/webp");
+    private final S3Storage s3Storage;
 
-    private final AwsConfig awsConfig;
+    private S3Service(S3Storage s3Storage) {
+        this.s3Storage = s3Storage;
+    }
 
-    public S3Service(AwsConfig awsConfig) {
-        this.awsConfig = awsConfig;
+    public static S3Service of(S3Storage s3Storage) {
+        return new S3Service(s3Storage);
     }
 
     public String uploadImage(String directoryPath, MultipartFile image) throws IOException {
-        final String key = directoryPath + generateImageFileName();
-        final S3Client s3Client = awsConfig.getS3Client();
-
-        validateExtension(image);
-        validateFileSize(image);
-
-        PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(awsConfig.getS3BucketName())
-                .key(key)
-                .contentType(image.getContentType())
-                .contentDisposition("inline")
-                .build();
-
-        RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
-        s3Client.putObject(request, requestBody);
-        return key;
+        return s3Storage.upload(directoryPath, image);
     }
 
-    public void deleteImage(String key) throws IOException {
-        final S3Client s3Client = awsConfig.getS3Client();
-
-        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
-                .bucket(awsConfig.getS3BucketName())
-                .key(key)
-                .build();
-
-        s3Client.deleteObject(deleteRequest);
+    public void deleteImage(String key) {
+        s3Storage.delete(key);
     }
-
-    private String generateImageFileName() {
-        return UUID.randomUUID() + ".jpg";
-    }
-
-    private void validateExtension(MultipartFile image) {
-        String contentType = image.getContentType();
-        if (!IMAGE_EXTENSIONS.contains(contentType)) {
-            throw new S3UploadException(S3UploadErrorCode.INVALID_EXTENSION);
-        }
-    }
-
-    private void validateFileSize(MultipartFile image) {
-        if (image.getSize() > awsConfig.getMaxFileSize()) {
-            throw new S3UploadException(S3UploadErrorCode.FILE_SIZE_EXCEEDED);
-        }
-    }
-
 }
