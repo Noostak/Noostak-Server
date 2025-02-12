@@ -10,9 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum MemberErrorCode implements ErrorCode {
     MEMBER_NAME_NOT_EMPTY(HttpStatus.BAD_REQUEST, "멤버 이름은 비어 있을 수 없습니다."),
     MEMBER_NAME_LENGTH_EXCEEDED(HttpStatus.BAD_REQUEST, "멤버 이름의 길이는 15글자를 넘을 수 없습니다."),
-    MEMBER_NAME_INVALID_LANGUAGE(HttpStatus.BAD_REQUEST, "멤버 이름에는 한글, 영문만 포함될 수 있습니다."),
-    MEMBER_NAME_CANNOT_CONTAIN_SPECIAL_CHARACTERS(HttpStatus.BAD_REQUEST, "멤버 이름에는 특수 문자가 포함될 수 없습니다."),
-    MEMBER_NAME_CANNOT_CONTAIN_NUMBERS(HttpStatus.BAD_REQUEST, "멤버 이름에는 숫자가 포함될 수 없습니다."),
+    INVALID_MEMBER_NAME(HttpStatus.BAD_REQUEST, "멤버 이름에는 한글, 영문, 이모지만 포함될 수 있습니다."),
 
     MEMBER_PROFILE_IMAGE_KEY_NOT_EMPTY(HttpStatus.BAD_REQUEST, "멤버 프로필 이미지 키는 비어 있을 수 없습니다."),
 
