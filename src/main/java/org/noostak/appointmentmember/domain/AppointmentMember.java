@@ -3,9 +3,8 @@ package org.noostak.appointmentmember.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.noostak.appointmentmember.domain.vo.AvailabilityStatus;
+import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.member.domain.Member;
-import org.noostak.member.domain.vo.*;
 
 @Entity
 @Getter
@@ -17,8 +16,8 @@ public class AppointmentMember {
     private Long appointmentMemberId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "availability_status")
-    private AvailabilityStatus type;
+    @Column(name = "availability_availability")
+    private AppointmentAvailability appointmentAvailability;
 
 // TODO:
 //    @ManyToOne(fetch = FetchType.LAZY)

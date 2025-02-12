@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum AvailabilityStatus {
+public enum AppointmentAvailability {
 
-    ABLE("참여"),
-    NOT_ABLE("불참");
+    AVAILABLE("약속 가능"),
+    UNAVAILABLE("약속 불가능");
 
     private final String message;
 }
