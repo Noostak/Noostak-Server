@@ -3,12 +3,13 @@ package org.noostak.member.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.noostak.global.entity.BaseTimeEntity;
 import org.noostak.member.domain.vo.*;
 
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

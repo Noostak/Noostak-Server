@@ -5,9 +5,14 @@ import lombok.EqualsAndHashCode;
 import org.noostak.member.common.MemberErrorCode;
 import org.noostak.member.common.MemberException;
 
+import java.util.regex.Pattern;
+
 @Embeddable
 @EqualsAndHashCode
 public class MemberName {
+    private static final int MAX_LENGTH = 15;
+    private static final Pattern INVALID_PATTERN = Pattern.compile("[^\uAC00-\uD7A3a-zA-Z\uD83C-\uDBFF\uDC00-\uDFFF\u200D\uFE0F]");
+
     private final String name;
 
     protected MemberName() {
@@ -30,24 +35,24 @@ public class MemberName {
     private void validateName(String name) {
         validateEmpty(name);
         validateLength(name);
-        validateSpecialCharacters(name);
+        validateInvalidCharacters(name);
     }
 
-    private void validateEmpty(String memberName) {
-        if (memberName == null || memberName.isBlank()) {
+    private void validateEmpty(String name) {
+        if (name == null || name.isBlank()) {
             throw new MemberException(MemberErrorCode.MEMBER_NAME_NOT_EMPTY);
         }
     }
 
-    private void validateLength(String memberName) {
-        if (memberName.length() > 15) {
+    private void validateLength(String name) {
+        if (name.length() > MAX_LENGTH) {
             throw new MemberException(MemberErrorCode.MEMBER_NAME_LENGTH_EXCEEDED);
         }
     }
 
-    private void validateSpecialCharacters(String name) {
-        if (name.matches(".*[!@#$%^&*()_+=|<>?{}\\[\\]~-].*")) {
-            throw new MemberException(MemberErrorCode.MEMBER_NAME_INVALID_CHARACTER);
+    private void validateInvalidCharacters(String name) {
+        if (INVALID_PATTERN.matcher(name).find()) {
+            throw new MemberException(MemberErrorCode.INVALID_MEMBER_NAME);
         }
     }
 
