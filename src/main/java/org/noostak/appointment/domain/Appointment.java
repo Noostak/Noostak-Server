@@ -21,6 +21,7 @@ public class Appointment extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     private Long appointmentHostId;
