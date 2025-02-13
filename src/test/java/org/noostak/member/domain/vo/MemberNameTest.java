@@ -68,12 +68,12 @@ class MemberNameTest {
                 "홍길동1",
                 "jsoon123",
                 "Test007",
-                "12jsoon"
+                "12jsoon",
         })
         void shouldThrowExceptionForNameContainingNumbers(String invalidName) {
             assertThatThrownBy(() -> MemberName.from(invalidName))
                     .isInstanceOf(MemberException.class)
-                    .hasMessageContaining(MemberErrorCode.MEMBER_NAME_INVALID_LANGUAGE.getMessage());
+                    .hasMessageContaining(MemberErrorCode.INVALID_MEMBER_NAME.getMessage());
         }
 
         @ParameterizedTest
@@ -90,7 +90,7 @@ class MemberNameTest {
         void shouldThrowExceptionForNameContainingInvalidLanguage(String invalidName) {
             assertThatThrownBy(() -> MemberName.from(invalidName))
                     .isInstanceOf(MemberException.class)
-                    .hasMessageContaining(MemberErrorCode.MEMBER_NAME_INVALID_LANGUAGE.getMessage());
+                    .hasMessageContaining(MemberErrorCode.INVALID_MEMBER_NAME.getMessage());
         }
     }
 }
