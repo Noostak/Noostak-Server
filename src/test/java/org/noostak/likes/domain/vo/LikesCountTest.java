@@ -81,7 +81,7 @@ class LikesCountTest {
             // When & Then
             assertThatThrownBy(likesCount::increase)
                     .isInstanceOf(LikesException.class)
-                    .hasMessageContaining(LikesErrorCode.OVER_MAX_LIKES.getMessage());
+                    .hasMessageContaining(LikesErrorCode.OVER_MAX_LIKES.getMessage(likesCount.value()));
         }
 
         @Test
