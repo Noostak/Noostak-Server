@@ -9,6 +9,7 @@ import org.noostak.appointment.domain.vo.AppointmentDuration;
 import org.noostak.appointment.domain.vo.AppointmentMemberCount;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.global.entity.BaseTimeEntity;
+import org.noostak.group.domain.Group;
 
 @Entity
 @Getter
@@ -19,8 +20,8 @@ public class Appointment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Group group;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Group group;
 
     private Long appointmentHostId;
 
