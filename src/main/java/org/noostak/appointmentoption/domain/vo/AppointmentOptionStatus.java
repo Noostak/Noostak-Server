@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AppointmentOptionStatus {
 
-    USED("사용"),
-    UNUSED("미사용")
+    CONFIRMED("확정"),
+    UNCONFIRMED("미확정")
 
     ;
 
