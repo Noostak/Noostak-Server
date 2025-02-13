@@ -9,7 +9,7 @@ import org.noostak.likes.common.LikesException;
 @Embeddable
 @EqualsAndHashCode
 public class LikesCount {
-    public static final Long MAX_LIKES = 50L;
+    private static final Long MAX_LIKES = 50L;
 
     private final Long count;
 
@@ -54,7 +54,7 @@ public class LikesCount {
 
     private void validateMaxLimit(Long count) {
         if (count > MAX_LIKES) {
-            throw new LikesException(LikesErrorCode.OVER_MAX_LIKES);
+            throw new LikesException(LikesErrorCode.OVER_MAX_LIKES,MAX_LIKES);
         }
     }
 
