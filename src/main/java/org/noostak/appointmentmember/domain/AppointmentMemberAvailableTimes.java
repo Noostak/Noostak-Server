@@ -3,6 +3,7 @@ package org.noostak.appointmentmember.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.noostak.global.entity.BaseTimeEntity;
 import org.noostak.member.domain.Member;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class AppointmentMemberAvailableTimes {
+public class AppointmentMemberAvailableTimes extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

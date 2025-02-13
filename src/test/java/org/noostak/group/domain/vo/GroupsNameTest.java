@@ -11,7 +11,7 @@ import org.noostak.group.common.exception.GroupException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class GroupNameTest {
+class GroupsNameTest {
 
     @Nested
     @DisplayName("성공 케이스")

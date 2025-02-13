@@ -12,7 +12,7 @@ import org.noostak.group.domain.vo.GroupProfileImageKey;
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class Group extends BaseTimeEntity {
+public class Groups extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +36,7 @@ public class Group extends BaseTimeEntity {
 
     private Long groupHostId;
 
-    private Group(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
+    private Groups(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
         this.groupHostId = groupHostId;
         this.name = name;
         this.key = key;
@@ -44,7 +44,7 @@ public class Group extends BaseTimeEntity {
         this.code = GroupInvitationCode.from(code);
     }
 
-    public static Group of(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
-        return new Group(groupHostId, name, key, code);
+    public static Groups of(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
+        return new Groups(groupHostId, name, key, code);
     }
 }
