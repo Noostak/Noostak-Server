@@ -12,7 +12,8 @@ import org.noostak.group.domain.vo.GroupProfileImageKey;
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class Groups extends BaseTimeEntity {
+@Table(name = "groups")
+public class Group extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,19 +33,20 @@ public class Groups extends BaseTimeEntity {
 
     @Embedded
     @AttributeOverride(name = "count", column = @Column(name = "group_member_count"))
-    private GroupMemberCount memberCount;
+    private GroupMemberCount count;
 
+    @Column(name = "group_host_id")
     private Long groupHostId;
 
-    private Groups(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
+    private Group(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
         this.groupHostId = groupHostId;
         this.name = name;
         this.key = key;
-        this.memberCount = GroupMemberCount.from(1L);
+        this.count = GroupMemberCount.from(1L);
         this.code = GroupInvitationCode.from(code);
     }
 
-    public static Groups of(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
-        return new Groups(groupHostId, name, key, code);
+    public static Group of(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
+        return new Group(groupHostId, name, key, code);
     }
 }
