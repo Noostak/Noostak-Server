@@ -36,4 +36,17 @@ public class Member extends BaseTimeEntity {
     private AuthId id;
 
     private String refreshToken;
+
+    private Member(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId id, final String refreshToken) {
+        this.name = name;
+        this.key = key;
+        this.status = MemberAccountStatus.ACTIVE;
+        this.type = type;
+        this.id = id;
+        this.refreshToken = refreshToken;
+    }
+
+    public static Member of(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId id, final String refreshToken) {
+        return new Member(name, key, type, id, refreshToken);
+    }
 }
