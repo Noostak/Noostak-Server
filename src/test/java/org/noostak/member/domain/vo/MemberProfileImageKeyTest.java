@@ -12,7 +12,6 @@ import org.noostak.member.common.MemberException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("멤버 프로필 이미지 키 테스트")
 class MemberProfileImageKeyTest {
 
     @Nested
