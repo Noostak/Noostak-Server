@@ -10,9 +10,12 @@ import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.group.dto.request.GroupCreateRequest;
 import org.noostak.group.dto.response.GroupCreateInternalResponse;
+import org.noostak.infra.KeyAndUrl;
+import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,19 +29,16 @@ public class GroupCreateServiceImpl implements GroupCreateService {
 
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
-    private final InvitationCodeGenerator generator;
+    private final InvitationCodeGenerator invitationCodeGenerator;
     private final S3Service s3Service;
 
     @Override
     @Transactional
     public GroupCreateInternalResponse createGroup(Long memberId, GroupCreateRequest request) {
         Member groupHost = findGroupHost(memberId);
-        Group group = createGroup(groupHost, request.groupName());
+        KeyAndUrl response = uploadGroupProfileImage(request.file());
+        Group group = createGroup(groupHost, request.groupName(), response.getKey());
         groupRepository.save(group);
-
-        GroupProfileImageUploadResponse response = uploadGroupProfileImage(request.file());
-        updateGroupWithProfileImage(group, response);
-
         return GroupCreateInternalResponse.of(group, response.getUrl());
     }
 
@@ -47,30 +47,21 @@ public class GroupCreateServiceImpl implements GroupCreateService {
                 .orElseThrow(() -> new GroupException(GroupErrorCode.HOST_MEMBER_NOT_FOUND));
     }
 
-    private Group createGroup(Member groupHost, String groupName) {
-        GroupInvitationCode invitationCode = generateInvitationCode();
+    private Group createGroup(Member groupHost, String groupName, String profileImageKey) {
+        GroupInvitationCode invitationCode = invitationCodeGenerator.generate();
         return Group.of(
                 groupHost.getMemberId(),
                 GroupName.from(groupName),
-                null,
+                GroupProfileImageKey.from(profileImageKey),
                 invitationCode.value()
         );
     }
 
-    private GroupInvitationCode generateInvitationCode() {
-        return generator.generate();
-    }
-
-    private GroupProfileImageUploadResponse uploadGroupProfileImage(MultipartFile file) {
+    private KeyAndUrl uploadGroupProfileImage(MultipartFile file) {
         try {
-            return s3Service.uploadGroupProfileImage(file);
+            return s3Service.uploadImage(S3DirectoryPath.GROUP, file);
         } catch (IOException e) {
             throw new GroupException(GroupErrorCode.GROUP_PROFILE_IMAGE_UPLOAD_FAILED);
         }
-    }
-
-    private void updateGroupWithProfileImage(Group group, GroupProfileImageUploadResponse response) {
-        group.updateProfileImageKey(GroupProfileImageKey.of(response.getKey()));
-        groupRepository.save(group);
     }
 }
