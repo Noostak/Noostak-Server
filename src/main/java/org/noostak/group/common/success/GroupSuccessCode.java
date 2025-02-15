@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum GroupSuccessCode implements SuccessCode {
     GROUP_CREATED(HttpStatus.CREATED, "그룹이 성공적으로 생성되었습니다."),
+
+    GROUP_RETRIEVED(HttpStatus.OK, "그룹이 성공적으로 조회되었습니다."),
     ;
 
     private final HttpStatus status;
