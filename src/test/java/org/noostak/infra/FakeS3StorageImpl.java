@@ -2,6 +2,7 @@ package org.noostak.infra;
 
 import org.noostak.infra.error.S3UploadErrorCode;
 import org.noostak.infra.error.S3UploadException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+@Component
 public class FakeS3StorageImpl implements S3Storage {
 
     private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("image/jpeg", "image/png", "image/jpg", "image/webp");
@@ -34,23 +36,30 @@ public class FakeS3StorageImpl implements S3Storage {
     }
 
     @Override
-    public String upload(String directoryPath, MultipartFile image) throws IOException {
-        final String key = directoryPath + generateImageFileName();
+    public KeyAndUrl upload(S3DirectoryPath dirPath, MultipartFile image) throws IOException {
+        final String fileName = dirPath.getPath() + generateImageFileName();
 
-        validateExtension(image);
-        validateFileSize(image);
+        validateImage(image);
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(s3BucketName)
-                .key(key)
+                .key(fileName)
                 .contentType(image.getContentType())
                 .contentDisposition("inline")
                 .build();
 
         RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
+
         s3Client.putObject(request, requestBody);
 
-        return key;
+        String publicUrl = findPublicUrlByKey(fileName);
+
+        return KeyAndUrl.of(fileName, publicUrl);
+    }
+
+    private void validateImage(MultipartFile image) {
+        validateExtension(image);
+        validateFileSize(image);
     }
 
     @Override
@@ -62,6 +71,12 @@ public class FakeS3StorageImpl implements S3Storage {
 
         s3Client.deleteObject(deleteRequest);
     }
+
+    @Override
+    public String findPublicUrlByKey(String key) {
+        return "fake-url-string";
+    }
+
 
     private void validateExtension(MultipartFile image) {
         String contentType = image.getContentType();
