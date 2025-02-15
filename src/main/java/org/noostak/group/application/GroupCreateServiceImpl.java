@@ -36,10 +36,11 @@ public class GroupCreateServiceImpl implements GroupCreateService {
     @Transactional
     public GroupCreateInternalResponse createGroup(Long memberId, GroupCreateRequest request) {
         Member groupHost = findGroupHost(memberId);
-        KeyAndUrl response = uploadGroupProfileImage(request.file());
+        KeyAndUrl response = uploadGroupProfileImageSafely(request.file());
+
         Group group = createGroup(groupHost, request.groupName(), response.getKey());
-        groupRepository.save(group);
-        return GroupCreateInternalResponse.of(group, response.getUrl());
+
+        return saveGroup(group, response.getUrl(), response.getKey());
     }
 
     private Member findGroupHost(Long memberId) {
@@ -57,11 +58,31 @@ public class GroupCreateServiceImpl implements GroupCreateService {
         );
     }
 
-    private KeyAndUrl uploadGroupProfileImage(MultipartFile file) {
+    private GroupCreateInternalResponse saveGroup(Group group, String imageUrl, String profileImageKey) {
+        try {
+            groupRepository.save(group);
+            return GroupCreateInternalResponse.of(group, imageUrl);
+        } catch (Exception e) {
+            deleteUploadedImageSafely(profileImageKey);
+            throw new GroupException(GroupErrorCode.GROUP_CREATION_FAILED);
+        }
+    }
+
+    private KeyAndUrl uploadGroupProfileImageSafely(MultipartFile file) {
         try {
             return s3Service.uploadImage(S3DirectoryPath.GROUP, file);
         } catch (IOException e) {
             throw new GroupException(GroupErrorCode.GROUP_PROFILE_IMAGE_UPLOAD_FAILED);
         }
     }
+
+    private void deleteUploadedImageSafely(String key) {
+        try {
+            s3Service.deleteImage(key);
+        } catch (Exception e) {
+            throw new GroupException(GroupErrorCode.GROUP_PROFILE_IMAGE_DELETE_FAILED);
+        }
+    }
 }
+
+
