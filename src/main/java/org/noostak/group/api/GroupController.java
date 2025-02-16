@@ -5,15 +5,14 @@ import org.noostak.global.success.SuccessResponse;
 import org.noostak.group.application.GroupService;
 import org.noostak.group.dto.request.GroupCreateRequest;
 import org.noostak.group.dto.response.GroupCreateResponse;
+import org.noostak.group.dto.response.GroupsRetrieveResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
 import static org.noostak.group.common.success.GroupSuccessCode.GROUP_CREATED;
+import static org.noostak.group.common.success.GroupSuccessCode.GROUP_RETRIEVED;
 
 @RestController
 @RequestMapping("/api/v1/groups")
@@ -31,5 +30,15 @@ public class GroupController {
         Long memberId = 1L;
         GroupCreateResponse response = groupService.createGroup(memberId, request);
         return ResponseEntity.ok((SuccessResponse.of(GROUP_CREATED, response)));
+    }
+
+    @GetMapping
+    public ResponseEntity<SuccessResponse<GroupsRetrieveResponse>> getGroups(
+            // @AuthenticationPrincipal Long memberId
+    ) {
+        // TODO: AuthenticationPrincipal
+        Long memberId = 1L;
+        GroupsRetrieveResponse groups = groupService.findGroups(memberId);
+        return ResponseEntity.ok(SuccessResponse.of(GROUP_RETRIEVED, groups));
     }
 }

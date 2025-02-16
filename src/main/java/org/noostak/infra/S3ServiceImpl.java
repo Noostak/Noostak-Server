@@ -24,7 +24,7 @@ public class S3ServiceImpl implements S3Service {
     }
 
     @Override
-    public String findImageUrl(String key) {
+    public String getImageUrl(String key) {
         return s3Storage.findPublicUrlByKey(key);
     }
 
