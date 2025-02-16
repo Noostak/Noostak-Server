@@ -1,8 +1,8 @@
 package org.noostak.group.config;
 
-import org.noostak.group.application.InviteCodeGenerator;
-import org.noostak.group.domain.DefaultInviteCodePolicy;
-import org.noostak.group.domain.InviteCodePolicy;
+import org.noostak.group.application.InvitationCodeGenerator;
+import org.noostak.group.domain.DefaultInvitationCodePolicy;
+import org.noostak.group.domain.InvitationCodePolicy;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,12 +17,12 @@ public class InviteCodeGeneratorConfig {
     }
 
     @Bean
-    public InviteCodePolicy inviteCodePolicy() {
-        return new DefaultInviteCodePolicy();
+    public InvitationCodePolicy inviteCodePolicy() {
+        return new DefaultInvitationCodePolicy();
     }
 
     @Bean
-    public InviteCodeGenerator inviteCodeGenerator(SecureRandom random, InviteCodePolicy policy) {
-        return new InviteCodeGenerator(random, policy);
+    public InvitationCodeGenerator inviteCodeGenerator(SecureRandom random, InvitationCodePolicy policy) {
+        return new InvitationCodeGenerator(random, policy);
     }
 }

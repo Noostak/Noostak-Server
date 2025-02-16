@@ -9,7 +9,7 @@ import org.noostak.appointment.domain.vo.AppointmentDuration;
 import org.noostak.appointment.domain.vo.AppointmentMemberCount;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.global.entity.BaseTimeEntity;
-import org.noostak.group.domain.Groups;
+import org.noostak.group.domain.Group;
 
 @Entity
 @Getter
@@ -22,7 +22,7 @@ public class Appointment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groups_id")
-    private Groups groups;
+    private Group groups;
 
     private Long appointmentHostId;
 

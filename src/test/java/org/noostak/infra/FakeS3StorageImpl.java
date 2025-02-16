@@ -2,6 +2,7 @@ package org.noostak.infra;
 
 import org.noostak.infra.error.S3UploadErrorCode;
 import org.noostak.infra.error.S3UploadException;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 
 @Component
+@Profile("test")
 public class FakeS3StorageImpl implements S3Storage {
 
     private static final List<String> IMAGE_EXTENSIONS = Arrays.asList("image/jpeg", "image/png", "image/jpg", "image/webp");

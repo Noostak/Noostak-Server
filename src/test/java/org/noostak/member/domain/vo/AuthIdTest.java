@@ -12,7 +12,6 @@ import org.noostak.member.common.MemberException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("Auth ID 테스트")
 class AuthIdTest {
 
     @Nested

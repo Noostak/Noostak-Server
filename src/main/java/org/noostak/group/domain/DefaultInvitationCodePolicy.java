@@ -3,7 +3,7 @@ package org.noostak.group.domain;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class DefaultInviteCodePolicy implements InviteCodePolicy {
+public class DefaultInvitationCodePolicy implements InvitationCodePolicy {
 
     private static final int DEFAULT_LENGTH = 6;
     private static final String DEFAULT_CHARACTERS = generateDefaultCharacters();
