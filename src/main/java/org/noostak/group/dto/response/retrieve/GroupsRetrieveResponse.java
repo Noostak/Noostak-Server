@@ -1,4 +1,4 @@
-package org.noostak.group.dto.response;
+package org.noostak.group.dto.response.retrieve;
 
 import java.util.List;
 
