@@ -8,4 +8,5 @@ public interface MemberGroupRepositoryCustom {
     List<Member> findMembersByGroupId(Long groupId);
     Member findGroupHostByGroupId(Long groupId);
     List<Group> findGroupsByMemberId(Long memberId);
+    boolean existsByMemberIdAndGroupId(Long memberId, Long groupId);
 }
