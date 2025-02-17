@@ -10,7 +10,7 @@ import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
-import org.noostak.group.dto.response.GroupsRetrieveResponse;
+import org.noostak.group.dto.response.retrieve.GroupsRetrieveResponse;
 import org.noostak.infra.S3Service;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;

@@ -13,7 +13,7 @@ import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.vo.GroupInvitationCode;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.dto.request.GroupCreateRequest;
-import org.noostak.group.dto.response.GroupCreateInternalResponse;
+import org.noostak.group.dto.response.create.GroupCreateInternalResponse;
 import org.noostak.infra.KeyAndUrl;
 import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;

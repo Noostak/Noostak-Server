@@ -1,4 +1,4 @@
-package org.noostak.group.dto.response;
+package org.noostak.group.dto.response.create;
 
 
 import org.noostak.group.domain.Group;
