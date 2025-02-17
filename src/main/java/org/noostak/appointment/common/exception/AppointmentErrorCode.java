@@ -18,7 +18,9 @@ public enum AppointmentErrorCode implements ErrorCode {
     APPOINTMENT_MEMBER_COUNT_NEGATIVE(HttpStatus.BAD_REQUEST, "약속 멤버 수는 음수가 될 수 없습니다."),
     APPOINTMENT_MEMBER_COUNT_MAX(HttpStatus.BAD_REQUEST, "약속 멤버 수는 최대 50명을 초과할 수 없습니다."),
 
-
+    GROUP_REQUIRED(HttpStatus.BAD_REQUEST, "약속은 반드시 그룹에 속해야 합니다."),
+    MEMBER_NOT_IN_GROUP(HttpStatus.BAD_REQUEST, "해당 그룹에 속한 멤버가 아닙니다."),
+    GROUP_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 그룹을 찾을 수 없습니다."),
     ;
 
     public static final String PREFIX = "[APPOINTMENT ERROR] ";
