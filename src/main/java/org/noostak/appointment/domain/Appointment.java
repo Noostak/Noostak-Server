@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.noostak.appointment.common.exception.AppointmentErrorCode;
+import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.vo.AppointmentCategory;
 import org.noostak.appointment.domain.vo.AppointmentDuration;
 import org.noostak.appointment.domain.vo.AppointmentMemberCount;
@@ -18,12 +20,13 @@ public class Appointment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long appointmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groups_id")
-    private Group groups;
+    private Group group;
 
+    @Column(name = "appointment_host_id")
     private Long appointmentHostId;
 
     @Embedded
@@ -31,6 +34,7 @@ public class Appointment extends BaseTimeEntity {
     private AppointmentMemberCount memberCount;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "appointment_status")
     private AppointmentStatus appointmentStatus;
 
     @Embedded
@@ -38,17 +42,34 @@ public class Appointment extends BaseTimeEntity {
     private AppointmentDuration duration;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "appointment_category")
     private AppointmentCategory category;
 
-    private Appointment(final Long appointmentHostId, final Long duration, final String category, final AppointmentStatus appointmentStatus) {
+    private Appointment(final Group group, final Long appointmentHostId, final AppointmentDuration duration,
+                        final AppointmentMemberCount memberCount, final AppointmentCategory category,
+                        final AppointmentStatus appointmentStatus) {
+        this.group = group;
         this.appointmentHostId = appointmentHostId;
-        this.duration = AppointmentDuration.from(duration);
-        this.memberCount = AppointmentMemberCount.from(1L);
-        this.category = AppointmentCategory.valueOf(category);
+        this.duration = duration;
+        this.memberCount = memberCount;
+        this.category = category;
         this.appointmentStatus = appointmentStatus;
     }
 
-    public static Appointment of(final Long appointmentHostId, final Long duration, final String category, final AppointmentStatus appointmentStatus) {
-        return new Appointment(appointmentHostId, duration, category, appointmentStatus);
+    public static Appointment of(final Group group, final Long appointmentHostId, final Long duration,
+                                 final String category, final AppointmentStatus appointmentStatus) {
+        if (group == null) {
+            throw new AppointmentException(AppointmentErrorCode.GROUP_NOT_FOUND);
+        }
+        return new Appointment(
+                group,
+                appointmentHostId,
+                AppointmentDuration.from(duration),
+                AppointmentMemberCount.from(1L),
+                AppointmentCategory.from(category),
+                appointmentStatus
+        );
     }
 }
+
+
