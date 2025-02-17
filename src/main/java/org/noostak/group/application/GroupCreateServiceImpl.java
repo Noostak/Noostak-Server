@@ -69,11 +69,7 @@ public class GroupCreateServiceImpl implements GroupCreateService {
     }
 
     private KeyAndUrl uploadGroupProfileImageSafely(MultipartFile file) {
-        try {
-            return s3Service.uploadImage(S3DirectoryPath.GROUP, file);
-        } catch (IOException e) {
-            throw new GroupException(GroupErrorCode.GROUP_PROFILE_IMAGE_UPLOAD_FAILED);
-        }
+        return s3Service.uploadImage(S3DirectoryPath.GROUP, file);
     }
 
     private void deleteUploadedImageSafely(String key) {

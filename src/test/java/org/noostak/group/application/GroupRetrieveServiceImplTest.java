@@ -15,8 +15,6 @@ import org.noostak.infra.S3Service;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
