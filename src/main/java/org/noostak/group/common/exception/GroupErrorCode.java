@@ -27,6 +27,8 @@ public enum GroupErrorCode implements ErrorCode {
 
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹을 찾을 수 없습니다."),
     GROUP_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹 멤버를 찾을 수 없습니다."),
+
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다.")
     ;
 
     public static final String PREFIX = "[GROUP ERROR] ";
