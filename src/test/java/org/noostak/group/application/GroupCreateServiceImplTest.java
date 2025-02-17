@@ -58,7 +58,7 @@ class GroupCreateServiceImplTest {
         groupRepository.deleteAll();
         memberRepository.deleteAll();
 
-        Member savedMember = saveMember("jsoonworld", "key", "123456", "refreshToken1");
+        Member savedMember = saveMember("jsoonworld", "key");
         savedMemberId = savedMember.getMemberId();
 
         Mockito.when(invitationCodeGenerator.generate()).thenReturn(GroupInvitationCode.from("ABC123"));
@@ -115,14 +115,11 @@ class GroupCreateServiceImplTest {
         }
     }
 
-    private Member saveMember(String name, String key, String authId, String refreshToken) {
+    private Member saveMember(String name, String key) {
         return memberRepository.save(
                 Member.of(
                         MemberName.from(name),
-                        MemberProfileImageKey.from(key),
-                        AuthType.GOOGLE,
-                        AuthId.from(authId),
-                        refreshToken
+                        MemberProfileImageKey.from(key)
                 )
         );
     }

@@ -49,7 +49,7 @@ class GroupRetrieveServiceImplTest {
 
         groupRetrieveService = new GroupRetrieveServiceImpl(memberGroupRepository, s3Service);
 
-        Member savedMember = saveMember("MemberOne", "key1", "authId1", "refreshToken1");
+        Member savedMember = saveMember("MemberOne", "key1");
         savedMemberId = savedMember.getMemberId();
 
         Group savedGroup1 = saveGroup(savedMemberId, "StudyGroup", "group-images/1", "ABC123");
@@ -90,7 +90,7 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("멤버가 하나의 그룹만 속해 있는 경우 정상 조회")
         void shouldRetrieveSingleGroupSuccessfully() {
             // given
-            Long memberId = saveMember("singleUser", "keySingle", "authIdSingle", "refreshTokenSingle").getMemberId();
+            Long memberId = saveMember("singleUser", "keySingle").getMemberId();
             Long groupId = saveGroup(memberId, "SingleGroup", "group-images/single", "SINGLE").getGroupId();
             saveMemberGroup(memberId, groupId);
 
@@ -106,8 +106,8 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("여러 명의 멤버가 같은 그룹에 속한 경우 특정 멤버가 정상적으로 조회")
         void shouldRetrieveGroupsWhenMultipleMembersInSameGroup() {
             // given
-            Long member1 = saveMember("memberOne", "key1", "authId1", "refreshToken1").getMemberId();
-            Long member2 = saveMember("memberTwo", "key2", "authId2", "refreshToken2").getMemberId();
+            Long member1 = saveMember("memberOne", "key1").getMemberId();
+            Long member2 = saveMember("memberTwo", "key2").getMemberId();
             Long groupId = saveGroup(member1, "SharedGroup", "group-images/shared", "SHARED").getGroupId();
 
             saveMemberGroup(member1, groupId);
@@ -173,14 +173,11 @@ class GroupRetrieveServiceImplTest {
         );
     }
 
-    private Member saveMember(String name, String key, String authId, String refreshToken) {
+    private Member saveMember(String name, String key) {
         return memberRepository.save(
                 Member.of(
                         MemberName.from(name),
-                        MemberProfileImageKey.from(key),
-                        AuthType.GOOGLE,
-                        AuthId.from(authId),
-                        refreshToken
+                        MemberProfileImageKey.from(key)
                 )
         );
     }
