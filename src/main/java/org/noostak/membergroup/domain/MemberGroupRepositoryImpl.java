@@ -46,4 +46,18 @@ public class MemberGroupRepositoryImpl implements MemberGroupRepositoryCustom {
                 .where(memberGroup.member.memberId.eq(memberId))
                 .fetch();
     }
+
+    @Override
+    public boolean existsByMemberIdAndGroupId(Long memberId, Long groupId) {
+        Integer fetchResult = queryFactory
+                .selectOne()
+                .from(memberGroup)
+                .where(
+                        memberGroup.member.memberId.eq(memberId)
+                                .and(memberGroup.group.groupId.eq(groupId))
+                )
+                .fetchFirst();
+
+        return fetchResult != null;
+    }
 }
