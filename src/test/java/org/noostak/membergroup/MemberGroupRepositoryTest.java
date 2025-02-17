@@ -1,17 +1,19 @@
 package org.noostak.membergroup;
 
+import org.noostak.group.domain.Group;
+import org.noostak.member.domain.Member;
 import org.noostak.membergroup.domain.MemberGroup;
 import org.noostak.membergroup.domain.MemberGroupRepository;
+import org.noostak.membergroup.domain.MemberGroupRepositoryCustom;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class MemberGroupRepositoryTest implements MemberGroupRepository {
+public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberGroupRepositoryCustom {
 
     private final List<MemberGroup> memberGroups = new ArrayList<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
@@ -24,13 +26,20 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository {
                 idField.setAccessible(true);
                 idField.set(memberGroup, idGenerator.getAndIncrement());
             }
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException("[ERROR] 'memberGroupId' 필드를 MemberGroup 클래스에서 찾을 수 없습니다. 필드 이름이 정확한지 확인하세요.", e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("[ERROR] MemberGroup 클래스의 'memberGroupId' 필드에 접근할 수 없습니다. 접근 제한자가 적절한지 확인하세요.", e);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("[ERROR] 'memberGroupId' 필드에 접근할 수 없습니다.", e);
         }
         memberGroups.add(memberGroup);
         return memberGroup;
+    }
+
+    @Override
+    public <S extends MemberGroup> List<S> saveAll(Iterable<S> entities) {
+        List<S> result = new ArrayList<>();
+        for (S entity : entities) {
+            result.add((S) save(entity));
+        }
+        return result;
     }
 
     @Override
@@ -45,6 +54,35 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository {
         return memberGroups.stream()
                 .filter(memberGroup -> memberGroup.getMember().getMemberId().equals(memberId))
                 .toList();
+    }
+
+    @Override
+    public List<Member> findMembersByGroupId(Long groupId) {
+        return memberGroups.stream()
+                .filter(memberGroup -> memberGroup.getGroup().getGroupId().equals(groupId))
+                .map(MemberGroup::getMember)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Member findGroupHostByGroupId(Long groupId) {
+        return memberGroups.stream()
+                .filter(memberGroup -> memberGroup.getGroup().getGroupId().equals(groupId))
+                .map(MemberGroup::getGroup)
+                .map(Group::getGroupHostId)
+                .map(hostId -> memberGroups.stream()
+                        .map(MemberGroup::getMember)
+                        .filter(member -> member.getMemberId().equals(hostId))
+                        .findFirst().orElse(null))
+                .findFirst().orElse(null);
+    }
+
+    @Override
+    public List<Group> findGroupsByMemberId(Long memberId) {
+        return memberGroups.stream()
+                .filter(memberGroup -> memberGroup.getMember().getMemberId().equals(memberId))
+                .map(MemberGroup::getGroup)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -91,16 +129,6 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository {
     public List<MemberGroup> findAllById(Iterable<Long> ids) {
         List<MemberGroup> result = new ArrayList<>();
         ids.forEach(id -> findById(id).ifPresent(result::add));
-        return result;
-    }
-
-    @Override
-    public <S extends MemberGroup> List<S> saveAll(Iterable<S> entities) {
-        List<S> result = new ArrayList<>();
-        entities.forEach(entity -> {
-            MemberGroup savedMemberGroup = save(entity);
-            result.add((S) savedMemberGroup);
-        });
         return result;
     }
 
