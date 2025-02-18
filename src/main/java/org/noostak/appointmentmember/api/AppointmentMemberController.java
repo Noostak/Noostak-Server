@@ -7,7 +7,7 @@ import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.noostak.appointment.common.success.AppointmentSuccessCode.SUCCESS_SAVE_AVAILABLE_TIMES;
+import static org.noostak.appointmentmember.common.success.AppointmentMemberSuccessCode.SUCCESS_SAVE_AVAILABLE_TIMES;
 
 @RestController
 @RequestMapping("/api/v1/appointment-members")
