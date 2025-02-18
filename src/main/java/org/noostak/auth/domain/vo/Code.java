@@ -9,23 +9,23 @@ import org.noostak.member.common.MemberException;
 @EqualsAndHashCode
 public class Code {
 
-    private final String id;
+    private final String code;
 
     protected Code() {
-        this.id = null;
+        this.code = null;
     }
 
-    private Code(String id) {
-        validate(id);
-        this.id = id;
+    private Code(String code) {
+        validate(code);
+        this.code = code;
     }
 
-    public static Code from(String id) {
-        return new Code(id);
+    public static Code from(String code) {
+        return new Code(code);
     }
 
     public String value() {
-        return id;
+        return code;
     }
 
     private void validate(String id) {
@@ -33,14 +33,14 @@ public class Code {
         validateEmpty(id);
     }
 
-    private void validateEmpty(String id) {
-        if (id.isBlank()) {
+    private void validateEmpty(String code) {
+        if (code.isBlank()) {
             throw new MemberException(MemberErrorCode.AUTH_ID_NOT_EMPTY);
         }
     }
 
-    private void validateNotNull(String id) {
-        if (id == null) {
+    private void validateNotNull(String code) {
+        if (code == null) {
             throw new MemberException(MemberErrorCode.AUTH_ID_NOT_NULL);
         }
     }
