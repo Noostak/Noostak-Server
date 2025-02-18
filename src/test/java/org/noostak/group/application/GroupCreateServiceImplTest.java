@@ -61,7 +61,7 @@ class GroupCreateServiceImplTest {
         memberRepository.deleteAll();
 
         Member savedMember = saveMember("jsoonworld", "key", "123456", "refreshToken1");
-        savedMemberId = savedMember.getMemberId();
+        savedMemberId = savedMember.getId();
 
         Mockito.when(invitationCodeGenerator.generate()).thenReturn(GroupInvitationCode.from("ABC123"));
 

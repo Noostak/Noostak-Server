@@ -15,7 +15,8 @@ public class Likes extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    @Column(name = "likes_id")
+    private Long id;
 
     @Embedded
     @AttributeOverride(name = "count", column = @Column(name = "likes_count"))

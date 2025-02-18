@@ -21,8 +21,8 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     @Override
     public MemberGroup save(MemberGroup memberGroup) {
         try {
-            if (memberGroup.getMemberGroupId() == null) {
-                var idField = MemberGroup.class.getDeclaredField("memberGroupId");
+            if (memberGroup.getId() == null) {
+                var idField = MemberGroup.class.getDeclaredField("id");
                 idField.setAccessible(true);
                 idField.set(memberGroup, idGenerator.getAndIncrement());
             }
@@ -45,21 +45,21 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     @Override
     public Optional<MemberGroup> findById(Long id) {
         return memberGroups.stream()
-                .filter(memberGroup -> memberGroup.getMemberGroupId().equals(id))
+                .filter(memberGroup -> memberGroup.getId().equals(id))
                 .findFirst();
     }
 
     @Override
     public List<MemberGroup> findByMemberId(Long memberId) {
         return memberGroups.stream()
-                .filter(memberGroup -> memberGroup.getMember().getMemberId().equals(memberId))
+                .filter(memberGroup -> memberGroup.getMember().getId().equals(memberId))
                 .toList();
     }
 
     @Override
     public List<Member> findMembersByGroupId(Long groupId) {
         return memberGroups.stream()
-                .filter(memberGroup -> memberGroup.getGroup().getGroupId().equals(groupId))
+                .filter(memberGroup -> memberGroup.getGroup().getId().equals(groupId))
                 .map(MemberGroup::getMember)
                 .collect(Collectors.toList());
     }
@@ -67,12 +67,12 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     @Override
     public Member findGroupHostByGroupId(Long groupId) {
         return memberGroups.stream()
-                .filter(memberGroup -> memberGroup.getGroup().getGroupId().equals(groupId))
+                .filter(memberGroup -> memberGroup.getGroup().getId().equals(groupId))
                 .map(MemberGroup::getGroup)
                 .map(Group::getGroupHostId)
                 .map(hostId -> memberGroups.stream()
                         .map(MemberGroup::getMember)
-                        .filter(member -> member.getMemberId().equals(hostId))
+                        .filter(member -> member.getId().equals(hostId))
                         .findFirst().orElse(null))
                 .findFirst().orElse(null);
     }
@@ -80,7 +80,7 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     @Override
     public List<Group> findGroupsByMemberId(Long memberId) {
         return memberGroups.stream()
-                .filter(memberGroup -> memberGroup.getMember().getMemberId().equals(memberId))
+                .filter(memberGroup -> memberGroup.getMember().getId().equals(memberId))
                 .map(MemberGroup::getGroup)
                 .collect(Collectors.toList());
     }
@@ -89,8 +89,8 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     public boolean existsByMemberIdAndGroupId(Long memberId, Long groupId) {
         return memberGroups.stream()
                 .anyMatch(memberGroup ->
-                        memberGroup.getMember().getMemberId().equals(memberId) &&
-                                memberGroup.getGroup().getGroupId().equals(groupId)
+                        memberGroup.getMember().getId().equals(memberId) &&
+                                memberGroup.getGroup().getId().equals(groupId)
                 );
     }
 
@@ -107,7 +107,7 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
 
     @Override
     public void deleteById(Long id) {
-        memberGroups.removeIf(memberGroup -> memberGroup.getMemberGroupId().equals(id));
+        memberGroups.removeIf(memberGroup -> memberGroup.getId().equals(id));
     }
 
     @Override
@@ -127,7 +127,7 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
 
     @Override
     public boolean existsById(Long id) {
-        return memberGroups.stream().anyMatch(memberGroup -> memberGroup.getMemberGroupId().equals(id));
+        return memberGroups.stream().anyMatch(memberGroup -> memberGroup.getId().equals(id));
     }
 
     @Override

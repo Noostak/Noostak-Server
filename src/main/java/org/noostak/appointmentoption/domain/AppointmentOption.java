@@ -16,6 +16,7 @@ public class AppointmentOption extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointment_option_id")
     private Long appointOptionId;
 
     @Enumerated(EnumType.STRING)

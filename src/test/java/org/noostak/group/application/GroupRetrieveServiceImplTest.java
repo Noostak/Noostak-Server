@@ -52,14 +52,14 @@ class GroupRetrieveServiceImplTest {
         groupRetrieveService = new GroupRetrieveServiceImpl(memberGroupRepository, s3Service);
 
         Member savedMember = saveMember("MemberOne", "key1", "authId1", "refreshToken1");
-        savedMemberId = savedMember.getMemberId();
+        savedMemberId = savedMember.getId();
 
         Group savedGroup1 = saveGroup(savedMemberId, "StudyGroup", "group-images/1", "ABC123");
         Group savedGroup2 = saveGroup(savedMemberId, "GamingClub", "group-images/2", "XYZ789");
         Group savedGroup3 = saveGroup(savedMemberId, "BookClub", "group-images/3", "LMN456");
-        savedGroup1Id = savedGroup1.getGroupId();
-        savedGroup2Id = savedGroup2.getGroupId();
-        savedGroup3Id = savedGroup3.getGroupId();
+        savedGroup1Id = savedGroup1.getId();
+        savedGroup2Id = savedGroup2.getId();
+        savedGroup3Id = savedGroup3.getId();
 
         saveMemberGroup(savedMemberId, savedGroup1Id);
         saveMemberGroup(savedMemberId, savedGroup2Id);
@@ -92,8 +92,8 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("멤버가 하나의 그룹만 속해 있는 경우 정상 조회")
         void shouldRetrieveSingleGroupSuccessfully() {
             // given
-            Long memberId = saveMember("singleUser", "keySingle", "authIdSingle", "refreshTokenSingle").getMemberId();
-            Long groupId = saveGroup(memberId, "SingleGroup", "group-images/single", "SINGLE").getGroupId();
+            Long memberId = saveMember("singleUser", "keySingle", "authIdSingle", "refreshTokenSingle").getId();
+            Long groupId = saveGroup(memberId, "SingleGroup", "group-images/single", "SINGLE").getId();
             saveMemberGroup(memberId, groupId);
 
             // when
@@ -108,9 +108,9 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("여러 명의 멤버가 같은 그룹에 속한 경우 특정 멤버가 정상적으로 조회")
         void shouldRetrieveGroupsWhenMultipleMembersInSameGroup() {
             // given
-            Long member1 = saveMember("memberOne", "key1", "authId1", "refreshToken1").getMemberId();
-            Long member2 = saveMember("memberTwo", "key2", "authId2", "refreshToken2").getMemberId();
-            Long groupId = saveGroup(member1, "SharedGroup", "group-images/shared", "SHARED").getGroupId();
+            Long member1 = saveMember("memberOne", "key1", "authId1", "refreshToken1").getId();
+            Long member2 = saveMember("memberTwo", "key2", "authId2", "refreshToken2").getId();
+            Long groupId = saveGroup(member1, "SharedGroup", "group-images/shared", "SHARED").getId();
 
             saveMemberGroup(member1, groupId);
             saveMemberGroup(member2, groupId);

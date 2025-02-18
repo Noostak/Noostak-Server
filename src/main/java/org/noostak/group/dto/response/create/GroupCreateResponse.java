@@ -10,7 +10,7 @@ public record GroupCreateResponse(
 ) {
     public static GroupCreateResponse of(final Group group, final String groupProfileImageUrl) {
         return new GroupCreateResponse(
-                group.getGroupId(),
+                group.getId(),
                 group.getName().value(),
                 groupProfileImageUrl,
                 group.getCode().value()

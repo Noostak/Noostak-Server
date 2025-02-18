@@ -17,7 +17,8 @@ public class Group extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long groupId;
+    @Column(name = "group_id")
+    private Long id;
 
     @Embedded
     @AttributeOverride(name = "code", column = @Column(name = "group_invitation_code"))

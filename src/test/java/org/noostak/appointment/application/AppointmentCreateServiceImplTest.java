@@ -73,7 +73,7 @@ public class AppointmentCreateServiceImplTest {
 
             List<Appointment> appointments = appointmentRepository.findAll();
             assertThat(appointments).hasSize(1);
-            assertThat(appointments.get(0).getGroup().getGroupId()).isEqualTo(savedGroupId);
+            assertThat(appointments.get(0).getGroup().getId()).isEqualTo(savedGroupId);
             assertThat(appointments.get(0).getAppointmentHostId()).isEqualTo(savedMemberId);
             assertThat(appointments.get(0).getDuration().value()).isEqualTo(request.duration());
             assertThat(appointments.get(0).getCategory()).isEqualTo(AppointmentCategory.from(request.category()));
@@ -139,7 +139,7 @@ public class AppointmentCreateServiceImplTest {
                 AuthType.GOOGLE,
                 AuthId.from(authId),
                 refreshToken
-        )).getMemberId();
+        )).getId();
     }
 
     private Long createAndSaveGroup(Long groupHostId, String groupName, String groupImageUrl, String inviteCode) {
@@ -148,7 +148,7 @@ public class AppointmentCreateServiceImplTest {
                 GroupName.from(groupName),
                 GroupProfileImageKey.from(groupImageUrl),
                 inviteCode
-        )).getGroupId();
+        )).getId();
     }
 
     private void saveMemberGroup(Long memberId, Long groupId) {
