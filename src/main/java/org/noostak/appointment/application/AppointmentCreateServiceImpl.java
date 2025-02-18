@@ -47,6 +47,7 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
         return Appointment.of(
                 group,
                 hostId,
+                request.appointmentName(),
                 request.duration(),
                 request.category(),
                 AppointmentStatus.PROGRESS
