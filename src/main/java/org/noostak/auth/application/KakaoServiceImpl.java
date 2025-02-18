@@ -41,10 +41,10 @@ public class KakaoServiceImpl implements KakaoService{
     }
 
     @Override
-    public JwtToken requestToken(String authId) {
+    public JwtToken requestToken(String code) {
         String url = KaKaoApi.TOKEN_REQUEST.getUrl();
         KakaoTokenResponse response =
-                postRequest(url, KakaoTokenRequest.of(authId), KakaoTokenResponse.class);
+                postRequest(url, KakaoTokenRequest.of(code), KakaoTokenResponse.class);
 
         response.validate();
 

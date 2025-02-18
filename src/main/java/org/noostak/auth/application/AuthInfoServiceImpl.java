@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.domain.AuthInfo;
 import org.noostak.auth.domain.AuthInfoRepository;
-import org.noostak.auth.domain.vo.AuthId;
+import org.noostak.auth.domain.vo.Code;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
 import org.noostak.auth.dto.SignUpResponse;
@@ -21,10 +21,10 @@ public class AuthInfoServiceImpl implements AuthInfoService{
 
     @Override
     @Transactional
-    public SignUpResponse createAuthInfo(String authType, String authId, JwtToken jwtToken, Member member) {
+    public SignUpResponse createAuthInfo(String authType, String code, JwtToken jwtToken, Member member) {
         AuthInfo newAuthInfo = createAuthInfo(
                 AuthType.from(authType),
-                AuthId.from(authId),
+                Code.from(code),
                 RefreshToken.from(jwtToken.getRefreshToken()),
                 member
         );
@@ -39,10 +39,10 @@ public class AuthInfoServiceImpl implements AuthInfoService{
         );
     }
 
-    private AuthInfo createAuthInfo(AuthType authType, AuthId authId, RefreshToken refreshToken, Member member) {
+    private AuthInfo createAuthInfo(AuthType authType, Code code, RefreshToken refreshToken, Member member) {
         return AuthInfo.of(
                 authType,
-                authId,
+                code,
                 refreshToken,
                 member
         );
@@ -53,7 +53,7 @@ public class AuthInfoServiceImpl implements AuthInfoService{
     }
 
     @Override
-    public boolean hasAuthInfo(String authId){
-        return authInfoRepository.hasAuthInfoByAuthId(AuthId.from(authId));
+    public boolean hasAuthInfo(String code){
+        return authInfoRepository.hasAuthInfoByAuthId(Code.from(code));
     }
 }

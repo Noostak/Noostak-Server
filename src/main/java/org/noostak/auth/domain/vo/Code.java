@@ -7,21 +7,21 @@ import org.noostak.member.common.MemberException;
 
 @Embeddable
 @EqualsAndHashCode
-public class AuthId {
+public class Code {
 
     private final String id;
 
-    protected AuthId() {
+    protected Code() {
         this.id = null;
     }
 
-    private AuthId(String id) {
+    private Code(String id) {
         validate(id);
         this.id = id;
     }
 
-    public static AuthId from(String id) {
-        return new AuthId(id);
+    public static Code from(String id) {
+        return new Code(id);
     }
 
     public String value() {
