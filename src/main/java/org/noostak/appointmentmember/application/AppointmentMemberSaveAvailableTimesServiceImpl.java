@@ -5,7 +5,7 @@ import org.noostak.appointmentmember.common.exception.AppointmentMemberErrorCode
 import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimes;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepository;
-import org.noostak.appointmentmember.dto.request.AvailableTimesRequest;
+import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepository;
 import org.springframework.stereotype.Service;
@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AppointmentSaveAvailableTimesServiceImpl implements AppointmentSaveAvailableTimesService {
+public class AppointmentMemberSaveAvailableTimesServiceImpl implements AppointmentMemberSaveAvailableTimesService {
 
     private final AppointmentMemberRepository appointmentMemberRepository;
     private final AppointmentMemberAvailableTimesRepository appointmentMemberAvailableTimesRepository;
 
     @Override
     @Transactional
-    public void saveAvailableTimes(Long memberId, Long appointmentId, AvailableTimesRequest request) {
+    public void saveAvailableTimes(Long memberId, Long appointmentId, AppointmentMemberAvailableTimesRequest request) {
         AppointmentMember appointmentMember = findAppointmentMember(memberId, appointmentId);
         List<AppointmentMemberAvailableTimes> newTimes = createNewAvailableTimes(appointmentMember, request);
 
@@ -37,7 +37,7 @@ public class AppointmentSaveAvailableTimesServiceImpl implements AppointmentSave
                 .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
     }
 
-    private List<AppointmentMemberAvailableTimes> createNewAvailableTimes(AppointmentMember appointmentMember, AvailableTimesRequest request) {
+    private List<AppointmentMemberAvailableTimes> createNewAvailableTimes(AppointmentMember appointmentMember, AppointmentMemberAvailableTimesRequest request) {
         return request.appointmentMemberAvailableTimes().stream()
                 .map(time -> AppointmentMemberAvailableTimes.of(appointmentMember, time.date(), time.startTime(), time.endTime()))
                 .collect(Collectors.toList());
