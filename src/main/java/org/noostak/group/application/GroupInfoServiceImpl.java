@@ -12,11 +12,13 @@ import org.noostak.infra.S3Service;
 import org.noostak.member.domain.Member;
 import org.noostak.membergroup.domain.MemberGroupRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GroupInfoServiceImpl implements GroupInfoService {
 
     private final GroupRepository groupRepository;
@@ -29,7 +31,6 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
         Member member = findMemberInGroup(memberId, groupId);
         GroupMemberInfoResponse myInfoResponse = convertToGroupMemberInfo(member);
-
 
         GroupMemberInfoResponse groupHostInfo = findGroupHost(groupId);
 

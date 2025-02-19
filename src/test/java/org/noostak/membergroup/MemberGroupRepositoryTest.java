@@ -86,6 +86,16 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     }
 
     @Override
+    public boolean existsByMemberIdAndGroupId(Long memberId, Long groupId) {
+        return memberGroups.stream()
+                .anyMatch(memberGroup ->
+                        memberGroup.getMember().getMemberId().equals(memberId) &&
+                                memberGroup.getGroup().getGroupId().equals(groupId)
+                );
+    }
+
+
+    @Override
     public List<MemberGroup> findAll() {
         return new ArrayList<>(memberGroups);
     }
