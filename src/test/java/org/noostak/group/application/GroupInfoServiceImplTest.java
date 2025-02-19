@@ -49,7 +49,7 @@ public class GroupInfoServiceImplTest {
         initializeMembers();
         initializeGroups();
         assignMembersToGroups();
-        saveMemberGroup(members.get(1).getMemberId(), savedGroupId);
+        saveMemberGroup(members.get(1).getId(), savedGroupId);
     }
 
     @AfterEach
@@ -75,7 +75,7 @@ public class GroupInfoServiceImplTest {
         @Test
         @DisplayName("그룹 멤버가 정보를 조회할 때 정상적으로 반환된다.")
         void shouldRetrieveGroupInfoAsMemberSuccessfully() {
-            Long anotherMemberId = members.get(1).getMemberId();
+            Long anotherMemberId = members.get(1).getId();
             GroupInfoResponse response = groupInfoService.getGroupInfo(anotherMemberId, savedGroupId);
 
             assertThat(response).isNotNull();
@@ -121,7 +121,7 @@ public class GroupInfoServiceImplTest {
                 .mapToObj(i -> createAndSaveMember("장순" + (char) ('가' + i), "key" + i, "authId" + i, "refreshToken" + i))
                 .map(memberId -> memberRepository.findById(memberId).orElseThrow())
                 .forEach(members::add);
-        savedMemberId = members.get(0).getMemberId();
+        savedMemberId = members.get(0).getId();
     }
 
     private void initializeGroups() {
@@ -130,7 +130,7 @@ public class GroupInfoServiceImplTest {
                 .mapToObj(i -> createAndSaveGroup(savedMemberId, "그룹" + i, "group-images/" + i, "INVIT" + i))
                 .map(groupId -> groupRepository.findById(groupId).orElseThrow())
                 .forEach(groups::add);
-        savedGroupId = groups.get(0).getGroupId();
+        savedGroupId = groups.get(0).getId();
     }
 
     private Long createAndSaveMember(String name, String key, String authId, String refreshToken) {
@@ -140,7 +140,7 @@ public class GroupInfoServiceImplTest {
                 AuthType.GOOGLE,
                 AuthId.from(authId),
                 refreshToken
-        )).getMemberId();
+        )).getId();
     }
 
     private Long createAndSaveGroup(Long groupHostId, String groupName, String groupImageUrl, String inviteCode) {
@@ -149,7 +149,7 @@ public class GroupInfoServiceImplTest {
                 GroupName.from(groupName),
                 GroupProfileImageKey.from(groupImageUrl),
                 inviteCode
-        )).getGroupId();
+        )).getId();
     }
 
     private void saveMemberGroup(Long memberId, Long groupId) {
@@ -165,7 +165,7 @@ public class GroupInfoServiceImplTest {
         members.forEach(member ->
                 groups.stream()
                         .filter(group -> (members.indexOf(member) + groups.indexOf(group)) % 2 == 0 || members.indexOf(member) < 2)
-                        .forEach(group -> saveMemberGroup(member.getMemberId(), group.getGroupId()))
+                        .forEach(group -> saveMemberGroup(member.getId(), group.getId()))
         );
     }
 }

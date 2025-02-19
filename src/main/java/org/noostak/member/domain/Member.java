@@ -13,7 +13,7 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long id;
 
     @Embedded
     @AttributeOverride(name = "name", column = @Column(name = "member_name"))
@@ -33,20 +33,20 @@ public class Member extends BaseTimeEntity {
 
     @Embedded
     @AttributeOverride(name = "id", column = @Column(name = "auth_id"))
-    private AuthId id;
+    private AuthId authId;
 
     private String refreshToken;
 
-    private Member(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId id, final String refreshToken) {
+    private Member(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId authId, final String refreshToken) {
         this.name = name;
         this.key = key;
         this.status = MemberAccountStatus.ACTIVE;
         this.type = type;
-        this.id = id;
+        this.authId = authId;
         this.refreshToken = refreshToken;
     }
 
-    public static Member of(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId id, final String refreshToken) {
-        return new Member(name, key, type, id, refreshToken);
+    public static Member of(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId authId, final String refreshToken) {
+        return new Member(name, key, type, authId, refreshToken);
     }
 }

@@ -24,7 +24,7 @@ public class MemberGroupRepositoryImpl implements MemberGroupRepositoryCustom {
                 .select(member)
                 .from(memberGroup)
                 .join(memberGroup.member, member)
-                .where(memberGroup.group.groupId.eq(groupId))
+                .where(memberGroup.group.id.eq(groupId))
                 .fetch();
     }
 
@@ -33,8 +33,8 @@ public class MemberGroupRepositoryImpl implements MemberGroupRepositoryCustom {
         return queryFactory
                 .select(member)
                 .from(group)
-                .join(member).on(group.groupHostId.eq(member.memberId))
-                .where(group.groupId.eq(groupId))
+                .join(member).on(group.groupHostId.eq(member.id))
+                .where(group.id.eq(groupId))
                 .fetchOne();
     }
 
@@ -43,7 +43,7 @@ public class MemberGroupRepositoryImpl implements MemberGroupRepositoryCustom {
         return queryFactory
                 .select(memberGroup.group)
                 .from(memberGroup)
-                .where(memberGroup.member.memberId.eq(memberId))
+                .where(memberGroup.member.id.eq(memberId))
                 .fetch();
     }
 
@@ -53,8 +53,8 @@ public class MemberGroupRepositoryImpl implements MemberGroupRepositoryCustom {
                 .selectOne()
                 .from(memberGroup)
                 .where(
-                        memberGroup.member.memberId.eq(memberId)
-                                .and(memberGroup.group.groupId.eq(groupId))
+                        memberGroup.member.id.eq(memberId)
+                                .and(memberGroup.group.id.eq(groupId))
                 )
                 .fetchFirst();
 

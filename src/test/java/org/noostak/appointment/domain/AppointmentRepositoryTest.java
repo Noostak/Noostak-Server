@@ -16,8 +16,8 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
     @Override
     public Appointment save(Appointment entity) {
         try {
-            if (entity.getAppointmentId() == null) {
-                var idField = Appointment.class.getDeclaredField("appointmentId");
+            if (entity.getId() == null) {
+                var idField = Appointment.class.getDeclaredField("id");
                 idField.setAccessible(true);
                 idField.set(entity, idGenerator.getAndIncrement());
             }
@@ -42,7 +42,7 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
     @Override
     public Optional<Appointment> findById(Long id) {
         return appointments.stream()
-                .filter(appointment -> appointment.getAppointmentId().equals(id))
+                .filter(appointment -> appointment.getId().equals(id))
                 .findFirst();
     }
 
@@ -58,7 +58,7 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
 
     @Override
     public void deleteById(Long id) {
-        appointments.removeIf(appointment -> appointment.getAppointmentId().equals(id));
+        appointments.removeIf(appointment -> appointment.getId().equals(id));
     }
 
     @Override
@@ -80,7 +80,7 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
 
     @Override
     public boolean existsById(Long id) {
-        return appointments.stream().anyMatch(appointment -> appointment.getAppointmentId().equals(id));
+        return appointments.stream().anyMatch(appointment -> appointment.getId().equals(id));
     }
 
     @Override

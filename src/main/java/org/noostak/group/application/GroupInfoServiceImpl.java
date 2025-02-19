@@ -43,7 +43,7 @@ public class GroupInfoServiceImpl implements GroupInfoService {
 
     private Member findMemberInGroup(Long memberId, Long groupId) {
         return memberGroupRepository.findMembersByGroupId(groupId).stream()
-                .filter(m -> m.getMemberId().equals(memberId))
+                .filter(m -> m.getId().equals(memberId))
                 .findFirst()
                 .orElseThrow(() -> new GroupException(GroupErrorCode.MEMBER_NOT_FOUND));
     }

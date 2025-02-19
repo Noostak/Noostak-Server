@@ -15,7 +15,8 @@ public class AppointmentMember extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long appointmentMemberId;
+    @Column(name = "appointment_member_id")
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "availability_availability")
@@ -28,4 +29,14 @@ public class AppointmentMember extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    private AppointmentMember(final AppointmentAvailability appointmentAvailability, final Appointment appointment, final Member member) {
+        this.appointmentAvailability = appointmentAvailability;
+        this.appointment = appointment;
+        this.member = member;
+    }
+
+    public static AppointmentMember of(final AppointmentAvailability appointmentAvailability, final Appointment appointment, final Member member) {
+        return new AppointmentMember(appointmentAvailability, appointment, member);
+    }
 }

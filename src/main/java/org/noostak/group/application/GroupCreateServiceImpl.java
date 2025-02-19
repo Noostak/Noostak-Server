@@ -50,7 +50,7 @@ public class GroupCreateServiceImpl implements GroupCreateService {
     private Group createGroup(Member groupHost, String groupName, String profileImageKey) {
         GroupInvitationCode invitationCode = invitationCodeGenerator.generate();
         return Group.of(
-                groupHost.getMemberId(),
+                groupHost.getId(),
                 GroupName.from(groupName),
                 GroupProfileImageKey.from(profileImageKey),
                 invitationCode.value()

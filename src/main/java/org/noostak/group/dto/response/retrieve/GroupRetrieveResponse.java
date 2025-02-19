@@ -10,7 +10,7 @@ public record GroupRetrieveResponse(
 ) {
     public static GroupRetrieveResponse of(final Group group, final String groupProfileImageUrl) {
         return new GroupRetrieveResponse(
-                group.getGroupId(),
+                group.getId(),
                 group.getName().value(),
                 group.getCount().value(),
                 groupProfileImageUrl
