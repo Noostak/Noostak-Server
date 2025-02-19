@@ -3,9 +3,6 @@ package org.noostak.appointmentmember.application;
 import org.junit.jupiter.api.*;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
-import org.noostak.appointment.domain.vo.AppointmentCategory;
-import org.noostak.appointment.domain.vo.AppointmentDuration;
-import org.noostak.appointment.domain.vo.AppointmentName;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberErrorCode;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
@@ -14,8 +11,8 @@ import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimes;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepositoryTest;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepositoryTest;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
-import org.noostak.appointmentmember.dto.request.AvailableTimeRequest;
-import org.noostak.appointmentmember.dto.request.AvailableTimesRequest;
+import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimeRequest;
+import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepository;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepository;
 import org.noostak.group.domain.Group;
@@ -43,9 +40,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
-public class AppointmentSaveAvailableTimesServiceImplTest {
+public class AppointmentMemberSaveAvailableTimesServiceImplTest {
 
-    private AppointmentSaveAvailableTimesService appointmentSaveAvailableTimesService;
+    private AppointmentMemberSaveAvailableTimesService appointmentMemberSaveAvailableTimesService;
     private AppointmentMemberRepository appointmentMemberRepository;
     private AppointmentMemberAvailableTimesRepository appointmentMemberAvailableTimesRepository;
     private MemberRepositoryTest memberRepository;
@@ -81,9 +78,9 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         @Test
         @DisplayName("여러 개의 약속 가능 시간을 저장할 수 있다.")
         void shouldSaveMultipleAvailableTimesSuccessfully() {
-            AvailableTimesRequest request = createAvailableTimesRequest();
+            AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
-            appointmentSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
             List<AppointmentMemberAvailableTimes> savedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
@@ -94,14 +91,14 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         @Test
         @DisplayName("동일한 시간 정보를 다시 저장할 경우 기존 데이터를 유지한다.")
         void shouldNotUpdateWhenSameTimesExist() {
-            AvailableTimesRequest request = createAvailableTimesRequest();
+            AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
-            appointmentSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
             List<AppointmentMemberAvailableTimes> initialTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
-            appointmentSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
             List<AppointmentMemberAvailableTimes> reSavedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
@@ -114,19 +111,19 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         @Test
         @DisplayName("새로운 시간 정보를 저장할 경우 기존 데이터를 갱신한다.")
         void shouldUpdateWhenNewTimesAdded() {
-            AvailableTimesRequest initialRequest = createAvailableTimesRequest();
+            AppointmentMemberAvailableTimesRequest initialRequest = createAvailableTimesRequest();
 
-            appointmentSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, initialRequest);
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, initialRequest);
 
-            AvailableTimesRequest newRequest = new AvailableTimesRequest(List.of(
-                    AvailableTimeRequest.of(
+            AppointmentMemberAvailableTimesRequest newRequest = new AppointmentMemberAvailableTimesRequest(List.of(
+                    AppointmentMemberAvailableTimeRequest.of(
                             LocalDateTime.of(2024, 3, 15, 11, 30),
                             LocalDateTime.of(2024, 3, 15, 12, 0),
                             LocalDateTime.of(2024, 3, 15, 12, 30)
                     )
             ));
 
-            appointmentSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, newRequest);
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, newRequest);
 
             List<AppointmentMemberAvailableTimes> updatedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
@@ -143,9 +140,9 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         @DisplayName("약속 멤버가 아닌 사용자가 시간을 저장하면 예외 발생")
         void shouldThrowExceptionWhenUserIsNotAppointmentMember() {
             Long invalidMemberId = 999L;
-            AvailableTimesRequest request = createAvailableTimesRequest();
+            AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
-            assertThatThrownBy(() -> appointmentSaveAvailableTimesService.saveAvailableTimes(invalidMemberId, savedAppointmentId, request))
+            assertThatThrownBy(() -> appointmentMemberSaveAvailableTimesService.saveAvailableTimes(invalidMemberId, savedAppointmentId, request))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -154,9 +151,9 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         @DisplayName("약속이 존재하지 않을 경우 예외 발생")
         void shouldThrowExceptionWhenAppointmentDoesNotExist() {
             Long nonExistentAppointmentId = 9999L;
-            AvailableTimesRequest request = createAvailableTimesRequest();
+            AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
-            assertThatThrownBy(() -> appointmentSaveAvailableTimesService.saveAvailableTimes(savedMemberId, nonExistentAppointmentId, request))
+            assertThatThrownBy(() -> appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, nonExistentAppointmentId, request))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -165,9 +162,9 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         @DisplayName("멤버가 존재하지 않을 경우 예외 발생")
         void shouldThrowExceptionWhenMemberDoesNotExist() {
             Long nonExistentMemberId = 9999L;
-            AvailableTimesRequest request = createAvailableTimesRequest();
+            AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
-            assertThatThrownBy(() -> appointmentSaveAvailableTimesService.saveAvailableTimes(nonExistentMemberId, savedAppointmentId, request))
+            assertThatThrownBy(() -> appointmentMemberSaveAvailableTimesService.saveAvailableTimes(nonExistentMemberId, savedAppointmentId, request))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -180,7 +177,7 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         appointmentRepository = new AppointmentRepositoryTest();
         groupRepository = new GroupRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
-        appointmentSaveAvailableTimesService = new AppointmentSaveAvailableTimesServiceImpl(
+        appointmentMemberSaveAvailableTimesService = new AppointmentMemberSaveAvailableTimesServiceImpl(
                 appointmentMemberRepository, appointmentMemberAvailableTimesRepository
         );
     }
@@ -196,14 +193,14 @@ public class AppointmentSaveAvailableTimesServiceImplTest {
         savedAppointmentMember = createAndSaveAppointmentMember(savedMemberId, savedAppointmentId);
     }
 
-    private AvailableTimesRequest createAvailableTimesRequest() {
-        return new AvailableTimesRequest(List.of(
-                AvailableTimeRequest.of(
+    private AppointmentMemberAvailableTimesRequest createAvailableTimesRequest() {
+        return new AppointmentMemberAvailableTimesRequest(List.of(
+                AppointmentMemberAvailableTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 0, 0),
                         LocalDateTime.of(2024, 3, 15, 10, 0),
                         LocalDateTime.of(2024, 3, 15, 10, 30)
                 ),
-                AvailableTimeRequest.of(
+                AppointmentMemberAvailableTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 0, 0),
                         LocalDateTime.of(2024, 3, 15, 11, 0),
                         LocalDateTime.of(2024, 3, 15, 11, 30)
