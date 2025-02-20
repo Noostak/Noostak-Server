@@ -3,11 +3,11 @@ package org.noostak.appointmentmember.application;
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberErrorCode;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
-import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimes;
-import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepository;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
 import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
 import org.noostak.appointmentmember.domain.AppointmentMember;
-import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
     @Transactional
     public void saveAvailableTimes(Long memberId, Long appointmentId, AppointmentMemberAvailableTimesRequest request) {
         AppointmentMember appointmentMember = findAppointmentMember(memberId, appointmentId);
-        List<AppointmentMemberAvailableTimes> newTimes = createNewAvailableTimes(appointmentMember, request);
+        List<AppointmentMemberAvailableTime> newTimes = createNewAvailableTimes(appointmentMember, request);
 
         refreshAvailableTimes(appointmentMember, newTimes);
     }
@@ -37,21 +37,32 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
                 .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
     }
 
-    private List<AppointmentMemberAvailableTimes> createNewAvailableTimes(AppointmentMember appointmentMember, AppointmentMemberAvailableTimesRequest request) {
+    private List<AppointmentMemberAvailableTime> createNewAvailableTimes(AppointmentMember appointmentMember, AppointmentMemberAvailableTimesRequest request) {
         return request.appointmentMemberAvailableTimes().stream()
-                .map(time -> AppointmentMemberAvailableTimes.of(appointmentMember, time.date(), time.startTime(), time.endTime()))
+                .map(time -> AppointmentMemberAvailableTime.of(appointmentMember, time.date(), time.startTime(), time.endTime()))
                 .collect(Collectors.toList());
     }
 
-    private void refreshAvailableTimes(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTimes> newTimes) {
-        List<AppointmentMemberAvailableTimes> existingTimes = appointmentMemberAvailableTimesRepository.findByAppointmentMember(appointmentMember);
-
-        Set<AppointmentMemberAvailableTimes> existingSet = Set.copyOf(existingTimes);
-        Set<AppointmentMemberAvailableTimes> newSet = Set.copyOf(newTimes);
-
-        if (!existingSet.equals(newSet)) {
-            appointmentMemberAvailableTimesRepository.deleteByAppointmentMember(appointmentMember);
-            appointmentMemberAvailableTimesRepository.saveAll(newTimes);
+    private void refreshAvailableTimes(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
+        if (!isTimeUpdateRequired(appointmentMember, newTimes)) {
+            return;
         }
+
+        updateAvailableTimes(appointmentMember, newTimes);
+        markAppointmentTimeIfNecessary(appointmentMember, newTimes);
+    }
+
+    private boolean isTimeUpdateRequired(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
+        List<AppointmentMemberAvailableTime> existingTimes = appointmentMemberAvailableTimesRepository.findByAppointmentMember(appointmentMember);
+        return !Set.copyOf(existingTimes).equals(Set.copyOf(newTimes));
+    }
+
+    private void updateAvailableTimes(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
+        appointmentMemberAvailableTimesRepository.deleteByAppointmentMember(appointmentMember);
+        appointmentMemberAvailableTimesRepository.saveAll(newTimes);
+    }
+
+    private void markAppointmentTimeIfNecessary(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
+        appointmentMember.updateAvailableTimes(newTimes);
     }
 }
