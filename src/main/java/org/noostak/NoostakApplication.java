@@ -9,5 +9,4 @@ public class NoostakApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NoostakApplication.class, args);
 	}
-
 }
