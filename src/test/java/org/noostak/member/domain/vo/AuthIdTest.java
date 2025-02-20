@@ -6,14 +6,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
-import org.noostak.auth.domain.vo.Code;
+import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.member.common.MemberErrorCode;
 import org.noostak.member.common.MemberException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class CodeTest {
+class AuthIdTest {
 
     @Nested
     @DisplayName("성공 케이스")
@@ -32,7 +32,7 @@ class CodeTest {
         })
         void shouldCreateCodeSuccessfully(String validId) {
             // Given & When
-            Code authId = Code.from(validId);
+            AuthId authId = AuthId.from(validId);
 
             // Then
             assertThat(authId.value()).isEqualTo(validId);
@@ -48,7 +48,7 @@ class CodeTest {
         @NullSource
         void shouldThrowExceptionForNullAuthId(String nullId) {
             // Given & When & Then
-            assertThatThrownBy(() -> Code.from(nullId))
+            assertThatThrownBy(() -> AuthId.from(nullId))
                     .isInstanceOf(MemberException.class)
                     .hasMessageContaining(MemberErrorCode.AUTH_ID_NOT_NULL.getMessage());
         }
@@ -58,7 +58,7 @@ class CodeTest {
         @EmptySource
         void shouldThrowExceptionForEmptyAuthId(String emptyId) {
             // Given & When & Then
-            assertThatThrownBy(() -> Code.from(emptyId))
+            assertThatThrownBy(() -> AuthId.from(emptyId))
                     .isInstanceOf(MemberException.class)
                     .hasMessageContaining(MemberErrorCode.AUTH_ID_NOT_EMPTY.getMessage());
         }
@@ -73,7 +73,7 @@ class CodeTest {
         })
         void shouldThrowExceptionForBlankAuthId(String blankId) {
             // Given & When & Then
-            assertThatThrownBy(() -> Code.from(blankId))
+            assertThatThrownBy(() -> AuthId.from(blankId))
                     .isInstanceOf(MemberException.class)
                     .hasMessageContaining(MemberErrorCode.AUTH_ID_NOT_EMPTY.getMessage());
         }
