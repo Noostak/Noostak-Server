@@ -1,13 +1,15 @@
 package org.noostak.auth.common.exception;
 
 
-public class AuthException extends RuntimeException {
+import org.noostak.global.error.core.BaseException;
+
+public class AuthException extends BaseException {
 
     public AuthException(AuthErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
     }
 
     public AuthException(AuthErrorCode errorCode, Object ... args) {
-        super(errorCode.getMessage(args));
+        super(errorCode,args);
     }
 }
