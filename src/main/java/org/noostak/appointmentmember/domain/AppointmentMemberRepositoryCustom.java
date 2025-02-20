@@ -1,9 +1,9 @@
-package org.noostak.appointmentmember.domain.repository;
+package org.noostak.appointmentmember.domain;
 
-import org.noostak.appointmentmember.domain.AppointmentMember;
-
+import java.util.List;
 import java.util.Optional;
 
 public interface AppointmentMemberRepositoryCustom {
     Optional<AppointmentMember> findByMemberIdAndAppointmentId(Long memberId, Long appointmentId);
+    List<AppointmentMember> findAllWithAvailableTimes(Long appointmentId);
 }
