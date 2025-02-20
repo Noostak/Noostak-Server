@@ -2,49 +2,52 @@ package org.noostak.auth.application;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
-import org.noostak.auth.dto.KakaoFetchUserInfoResponse;
-import org.noostak.auth.dto.KakaoTokenRequest;
-import org.noostak.auth.dto.KakaoTokenResponse;
-import org.noostak.auth.dto.SocialLoginResponse;
-import org.noostak.member.application.MemberService;
-import org.springframework.http.HttpEntity;
+import org.noostak.auth.domain.vo.AuthId;
+import org.noostak.auth.dto.*;
+import org.noostak.global.KakaoTokenRequestFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class KakaoServiceImpl implements KakaoService{
 
-    private final MemberService memberService;
-
+    private final KakaoTokenRequestFactory kakaoTokenRequestFactory;
+    private final RestClient restClient;
     @Override
-    public void refreshAccessToken() {
+    public void requestAccessToken(String refreshToken) {
 
     }
 
+
     @Override
-    public SocialLoginResponse fetchUserInfo(String accessToken) {
-        String requestUrl = KaKaoApi.FETCH_USER_INFO_REQUEST.getUrl();
+    public TokenInfo fetchTokenInfo(String accessToken) {
+        String url = KaKaoApi.FETCH_TOKEN.getUrl();
+        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
 
-        KakaoFetchUserInfoResponse response = postRequest(
-                requestUrl,
-                makeAuthorizationHeader(accessToken),
-                KakaoFetchUserInfoResponse.class
-        );
+        KakaoTokenInfoResponse response =
+                restClient.postRequest(url, headers, KakaoTokenInfoResponse.class);
 
-        // TODO: 만약 조회 실패에 대한 에러코드를 반환하는 경우(액세스 토큰 만료, 혹은 유효하지 않은 값)
+        response.validate();
 
-        return null;
+        return TokenInfo.of(response.getId());
     }
+
 
     @Override
     public JwtToken requestToken(String code) {
         String url = KaKaoApi.TOKEN_REQUEST.getUrl();
+
+        KakaoTokenRequest request = kakaoTokenRequestFactory.createRequest(code);
+
         KakaoTokenResponse response =
-                postRequest(url, KakaoTokenRequest.of(code), KakaoTokenResponse.class);
+                restClient.postRequest(url,
+                        request.getUrlEncodedParams(),
+                        KakaoTokenResponse.class);
 
         response.validate();
 
@@ -52,41 +55,26 @@ public class KakaoServiceImpl implements KakaoService{
     }
 
     @Override
-    public void login() {
+    public AuthId login(String accessToken) {
+        String url = KaKaoApi.FETCH_MY_INFO.getUrl();
 
+        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
+
+        KakaoMyInfoResponse response =
+                restClient.postRequest(url, headers, KakaoMyInfoResponse.class);
+
+        response.validate();
+
+        return AuthId.from(response.getId());
     }
 
-    private <T,R> T postRequest(String url, R request, Class<T> responseType){
-        return new RestTemplate().postForObject(
-                url,
-                request,
-                responseType
-        );
-    }
-
-    private <T,R> T postRequest(String url, HttpHeaders headers, R request, Class<T> responseType){
-        HttpEntity<R> requestHttpEntity = new HttpEntity<>(request, headers);
-
-        return new RestTemplate().postForObject(
-                url,
-                requestHttpEntity,
-                responseType
-        );
-    }
-
-    private <T> T postRequest(String url, HttpHeaders headers, Class<T> responseType){
-        return new RestTemplate().postForObject(
-                url,
-                headers,
-                responseType
-        );
-    }
-
-    private HttpHeaders makeAuthorizationHeader(String token){
+    private HttpHeaders makeAuthorizationBearerTokenHeader(String token){
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
-        headers.set("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        return new HttpHeaders();
+        return headers;
     }
+
+    // TODO: 연결 끊기(멤버 delete, authInfo delete)
+    // TODO: 로그아웃(멤버 로그아웃)
 }
