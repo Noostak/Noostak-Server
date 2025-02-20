@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class JwtToken {
-    private String tokenType;
+    private String tokenType = "Bearer";
     private String accessToken;
     private String refreshToken;
 }
