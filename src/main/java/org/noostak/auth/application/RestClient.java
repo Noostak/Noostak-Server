@@ -5,6 +5,7 @@ import org.noostak.auth.common.exception.RestClientErrorCode;
 import org.noostak.auth.common.exception.RestClientException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -75,8 +76,19 @@ public class RestClient {
         }
     }
 
+    public <T> T getRequest(String url, HttpHeaders headers, Class<T> responseType) {
+        try {
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            T response = restTemplate.exchange(url, HttpMethod.GET,entity, responseType).getBody();
+            return validate(response);
+        } catch (Exception e) {
+            throw new RestClientException(RestClientErrorCode.REST_CLIENT_ERROR, e.getMessage());
+        }
+    }
+
     private <T> T validate(T response){
         validateIsNull(response);
+
         return response;
     }
 
