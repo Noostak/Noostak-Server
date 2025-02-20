@@ -12,7 +12,7 @@ import org.noostak.auth.common.exception.KakaoApiException;
 @Getter
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoMyInfoResponse {
+public class KakaoUserInfoResponse {
     private String id;
 
     private String connectedAt;

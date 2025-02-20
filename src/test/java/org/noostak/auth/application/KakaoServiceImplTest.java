@@ -14,7 +14,6 @@ import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.KakaoApiErrorCode;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.dto.*;
-import org.noostak.global.KakaoTokenRequestFactory;
 import org.springframework.http.HttpHeaders;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,16 +124,16 @@ class KakaoServiceImplTest {
         @DisplayName("로그인 테스트")
         void loginTest() {
             // given
-            KakaoMyInfoResponse mockResponse = mock(KakaoMyInfoResponse.class);
+            KakaoUserInfoResponse mockResponse = mock(KakaoUserInfoResponse.class);
             when(mockResponse.getId()).thenReturn(MOCK_KAKAO_ID);
             doNothing().when(mockResponse).validate();
 
             AuthId expectedAuthId = AuthId.from(MOCK_KAKAO_ID);
 
             when(restClient.postRequest(
-                    eq(KaKaoApi.FETCH_MY_INFO.getUrl()),
+                    eq(KaKaoApi.USER_INFO.getUrl()),
                     any(HttpHeaders.class),
-                    eq(KakaoMyInfoResponse.class)))
+                    eq(KakaoUserInfoResponse.class)))
                     .thenReturn(mockResponse);
 
             try (MockedStatic<AuthId> mockedStatic = mockStatic(AuthId.class)) {
@@ -148,9 +147,9 @@ class KakaoServiceImplTest {
 
                 verify(mockResponse).validate();
                 verify(restClient).postRequest(
-                        eq(KaKaoApi.FETCH_MY_INFO.getUrl()),
+                        eq(KaKaoApi.USER_INFO.getUrl()),
                         any(HttpHeaders.class),
-                        eq(KakaoMyInfoResponse.class));
+                        eq(KakaoUserInfoResponse.class));
             }
         }
 

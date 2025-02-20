@@ -2,19 +2,16 @@ package org.noostak.auth.application;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.dto.*;
-import org.noostak.global.KakaoTokenRequestFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class KakaoServiceImpl implements KakaoService{
 
@@ -24,7 +21,6 @@ public class KakaoServiceImpl implements KakaoService{
     public void requestAccessToken(String refreshToken) {
 
     }
-
 
     @Override
     public TokenInfo fetchTokenInfo(String accessToken) {
@@ -58,12 +54,12 @@ public class KakaoServiceImpl implements KakaoService{
 
     @Override
     public AuthId login(String accessToken) {
-        String url = KaKaoApi.FETCH_MY_INFO.getUrl();
+        String url = KaKaoApi.USER_INFO.getUrl();
 
         HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
 
-        KakaoMyInfoResponse response =
-                restClient.postRequest(url, headers, KakaoMyInfoResponse.class);
+        KakaoUserInfoResponse response =
+                restClient.postRequest(url, headers, KakaoUserInfoResponse.class);
 
         response.validate();
 
