@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum AppointmentMemberSuccessCode implements SuccessCode {
-    SUCCESS_SAVE_AVAILABLE_TIMES(HttpStatus.OK, "약속 시간이 성공적으로 저장되었습니다.")
+    SUCCESS_SAVE_AVAILABLE_TIMES(HttpStatus.OK, "약속 시간이 성공적으로 저장되었습니다."),
+
+    APPOINTMENT_MEMBER_AVAILABLE_TIMES_RETRIEVED(HttpStatus.OK, "약속 시간이 성공적으로 조회되었습니다."),
     ;
 
     private final HttpStatus status;
