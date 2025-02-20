@@ -4,27 +4,43 @@ package org.noostak.auth.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.ToString;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Getter
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoTokenRequest {
-    @Value("${oauth-property.kakao.grant_type}")
+
     private String grantType;
 
-    @Value("${oauth-property.kakao.client_id}")
     private String clientId;
 
-    @Value("${oauth-property.kakao.redirect_uri}")
     private String redirectUri;
 
     private String code;
 
-    private KakaoTokenRequest(String code){
-        this.code=code;
+    private KakaoTokenRequest(String clientId, String redirectUri, String code) {
+        this.grantType = "authorization_code";
+        this.clientId = clientId;
+        this.redirectUri = redirectUri;
+        this.code = code;
     }
 
-    public static KakaoTokenRequest of(String code){
-        return new KakaoTokenRequest(code);
+    public static KakaoTokenRequest of(String clientId, String redirectUri, String code){
+        return new KakaoTokenRequest(clientId,redirectUri,code);
+    }
+
+    public String getUrlEncodedParams() {
+        StringBuilder params = new StringBuilder();
+
+        params.append("grant_type=").append(URLEncoder.encode(grantType, StandardCharsets.UTF_8));
+        params.append("&client_id=").append(URLEncoder.encode(clientId, StandardCharsets.UTF_8));
+        params.append("&redirect_uri=").append(URLEncoder.encode(redirectUri, StandardCharsets.UTF_8));
+        params.append("&code=").append(URLEncoder.encode(code, StandardCharsets.UTF_8));
+
+        return params.toString();
     }
 }
