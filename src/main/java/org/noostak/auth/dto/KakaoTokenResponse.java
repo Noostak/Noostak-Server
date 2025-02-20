@@ -22,13 +22,13 @@ public class KakaoTokenResponse {
     private String refreshTokenExpiresIn;
     private String scope;
 
-    @JsonUnwrapped
-    private KakaoErrorInfo errorInfo;
-
+    private String error;
+    private String errorDescription;
+    private String errorCode;
 
     public void validate(){
-        if(errorInfo.hasError()){
-            throw new KakaoApiException(KakaoApiErrorCode.KAKAO_API_ERROR, errorInfo.toString());
+        if(error!= null){
+            throw new KakaoApiException(KakaoApiErrorCode.KAKAO_API_ERROR, errorDescription);
         }
     }
 }
