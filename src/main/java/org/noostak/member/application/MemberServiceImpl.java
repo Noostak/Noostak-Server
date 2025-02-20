@@ -10,17 +10,25 @@ import org.noostak.member.domain.MemberRepository;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.auth.dto.SignUpRequest;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService{
 
     private final MemberRepository memberRepository;
+
     private final S3Service s3Service;
+
+    public MemberServiceImpl(MemberRepository memberRepository,
+                             @Qualifier("dev") S3Service s3Service) {
+        this.memberRepository = memberRepository;
+        this.s3Service = s3Service;
+    }
 
     @Override
     @Transactional
