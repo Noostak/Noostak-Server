@@ -1,30 +1,21 @@
 package org.noostak.auth.application.jwt;
 
-import io.jsonwebtoken.Claims;
+
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
-import java.util.Date;
+import javax.crypto.SecretKey;
 
 @Component
-@RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
+    private final SecretKey secretKey;
 
-    @Value("${jwt.secret}")
-    private String secretKey;
-    private Key secretKeyObj;
-
-    @PostConstruct
-    protected void init() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        secretKeyObj = Keys.hmacShaKeyFor(keyBytes);
+    public JwtTokenProvider(String secretKey) {
+        log.info("secret: " + secretKey);
+        this.secretKey = Jwts.SIG.HS256.key().build();
     }
 
     public static JwtToken createToken(String accessToken, String refreshToken){
@@ -33,11 +24,10 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-
-            Jwts.parserBuilder()
-                    .setSigningKey(secretKeyObj)
+            Jwts.parser()
+                    .verifyWith(secretKey)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return true;
         } catch (Exception e) {
             return false;
@@ -45,12 +35,14 @@ public class JwtTokenProvider {
     }
 
 
-    public String getUserId(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKeyObj)
+    public String getAuthId(String token) {
+
+        // TODO: 카카오, 구글 별로 액세스 토큰에서 AuthId 추출하기
+        return Jwts.parser()
+                .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(token)
-                .getBody()
+                .parseSignedClaims(token)
+                .getPayload()
                 .getSubject();
     }
 }

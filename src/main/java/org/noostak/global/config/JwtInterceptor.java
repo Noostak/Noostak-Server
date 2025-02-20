@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
-import org.springframework.lang.NonNullApi;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,8 +19,9 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = extractToken(request);
 
+        // TODO: 각 Oauth 에서 지원하는 토큰 정보 APi 호출
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            request.setAttribute("authId", jwtTokenProvider.getUserId(token));
+            request.setAttribute("authId", jwtTokenProvider.getAuthId(token));
             return true;
         }
 
