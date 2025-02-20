@@ -14,6 +14,7 @@ public enum AuthErrorCode implements ErrorCode {
     API_ERROR_RESPONSE(HttpStatus.BAD_REQUEST, "외부 API 호출 도중 에러가 발생하였습니다. 에러내용: %s"),
     UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않습니다."),
+    EMPTY_TOKEN(HttpStatus.UNAUTHORIZED, "토큰 값이 비어있습니다."),
 
     ;
 
