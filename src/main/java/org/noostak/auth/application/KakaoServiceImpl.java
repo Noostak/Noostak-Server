@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
+import org.noostak.auth.common.exception.AuthErrorCode;
+import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.dto.*;
 import org.noostak.global.KakaoTokenRequestFactory;
@@ -68,8 +70,13 @@ public class KakaoServiceImpl implements KakaoService{
         return AuthId.from(response.getId());
     }
 
-    private HttpHeaders makeAuthorizationBearerTokenHeader(String token){
+    public HttpHeaders makeAuthorizationBearerTokenHeader(String token){
         HttpHeaders headers = new HttpHeaders();
+
+        if(token == null || token.isEmpty() || token.isBlank()){
+            throw new AuthException(AuthErrorCode.INVALID_TOKEN);
+        }
+
         headers.set("Authorization", "Bearer " + token);
 
         return headers;
