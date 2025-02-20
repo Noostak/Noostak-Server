@@ -1,7 +1,8 @@
 package org.noostak.appointmentmember.domain.repository;
 
 import org.noostak.appointmentmember.domain.AppointmentMember;
-import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimes;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
@@ -11,14 +12,14 @@ import java.util.function.Function;
 
 public class AppointmentMemberAvailableTimesRepositoryTest implements AppointmentMemberAvailableTimesRepository {
 
-    private final List<AppointmentMemberAvailableTimes> availableTimes = new ArrayList<>();
+    private final List<AppointmentMemberAvailableTime> availableTimes = new ArrayList<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
 
     @Override
-    public AppointmentMemberAvailableTimes save(AppointmentMemberAvailableTimes entity) {
+    public AppointmentMemberAvailableTime save(AppointmentMemberAvailableTime entity) {
         try {
             if (entity.getId() == null) {
-                var idField = AppointmentMemberAvailableTimes.class.getDeclaredField("id");
+                var idField = AppointmentMemberAvailableTime.class.getDeclaredField("id");
                 idField.setAccessible(true);
                 idField.set(entity, idGenerator.getAndIncrement());
             }
@@ -30,7 +31,7 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
-    public List<AppointmentMemberAvailableTimes> findByAppointmentMember(AppointmentMember appointmentMember) {
+    public List<AppointmentMemberAvailableTime> findByAppointmentMember(AppointmentMember appointmentMember) {
         return availableTimes.stream()
                 .filter(time -> time.getAppointmentMember().equals(appointmentMember))
                 .toList();
@@ -42,17 +43,17 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
-    public List<AppointmentMemberAvailableTimes> findAll() {
+    public List<AppointmentMemberAvailableTime> findAll() {
         return new ArrayList<>(availableTimes);
     }
 
     @Override
-    public List<AppointmentMemberAvailableTimes> findAllById(Iterable<Long> longs) {
+    public List<AppointmentMemberAvailableTime> findAllById(Iterable<Long> longs) {
         return List.of();
     }
 
     @Override
-    public Optional<AppointmentMemberAvailableTimes> findById(Long id) {
+    public Optional<AppointmentMemberAvailableTime> findById(Long id) {
         return availableTimes.stream().filter(time -> time.getId().equals(id)).findFirst();
     }
 
@@ -77,7 +78,7 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
-    public void delete(AppointmentMemberAvailableTimes entity) {
+    public void delete(AppointmentMemberAvailableTime entity) {
         availableTimes.remove(entity);
     }
 
@@ -87,12 +88,12 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
-    public void deleteAll(Iterable<? extends AppointmentMemberAvailableTimes> entities) {
+    public void deleteAll(Iterable<? extends AppointmentMemberAvailableTime> entities) {
 
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> List<S> saveAll(Iterable<S> entities) {
+    public <S extends AppointmentMemberAvailableTime> List<S> saveAll(Iterable<S> entities) {
         List<S> result = new ArrayList<>();
         for (S entity : entities) {
             result.add((S) save(entity));
@@ -104,18 +105,18 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     public void flush() {}
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> S saveAndFlush(S entity) {
+    public <S extends AppointmentMemberAvailableTime> S saveAndFlush(S entity) {
         return null;
     }
 
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> List<S> saveAllAndFlush(Iterable<S> entities) {
+    public <S extends AppointmentMemberAvailableTime> List<S> saveAllAndFlush(Iterable<S> entities) {
         return List.of();
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<AppointmentMemberAvailableTimes> entities) {
+    public void deleteAllInBatch(Iterable<AppointmentMemberAvailableTime> entities) {
 
     }
 
@@ -130,62 +131,62 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
-    public AppointmentMemberAvailableTimes getOne(Long aLong) {
+    public AppointmentMemberAvailableTime getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public AppointmentMemberAvailableTimes getById(Long aLong) {
+    public AppointmentMemberAvailableTime getById(Long aLong) {
         return null;
     }
 
     @Override
-    public AppointmentMemberAvailableTimes getReferenceById(Long aLong) {
+    public AppointmentMemberAvailableTime getReferenceById(Long aLong) {
         return null;
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> Optional<S> findOne(Example<S> example) {
+    public <S extends AppointmentMemberAvailableTime> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> List<S> findAll(Example<S> example) {
+    public <S extends AppointmentMemberAvailableTime> List<S> findAll(Example<S> example) {
         return List.of();
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends AppointmentMemberAvailableTime> List<S> findAll(Example<S> example, Sort sort) {
         return List.of();
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends AppointmentMemberAvailableTime> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> long count(Example<S> example) {
+    public <S extends AppointmentMemberAvailableTime> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes> boolean exists(Example<S> example) {
+    public <S extends AppointmentMemberAvailableTime> boolean exists(Example<S> example) {
         return false;
     }
 
     @Override
-    public <S extends AppointmentMemberAvailableTimes, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends AppointmentMemberAvailableTime, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 
     @Override
-    public List<AppointmentMemberAvailableTimes> findAll(Sort sort) {
+    public List<AppointmentMemberAvailableTime> findAll(Sort sort) {
         return List.of();
     }
 
     @Override
-    public Page<AppointmentMemberAvailableTimes> findAll(Pageable pageable) {
+    public Page<AppointmentMemberAvailableTime> findAll(Pageable pageable) {
         return null;
     }
 }
