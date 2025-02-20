@@ -7,16 +7,17 @@ import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberErrorCode;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
 import org.noostak.appointmentmember.domain.AppointmentMember;
-import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimes;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepositoryTest;
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepositoryTest;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimeRequest;
 import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
-import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepository;
-import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepository;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
+import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.member.MemberRepositoryTest;
@@ -30,7 +31,6 @@ import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
 import org.noostak.membergroup.domain.MemberGroup;
 import org.noostak.membergroup.domain.MemberGroupRepository;
-import org.noostak.server.group.domain.GroupRepositoryTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -82,7 +82,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
 
             appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
-            List<AppointmentMemberAvailableTimes> savedTimes =
+            List<AppointmentMemberAvailableTime> savedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
             assertThat(savedTimes).hasSize(request.appointmentMemberAvailableTimes().size());
@@ -95,12 +95,12 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
 
             appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
-            List<AppointmentMemberAvailableTimes> initialTimes =
+            List<AppointmentMemberAvailableTime> initialTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
             appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
-            List<AppointmentMemberAvailableTimes> reSavedTimes =
+            List<AppointmentMemberAvailableTime> reSavedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
             assertThat(reSavedTimes).usingRecursiveComparison()
@@ -125,10 +125,43 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
 
             appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, newRequest);
 
-            List<AppointmentMemberAvailableTimes> updatedTimes =
+            List<AppointmentMemberAvailableTime> updatedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
             assertThat(updatedTimes).hasSize(newRequest.appointmentMemberAvailableTimes().size());
+        }
+
+        @Test
+        @DisplayName("동일한 시간 정보를 저장할 경우 appointmentTimeSet이 변경되지 않는다.")
+        void shouldNotChangeAppointmentTimeSetWhenSameTimesExist() {
+            AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
+
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
+
+            AppointmentMember firstUpdate = appointmentMemberRepository.findByMemberIdAndAppointmentId(savedMemberId, savedAppointmentId)
+                    .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
+
+            boolean initialStatus = firstUpdate.isAppointmentTimeSet();
+
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
+
+            AppointmentMember secondUpdate = appointmentMemberRepository.findByMemberIdAndAppointmentId(savedMemberId, savedAppointmentId)
+                    .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
+
+            assertThat(secondUpdate.isAppointmentTimeSet()).isEqualTo(initialStatus);
+        }
+
+        @Test
+        @DisplayName("가능 시간이 없는 경우 appointmentTimeSet이 true로 변경되지 않는다.")
+        void shouldNotSetAppointmentTimeSetWhenNoNewTimes() {
+            AppointmentMemberAvailableTimesRequest emptyRequest = new AppointmentMemberAvailableTimesRequest(List.of());
+
+            appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, emptyRequest);
+
+            AppointmentMember updatedMember = appointmentMemberRepository.findByMemberIdAndAppointmentId(savedMemberId, savedAppointmentId)
+                    .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
+
+            assertThat(updatedMember.isAppointmentTimeSet()).isFalse();
         }
     }
 
