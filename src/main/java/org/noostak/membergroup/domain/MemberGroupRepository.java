@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface MemberGroupRepository extends JpaRepository<MemberGroup, Long> {
 
-    List<MemberGroup> findByMemberId(Long memberId);
+    List<MemberGroup> findByMember_MemberId(Long memberId);
 }

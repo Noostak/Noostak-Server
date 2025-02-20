@@ -30,7 +30,7 @@ public class GroupRetrieveServiceImpl implements GroupRetrieveService {
     }
 
     private MemberGroups getMemberGroups(Long memberId) {
-        List<MemberGroup> foundMemberGroups = memberGroupRepository.findByMemberId(memberId);
+        List<MemberGroup> foundMemberGroups = memberGroupRepository.findByMember_MemberId(memberId);
         MemberGroups memberGroups = MemberGroups.of(foundMemberGroups);
 
         if (memberGroups.isEmpty()) {
