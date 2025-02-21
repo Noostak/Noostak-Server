@@ -46,8 +46,6 @@ public class OauthController {
         // 소셜 로그인 진행하기
         AuthId authId = oauthService.login(accessToken);
 
-        // TODO: 액세스 토큰 정보 가져오기(카카오 403 에러로 인한 보류)
-        //  TokenInfo tokenInfo = oauthService.fetchTokenInfo(accessToken);
 
         // 동일 소셜 계정으로 가입이 되어있는지 확인하기
         if(authInfoService.hasAuthInfo(authId)){
@@ -63,29 +61,4 @@ public class OauthController {
 
         return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.SIGNUP_COMPLETED,response)));
     }
-
-//    @PostMapping(path = "/sign-in")
-//    public ResponseEntity<SuccessResponse<?>> signIn(
-//            HttpServletRequest request,
-//          @RequestBody SocialLoginRequest requestDto
-//    ) {
-//
-//        // TODO: 멤버의 회원가입 여부 파악하기 (해당 authId를 가진 멤버가 존재하는가?)
-//        String givenAuthId = request.getHeader("Authorization");
-//        AuthType authType = AuthType.from(requestDto.getAuthType());
-//
-//        // TODO: 만약 authId에 대한 정보가 없다면 응답 반환하기
-//        if(!authInfoService.hasAuthInfo(givenAuthId)){
-//
-//            return ResponseEntity.ok((SuccessResponse.of(AuthErrorCode.AUTH_ID_ALREADY_EXISTS,givenAuthId)));
-//        }
-//
-//        // TODO: 2. 만약 정보가 이미 있다면 authId로 카카오 서버에 토큰 요청하기
-//        JwtToken jwtToken = kakaoService.requestToken(requestDto.getAuthId());
-//
-//        // TODO: 이미 존재하는 멤버 AuthInfo의 RefreshToken 갱신하기
-//
-//        // TODO: JWT 토큰 반환하기
-//        return ResponseEntity.ok((SuccessResponse.of(GROUP_CREATED, response)));
-//    }
 }

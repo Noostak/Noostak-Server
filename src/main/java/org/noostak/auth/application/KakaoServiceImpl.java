@@ -77,7 +77,4 @@ public class KakaoServiceImpl implements KakaoService{
 
         return headers;
     }
-
-    // TODO: 연결 끊기(멤버 delete, authInfo delete)
-    // TODO: 로그아웃(멤버 로그아웃)
 }
