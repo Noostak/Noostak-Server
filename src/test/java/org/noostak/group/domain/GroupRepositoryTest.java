@@ -1,4 +1,4 @@
-package org.noostak.server.group.domain;
+package org.noostak.group.domain;
 
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;

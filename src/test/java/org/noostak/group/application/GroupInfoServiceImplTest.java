@@ -5,6 +5,7 @@ import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
+import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.group.dto.response.info.GroupInfoResponse;
@@ -19,7 +20,6 @@ import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
 import org.noostak.membergroup.domain.MemberGroup;
 import org.noostak.membergroup.domain.MemberGroupRepository;
-import org.noostak.server.group.domain.GroupRepositoryTest;
 
 import java.util.ArrayList;
 import java.util.List;

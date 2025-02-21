@@ -3,15 +3,14 @@ package org.noostak.appointment.application;
 import org.junit.jupiter.api.*;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
-import org.noostak.appointment.domain.Appointment;
-import org.noostak.appointment.domain.AppointmentRepository;
-import org.noostak.appointment.domain.AppointmentRepositoryTest;
-import org.noostak.appointment.domain.AppointmentHostSelectionTimes;
+import org.noostak.appointment.domain.*;
 import org.noostak.appointment.domain.vo.AppointmentCategory;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
+import org.noostak.appointment.dto.request.AppointmentHostSelectionTimeRequest;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
+import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.member.MemberRepositoryTest;
@@ -24,7 +23,6 @@ import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
 import org.noostak.membergroup.domain.MemberGroup;
 import org.noostak.membergroup.domain.MemberGroupRepository;
-import org.noostak.server.group.domain.GroupRepositoryTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -41,6 +39,7 @@ public class AppointmentCreateServiceImplTest {
     private MemberGroupRepository memberGroupRepository;
     private AppointmentRepository appointmentRepository;
     private AppointmentCreateServiceImpl appointmentCreateService;
+    private AppointmentHostSelectionTimeRepository appointmentHostSelectionTimeRepository;
 
     private Long savedMemberId;
     private Long savedGroupId;
@@ -66,18 +65,21 @@ public class AppointmentCreateServiceImplTest {
         @Test
         @DisplayName("정상적으로 약속을 생성할 수 있다.")
         void shouldCreateAppointmentSuccessfully() {
-            List<AppointmentHostSelectionTimes> selectionTimes = createSelectionTimes();
+            // Given
+            List<AppointmentHostSelectionTimeRequest> selectionTimes = createSelectionTimes();
             AppointmentCreateRequest request = AppointmentCreateRequest.of("회의", "중요", 60L, selectionTimes);
 
+            // When
             appointmentCreateService.createAppointment(savedMemberId, savedGroupId, request);
 
+            // Then
             List<Appointment> appointments = appointmentRepository.findAll();
             assertThat(appointments).hasSize(1);
-            assertThat(appointments.get(0).getGroup().getId()).isEqualTo(savedGroupId);
-            assertThat(appointments.get(0).getAppointmentHostId()).isEqualTo(savedMemberId);
-            assertThat(appointments.get(0).getDuration().value()).isEqualTo(request.duration());
-            assertThat(appointments.get(0).getCategory()).isEqualTo(AppointmentCategory.from(request.category()));
-            assertThat(appointments.get(0).getAppointmentStatus()).isEqualTo(AppointmentStatus.PROGRESS);
+            assertThat(appointments.getFirst().getGroup().getId()).isEqualTo(savedGroupId);
+            assertThat(appointments.getFirst().getAppointmentHostId()).isEqualTo(savedMemberId);
+            assertThat(appointments.getFirst().getDuration().value()).isEqualTo(request.duration());
+            assertThat(appointments.getFirst().getCategory()).isEqualTo(AppointmentCategory.from(request.category()));
+            assertThat(appointments.getFirst().getAppointmentStatus()).isEqualTo(AppointmentStatus.PROGRESS);
         }
     }
 
@@ -113,7 +115,8 @@ public class AppointmentCreateServiceImplTest {
         groupRepository = new GroupRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
         appointmentRepository = new AppointmentRepositoryTest();
-        appointmentCreateService = new AppointmentCreateServiceImpl(memberGroupRepository, groupRepository, appointmentRepository);
+        appointmentHostSelectionTimeRepository = new AppointmentHostSelectionTimeRepositoryTest();
+        appointmentCreateService = new AppointmentCreateServiceImpl(memberGroupRepository, groupRepository, appointmentRepository, appointmentHostSelectionTimeRepository);
     }
 
     private void initializeTestData() {
@@ -122,9 +125,9 @@ public class AppointmentCreateServiceImplTest {
         saveMemberGroup(savedMemberId, savedGroupId);
     }
 
-    private List<AppointmentHostSelectionTimes> createSelectionTimes() {
+    private List<AppointmentHostSelectionTimeRequest> createSelectionTimes() {
         return List.of(
-                AppointmentHostSelectionTimes.of(
+                AppointmentHostSelectionTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 10, 0),
                         LocalDateTime.of(2024, 3, 15, 10, 30),
                         LocalDateTime.of(2024, 3, 15, 11, 0)

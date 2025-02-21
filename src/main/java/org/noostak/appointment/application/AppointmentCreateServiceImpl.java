@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.Appointment;
+import org.noostak.appointment.domain.AppointmentHostSelectionTime;
+import org.noostak.appointment.domain.AppointmentHostSelectionTimeRepository;
 import org.noostak.appointment.domain.AppointmentRepository;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
@@ -13,6 +15,8 @@ import org.noostak.membergroup.domain.MemberGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -21,6 +25,7 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
     private final MemberGroupRepository memberGroupRepository;
     private final GroupRepository groupRepository;
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentHostSelectionTimeRepository appointmentHostSelectionTimeRepository;
 
     @Override
     @Transactional
@@ -29,6 +34,7 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
         Group group = findGroupById(groupId);
         Appointment appointment = createAppointment(group, memberId, request);
         saveAppointment(appointment);
+        saveAppointmentHostSelectionTimes(appointment, request);
     }
 
     private void verifyMemberIsInGroup(Long memberId, Long groupId) {
@@ -56,5 +62,13 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
 
     private void saveAppointment(Appointment appointment) {
         appointmentRepository.save(appointment);
+    }
+
+    private void saveAppointmentHostSelectionTimes(Appointment appointment, AppointmentCreateRequest request) {
+        List<AppointmentHostSelectionTime> selectionTimes = request.appointmentHostSelectionTimes().stream()
+                .map(timeRequest -> AppointmentHostSelectionTime.of(appointment, timeRequest.date(), timeRequest.startTime(), timeRequest.endTime()))
+                .toList();
+
+        appointmentHostSelectionTimeRepository.saveAll(selectionTimes);
     }
 }

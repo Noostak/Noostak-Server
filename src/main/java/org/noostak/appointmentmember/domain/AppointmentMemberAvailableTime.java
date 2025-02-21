@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AppointmentMemberAvailableTimes extends BaseTimeEntity {
+public class AppointmentMemberAvailableTime extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,15 +33,15 @@ public class AppointmentMemberAvailableTimes extends BaseTimeEntity {
     @Column(name = "appointment_member_available_end_time")
     private LocalDateTime endTime;
 
-    private AppointmentMemberAvailableTimes(final AppointmentMember appointmentMember, final LocalDateTime date, final LocalDateTime startTime, final LocalDateTime endTime) {
+    private AppointmentMemberAvailableTime(final AppointmentMember appointmentMember, final LocalDateTime date, final LocalDateTime startTime, final LocalDateTime endTime) {
         this.appointmentMember = appointmentMember;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public static AppointmentMemberAvailableTimes of(final AppointmentMember appointmentMember, final LocalDateTime date, final LocalDateTime startTime, final LocalDateTime endTime) {
-        return new AppointmentMemberAvailableTimes(appointmentMember, date, startTime, endTime);
+    public static AppointmentMemberAvailableTime of(final AppointmentMember appointmentMember, final LocalDateTime date, final LocalDateTime startTime, final LocalDateTime endTime) {
+        return new AppointmentMemberAvailableTime(appointmentMember, date, startTime, endTime);
     }
 }
 

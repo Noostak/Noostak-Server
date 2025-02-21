@@ -1,12 +1,14 @@
 package org.noostak.appointmentmember.domain.repository;
 
 import org.noostak.appointmentmember.domain.AppointmentMember;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class AppointmentMemberRepositoryTest implements AppointmentMemberRepository {
 
@@ -33,6 +35,13 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
         return appointmentMembers.stream()
                 .filter(member -> member.getMember().getId().equals(memberId) && member.getAppointment().getId().equals(appointmentId))
                 .findFirst();
+    }
+
+    @Override
+    public List<AppointmentMember> findAllWithAvailableTimes(Long appointmentId) {
+        return appointmentMembers.stream()
+                .filter(member -> member.getAppointment().getId().equals(appointmentId))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -76,14 +85,10 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Long> longs) {
-
-    }
+    public void deleteAllById(Iterable<? extends Long> longs) {}
 
     @Override
-    public void deleteAll(Iterable<? extends AppointmentMember> entities) {
-
-    }
+    public void deleteAll(Iterable<? extends AppointmentMember> entities) {}
 
     @Override
     public <S extends AppointmentMember> List<S> saveAll(Iterable<S> entities) {
@@ -108,14 +113,10 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<AppointmentMember> entities) {
-
-    }
+    public void deleteAllInBatch(Iterable<AppointmentMember> entities) {}
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> longs) {
-
-    }
+    public void deleteAllByIdInBatch(Iterable<Long> longs) {}
 
     @Override
     public void deleteAllInBatch() {
