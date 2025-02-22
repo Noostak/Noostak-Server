@@ -7,6 +7,7 @@ import org.noostak.auth.domain.AuthInfoRepository;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
+import org.noostak.auth.dto.SignInResponse;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.member.domain.Member;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,28 @@ public class AuthInfoServiceImpl implements AuthInfoService{
                 member.getId(),
                 authType
         );
+    }
+
+    @Override
+    public SignInResponse fetchByAuthId(AuthId authId) {
+        AuthInfo authInfo= authInfoRepository.getAuthInfoByAuthId(authId);
+
+        return SignInResponse.of(
+                null,
+                authInfo.getRefreshToken().value(),
+                authInfo.getMember().getId(),
+                authInfo.getAuthType().getName());
+    }
+
+    @Override
+    public SignInResponse fetchByAuthId(AuthId authId, String accessToken) {
+        AuthInfo authInfo= authInfoRepository.getAuthInfoByAuthId(authId);
+
+        return SignInResponse.of(
+                accessToken,
+                authInfo.getRefreshToken().value(),
+                authInfo.getMember().getId(),
+                authInfo.getAuthType().getName());
     }
 
     private AuthInfo createAuthInfo(AuthType authType, AuthId authId, RefreshToken refreshToken, Member member) {
