@@ -11,6 +11,8 @@ import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.common.success.AuthSuccessCode;
 import org.noostak.auth.domain.vo.AuthId;
+import org.noostak.auth.dto.SignInRequest;
+import org.noostak.auth.dto.SignInResponse;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.auth.application.AuthInfoService;
@@ -30,22 +32,40 @@ public class OauthController {
     private final AuthInfoService authInfoService;
     private final MemberService memberService;
 
+    @PostMapping("/sign-in")
+    public ResponseEntity<?> signIn(HttpServletRequest request, @RequestBody SignInRequest requestDto){
+        String givenAccessToken = request.getHeader("Authorization");
+
+        String authType = requestDto.getAuthType();
+        OauthService oauthService = oauthServiceFactory.getService(authType);
+
+        // TODO: 소셜 서비스 로그인 진행하기(유저 정보 불러오기)
+        //  -> 만약 유효하지 않은 액세스 토큰일 경우, 내부에서 에러 발생
+        AuthId authId = oauthService.login(givenAccessToken);
+
+        SignInResponse response = authInfoService.fetchByAuthId(authId,givenAccessToken);
+
+        // TODO: refreshToken으로 response 갱신하기
+        String refreshToken = response.getRefreshToken();
+
+        return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.SIGN_IN_COMPLETED,response)));
+    }
+
+
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(HttpServletRequest request, @ModelAttribute SignUpRequest requestDto){
         String code = request.getHeader("Authorization");
 
         // authType 을 기준으로 OauthService 선택하기
-        String authType = requestDto.getAuthType().toUpperCase();
+        String authType = requestDto.getAuthType();
         OauthService oauthService = oauthServiceFactory.getService(authType);
 
         // code를 통해서 AccessToken 및 RefreshToken 가져오기
         JwtToken jwtToken = oauthService.requestToken(code);
         String accessToken = jwtToken.getAccessToken();
-        log.info("jwtToken : {}", jwtToken);
 
-        // 소셜 로그인 진행하기
+        // 소셜 서비스 로그인 진행하기(유저 정보 불러오기)
         AuthId authId = oauthService.login(accessToken);
-
 
         // 동일 소셜 계정으로 가입이 되어있는지 확인하기
         if(authInfoService.hasAuthInfo(authId)){
@@ -59,6 +79,6 @@ public class OauthController {
         SignUpResponse response =
                 authInfoService.createAuthInfo(authType, authId, jwtToken, member);
 
-        return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.SIGNUP_COMPLETED,response)));
+        return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.SIGN_UP_COMPLETED,response)));
     }
 }
