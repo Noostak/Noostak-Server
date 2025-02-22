@@ -21,7 +21,8 @@ public class RefreshToken {
     public static RefreshToken from(String token){
         return new RefreshToken(token);
     }
-    public boolean expired(){
-        return true;
+
+    public String value(){
+        return token;
     }
 }
