@@ -1,0 +1,48 @@
+package org.noostak.auth.application.jwt;
+
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+
+@Component
+@Slf4j
+public class JwtTokenProvider {
+    private final SecretKey secretKey;
+
+    public JwtTokenProvider(String secretKey) {
+        log.info("secret: " + secretKey);
+        this.secretKey = Jwts.SIG.HS256.key().build();
+    }
+
+    public static JwtToken createToken(String accessToken, String refreshToken){
+        return new JwtToken("Bearer",accessToken,refreshToken);
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    public String getAuthId(String token) {
+
+        // TODO: 카카오, 구글 별로 액세스 토큰에서 AuthId 추출하기
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+}

@@ -16,7 +16,7 @@ public enum MemberErrorCode implements ErrorCode {
 
     AUTH_ID_NOT_EMPTY(HttpStatus.BAD_REQUEST, "인증 ID는 비어 있을 수 없습니다."),
     AUTH_ID_NOT_NULL(HttpStatus.BAD_REQUEST, "인증 ID는 null일 수 없습니다."),
-
+    MEMBER_PROFILE_UPLOAD_FAIL(HttpStatus.BAD_REQUEST, "멤버 이미지 업로드에 실패하였습니다."),
 
     ;
 

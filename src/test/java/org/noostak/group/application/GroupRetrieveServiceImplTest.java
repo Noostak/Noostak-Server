@@ -16,8 +16,6 @@ import org.noostak.infra.S3Service;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -51,7 +49,7 @@ class GroupRetrieveServiceImplTest {
 
         groupRetrieveService = new GroupRetrieveServiceImpl(memberGroupRepository, s3Service);
 
-        Member savedMember = saveMember("MemberOne", "key1", "authId1", "refreshToken1");
+        Member savedMember = saveMember("MemberOne", "key1");
         savedMemberId = savedMember.getId();
 
         Group savedGroup1 = saveGroup(savedMemberId, "StudyGroup", "group-images/1", "ABC123");
@@ -77,7 +75,7 @@ class GroupRetrieveServiceImplTest {
             // given
             Long memberId = savedMemberId;
 
-            List<MemberGroup> memberGroups = memberGroupRepository.findByMemberId(memberId);
+            List<MemberGroup> memberGroups = memberGroupRepository.findByMember_MemberId(memberId);
             assertThat(memberGroups).isNotEmpty();
 
             // when
@@ -92,8 +90,9 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("멤버가 하나의 그룹만 속해 있는 경우 정상 조회")
         void shouldRetrieveSingleGroupSuccessfully() {
             // given
-            Long memberId = saveMember("singleUser", "keySingle", "authIdSingle", "refreshTokenSingle").getId();
+            Long memberId = saveMember("singleUser", "keySingle").getId();
             Long groupId = saveGroup(memberId, "SingleGroup", "group-images/single", "SINGLE").getId();
+
             saveMemberGroup(memberId, groupId);
 
             // when
@@ -108,8 +107,9 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("여러 명의 멤버가 같은 그룹에 속한 경우 특정 멤버가 정상적으로 조회")
         void shouldRetrieveGroupsWhenMultipleMembersInSameGroup() {
             // given
-            Long member1 = saveMember("memberOne", "key1", "authId1", "refreshToken1").getId();
-            Long member2 = saveMember("memberTwo", "key2", "authId2", "refreshToken2").getId();
+
+            Long member1 = saveMember("memberOne", "key1").getId();
+            Long member2 = saveMember("memberTwo", "key2").getId();
             Long groupId = saveGroup(member1, "SharedGroup", "group-images/shared", "SHARED").getId();
 
             saveMemberGroup(member1, groupId);
@@ -175,14 +175,11 @@ class GroupRetrieveServiceImplTest {
         );
     }
 
-    private Member saveMember(String name, String key, String authId, String refreshToken) {
+    private Member saveMember(String name, String key) {
         return memberRepository.save(
                 Member.of(
                         MemberName.from(name),
-                        MemberProfileImageKey.from(key),
-                        AuthType.GOOGLE,
-                        AuthId.from(authId),
-                        refreshToken
+                        MemberProfileImageKey.from(key)
                 )
         );
     }
