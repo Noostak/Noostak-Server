@@ -35,4 +35,5 @@ public class Member extends BaseTimeEntity {
     
     public static Member of(final MemberName name, final MemberProfileImageKey key) {
         return new Member(name, key);
+    }
 }

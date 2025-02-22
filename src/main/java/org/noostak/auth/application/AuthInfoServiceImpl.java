@@ -33,7 +33,7 @@ public class AuthInfoServiceImpl implements AuthInfoService{
         return SignUpResponse.of(
                 jwtToken.getAccessToken(),
                 jwtToken.getRefreshToken(),
-                member.getMemberId(),
+                member.getId(),
                 authType
         );
     }
