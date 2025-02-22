@@ -8,9 +8,10 @@ import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
+import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
-import org.noostak.group.dto.response.GroupsRetrieveResponse;
+import org.noostak.group.dto.response.retrieve.GroupsRetrieveResponse;
 import org.noostak.infra.S3Service;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
@@ -20,7 +21,6 @@ import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
 import org.noostak.membergroup.domain.MemberGroup;
 import org.noostak.membergroup.domain.MemberGroupRepository;
-import org.noostak.server.group.domain.GroupRepositoryTest;
 
 import java.util.List;
 
@@ -50,14 +50,14 @@ class GroupRetrieveServiceImplTest {
         groupRetrieveService = new GroupRetrieveServiceImpl(memberGroupRepository, s3Service);
 
         Member savedMember = saveMember("MemberOne", "key1");
-        savedMemberId = savedMember.getMemberId();
+        savedMemberId = savedMember.getId();
 
         Group savedGroup1 = saveGroup(savedMemberId, "StudyGroup", "group-images/1", "ABC123");
         Group savedGroup2 = saveGroup(savedMemberId, "GamingClub", "group-images/2", "XYZ789");
         Group savedGroup3 = saveGroup(savedMemberId, "BookClub", "group-images/3", "LMN456");
-        savedGroup1Id = savedGroup1.getGroupId();
-        savedGroup2Id = savedGroup2.getGroupId();
-        savedGroup3Id = savedGroup3.getGroupId();
+        savedGroup1Id = savedGroup1.getId();
+        savedGroup2Id = savedGroup2.getId();
+        savedGroup3Id = savedGroup3.getId();
 
         saveMemberGroup(savedMemberId, savedGroup1Id);
         saveMemberGroup(savedMemberId, savedGroup2Id);
@@ -90,8 +90,9 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("멤버가 하나의 그룹만 속해 있는 경우 정상 조회")
         void shouldRetrieveSingleGroupSuccessfully() {
             // given
-            Long memberId = saveMember("singleUser", "keySingle").getMemberId();
-            Long groupId = saveGroup(memberId, "SingleGroup", "group-images/single", "SINGLE").getGroupId();
+            Long memberId = saveMember("singleUser", "keySingle").getId();
+            Long groupId = saveGroup(memberId, "SingleGroup", "group-images/single", "SINGLE").getId();
+
             saveMemberGroup(memberId, groupId);
 
             // when
@@ -106,9 +107,10 @@ class GroupRetrieveServiceImplTest {
         @DisplayName("여러 명의 멤버가 같은 그룹에 속한 경우 특정 멤버가 정상적으로 조회")
         void shouldRetrieveGroupsWhenMultipleMembersInSameGroup() {
             // given
-            Long member1 = saveMember("memberOne", "key1").getMemberId();
-            Long member2 = saveMember("memberTwo", "key2").getMemberId();
-            Long groupId = saveGroup(member1, "SharedGroup", "group-images/shared", "SHARED").getGroupId();
+
+            Long member1 = saveMember("memberOne", "key1").getId();
+            Long member2 = saveMember("memberTwo", "key2").getId();
+            Long groupId = saveGroup(member1, "SharedGroup", "group-images/shared", "SHARED").getId();
 
             saveMemberGroup(member1, groupId);
             saveMemberGroup(member2, groupId);

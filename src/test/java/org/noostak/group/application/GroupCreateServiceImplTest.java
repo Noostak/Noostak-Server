@@ -10,10 +10,11 @@ import org.mockito.MockitoAnnotations;
 import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.GroupRepository;
+import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.group.domain.vo.GroupInvitationCode;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.dto.request.GroupCreateRequest;
-import org.noostak.group.dto.response.GroupCreateInternalResponse;
+import org.noostak.group.dto.response.create.GroupCreateInternalResponse;
 import org.noostak.infra.KeyAndUrl;
 import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
@@ -21,7 +22,6 @@ import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
-import org.noostak.server.group.domain.GroupRepositoryTest;
 import org.noostak.member.MemberRepositoryTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -59,7 +59,7 @@ class GroupCreateServiceImplTest {
         memberRepository.deleteAll();
 
         Member savedMember = saveMember("jsoonworld", "key");
-        savedMemberId = savedMember.getMemberId();
+        savedMemberId = savedMember.getId();
 
         Mockito.when(invitationCodeGenerator.generate()).thenReturn(GroupInvitationCode.from("ABC123"));
 

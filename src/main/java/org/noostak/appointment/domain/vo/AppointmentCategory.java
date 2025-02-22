@@ -20,8 +20,9 @@ public enum AppointmentCategory {
     public static AppointmentCategory from(String category) {
         validateCategory(category);
 
+        String trimmedCategory = category.trim();
         return Arrays.stream(values())
-                .filter(c -> c.name().equalsIgnoreCase(category.trim()) || c.message.equals(category.trim()))
+                .filter(c -> c.getMessage().equals(trimmedCategory))
                 .findFirst()
                 .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.APPOINTMENT_CATEGORY_NOT_FOUND));
     }

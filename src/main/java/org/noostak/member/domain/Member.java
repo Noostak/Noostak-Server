@@ -13,7 +13,7 @@ public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long id;
 
     @Embedded
     @AttributeOverride(name = "name", column = @Column(name = "member_name"))
@@ -35,5 +35,4 @@ public class Member extends BaseTimeEntity {
     
     public static Member of(final MemberName name, final MemberProfileImageKey key) {
         return new Member(name, key);
-    }
 }

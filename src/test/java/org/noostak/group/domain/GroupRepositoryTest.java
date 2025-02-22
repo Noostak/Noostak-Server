@@ -1,4 +1,4 @@
-package org.noostak.server.group.domain;
+package org.noostak.group.domain;
 
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
@@ -26,7 +26,7 @@ public class GroupRepositoryTest implements GroupRepository {
 
     @Override
     public Group save(Group group) {
-        if (group.getGroupId() == null) {
+        if (group.getId() == null) {
             setId(group);
         }
         groups.add(group);
@@ -35,7 +35,7 @@ public class GroupRepositoryTest implements GroupRepository {
 
     private void setId(Group group) {
         try {
-            var groupIdField = Group.class.getDeclaredField("groupId");
+            var groupIdField = Group.class.getDeclaredField("id");
             groupIdField.setAccessible(true);
             groupIdField.set(group, idGenerator.getAndIncrement());
         } catch (NoSuchFieldException e) {
@@ -48,7 +48,7 @@ public class GroupRepositoryTest implements GroupRepository {
     @Override
     public Optional<Group> findById(Long id) {
         return groups.stream()
-                .filter(group -> group.getGroupId().equals(id))
+                .filter(group -> group.getId().equals(id))
                 .findFirst();
     }
 
@@ -74,7 +74,7 @@ public class GroupRepositoryTest implements GroupRepository {
 
     @Override
     public void deleteById(Long id) {
-        groups.removeIf(group -> group.getGroupId().equals(id));
+        groups.removeIf(group -> group.getId().equals(id));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class GroupRepositoryTest implements GroupRepository {
     @Override
     public boolean existsById(Long id) {
         return groups.stream()
-                .anyMatch(group -> group.getGroupId().equals(id));
+                .anyMatch(group -> group.getId().equals(id));
     }
 
     @Override
