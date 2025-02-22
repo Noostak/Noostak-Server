@@ -11,4 +11,8 @@ public class SignUpRequest {
     String memberName;
     MultipartFile memberProfileImage;
     String authType;
+
+    public String getAuthType(){
+        return authType.toUpperCase();
+    }
 }
