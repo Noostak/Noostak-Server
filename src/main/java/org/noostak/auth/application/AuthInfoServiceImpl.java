@@ -39,16 +39,6 @@ public class AuthInfoServiceImpl implements AuthInfoService{
         );
     }
 
-    @Override
-    public SignInResponse fetchByAuthId(AuthId authId) {
-        AuthInfo authInfo= authInfoRepository.getAuthInfoByAuthId(authId);
-
-        return SignInResponse.of(
-                null,
-                authInfo.getRefreshToken().value(),
-                authInfo.getMember().getId(),
-                authInfo.getAuthType().getName());
-    }
 
     @Override
     public SignInResponse fetchByAuthId(AuthId authId, String accessToken) {
@@ -59,6 +49,14 @@ public class AuthInfoServiceImpl implements AuthInfoService{
                 authInfo.getRefreshToken().value(),
                 authInfo.getMember().getId(),
                 authInfo.getAuthType().getName());
+    }
+
+    @Override
+    public AuthInfo updateRefreshToken(AuthId authId, String refreshToken) {
+        AuthInfo authInfo = authInfoRepository.getAuthInfoByAuthId(authId);
+        authInfo.setRefreshToken(RefreshToken.from(refreshToken));
+
+        return authInfoRepository.save(authInfo);
     }
 
     private AuthInfo createAuthInfo(AuthType authType, AuthId authId, RefreshToken refreshToken, Member member) {
@@ -72,11 +70,6 @@ public class AuthInfoServiceImpl implements AuthInfoService{
 
     private AuthInfo saveAuthInfo(AuthInfo authInfo){
         return authInfoRepository.save(authInfo);
-    }
-
-    @Override
-    public boolean hasAuthInfo(String authId){
-        return authInfoRepository.hasAuthInfoByAuthId(AuthId.from(authId));
     }
 
     @Override

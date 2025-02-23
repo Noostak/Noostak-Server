@@ -10,10 +10,9 @@ import org.noostak.member.domain.Member;
 public interface AuthInfoService {
     SignUpResponse createAuthInfo(String authType, AuthId authId, JwtToken jwtToken, Member member);
 
-    SignInResponse fetchByAuthId(AuthId authId);
     SignInResponse fetchByAuthId(AuthId authId, String accessToken);
 
-    boolean hasAuthInfo(String authId);
+    AuthInfo updateRefreshToken(AuthId authId, String refreshToken);
 
     boolean hasAuthInfo(AuthId authId);
 }
