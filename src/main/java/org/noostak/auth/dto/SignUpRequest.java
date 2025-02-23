@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class SignUpRequest {
     String memberName;
     MultipartFile memberProfileImage;
+    String authId;
     String authType;
 
     public String getAuthType(){
