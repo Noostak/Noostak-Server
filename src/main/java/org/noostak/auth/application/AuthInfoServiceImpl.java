@@ -7,6 +7,7 @@ import org.noostak.auth.domain.AuthInfoRepository;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
+import org.noostak.auth.dto.AuthorizeResponse;
 import org.noostak.auth.dto.SignInResponse;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.member.domain.Member;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthInfoServiceImpl implements AuthInfoService{
 
     private final AuthInfoRepository authInfoRepository;
@@ -52,6 +54,7 @@ public class AuthInfoServiceImpl implements AuthInfoService{
     }
 
     @Override
+    @Transactional
     public AuthInfo updateRefreshToken(AuthId authId, String refreshToken) {
         AuthInfo authInfo = authInfoRepository.getAuthInfoByAuthId(authId);
         authInfo.setRefreshToken(RefreshToken.from(refreshToken));
@@ -66,6 +69,17 @@ public class AuthInfoServiceImpl implements AuthInfoService{
                 refreshToken,
                 member
         );
+    }
+
+    @Override
+    public AuthorizeResponse authorize(String authType, AuthId authId, JwtToken jwtToken) {
+        boolean isMember = hasAuthInfo(authId);
+
+        if(isMember){
+            updateRefreshToken(authId, jwtToken.getRefreshToken());
+        }
+
+        return AuthorizeResponse.of(isMember, authId, authType, jwtToken);
     }
 
     private AuthInfo saveAuthInfo(AuthInfo authInfo){
