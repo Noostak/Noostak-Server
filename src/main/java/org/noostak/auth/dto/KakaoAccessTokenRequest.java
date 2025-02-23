@@ -12,28 +12,25 @@ import java.nio.charset.StandardCharsets;
 @Getter
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class KakaoTokenRequest {
+public class KakaoAccessTokenRequest {
 
     private String grantType;
 
     private String clientId;
 
-    private String redirectUri;
-
-    private String code;
+    private String refreshToken;
 
     private String clientSecret;
 
-    private KakaoTokenRequest(String clientId, String redirectUri, String code, String clientSecret) {
-        this.grantType = "authorization_code";
+    private KakaoAccessTokenRequest(String clientId, String refreshToken, String clientSecret) {
+        this.grantType = "refresh_token";
         this.clientId = clientId;
-        this.redirectUri = redirectUri;
-        this.code = code;
+        this.refreshToken = refreshToken;
         this.clientSecret = clientSecret;
     }
 
-    public static KakaoTokenRequest of(String clientId, String redirectUri, String code, String clientSecret){
-        return new KakaoTokenRequest(clientId,redirectUri,code, clientSecret);
+    public static KakaoAccessTokenRequest of(String clientId, String refreshToken, String clientSecret){
+        return new KakaoAccessTokenRequest(clientId,refreshToken,clientSecret);
     }
 
     public String getUrlEncodedParams() {
@@ -41,8 +38,7 @@ public class KakaoTokenRequest {
 
         params.append("grant_type=").append(URLEncoder.encode(grantType, StandardCharsets.UTF_8));
         params.append("&client_id=").append(URLEncoder.encode(clientId, StandardCharsets.UTF_8));
-        params.append("&redirect_uri=").append(URLEncoder.encode(redirectUri, StandardCharsets.UTF_8));
-        params.append("&code=").append(URLEncoder.encode(code, StandardCharsets.UTF_8));
+        params.append("&refresh_token=").append(URLEncoder.encode(refreshToken, StandardCharsets.UTF_8));
         params.append("&client_secret=").append(URLEncoder.encode(clientSecret, StandardCharsets.UTF_8));
 
         return params.toString();

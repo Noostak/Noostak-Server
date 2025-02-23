@@ -30,4 +30,14 @@ public class OauthServiceFactory {
 
         return serviceMap.get(authType);
     }
+
+    public OauthService getService(AuthType authType) {
+        OauthService service = serviceMap.get(authType.getName());
+
+        if(service == null){
+            throw new AuthException(AuthErrorCode.AUTH_TYPE_NOT_EXISTS, authType);
+        }
+
+        return serviceMap.get(authType.getName());
+    }
 }

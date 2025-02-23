@@ -34,6 +34,10 @@ public class AuthInfo {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public void setRefreshToken(RefreshToken refreshToken){
+        this.refreshToken = refreshToken;
+    }
+
     private AuthInfo(AuthType authType, AuthId authId, RefreshToken refreshToken, Member member) {
         this.authType = authType;
         this.authId = authId;

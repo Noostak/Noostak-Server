@@ -6,6 +6,7 @@ import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
+import org.noostak.auth.common.exception.ExternalApiException;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.dto.*;
 import org.springframework.http.HttpHeaders;
@@ -18,21 +19,20 @@ public class KakaoServiceImpl implements KakaoService{
     private final KakaoTokenRequestFactory kakaoTokenRequestFactory;
     private final RestClient restClient;
     @Override
-    public void requestAccessToken(String refreshToken) {
+    public JwtToken requestAccessToken(String givenRefreshToken) throws ExternalApiException {
+        String url = KaKaoApi.TOKEN_REQUEST.getUrl();
 
-    }
+        KakaoAccessTokenRequest request =
+                kakaoTokenRequestFactory.createAccessTokenRequest(givenRefreshToken);
 
-    @Override
-    public TokenInfo fetchTokenInfo(String accessToken) {
-        String url = KaKaoApi.FETCH_TOKEN.getUrl();
-        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
-
-        KakaoTokenInfoResponse response =
-                restClient.postRequest(url, headers, KakaoTokenInfoResponse.class);
+        KakaoAccessTokenResponse response =
+                restClient.postRequest(url,
+                        request.getUrlEncodedParams(),
+                        KakaoAccessTokenResponse.class);
 
         response.validate();
 
-        return TokenInfo.of(response.getId());
+        return JwtTokenProvider.createToken(response.getAccessToken(), response.getRefreshToken());
     }
 
 
@@ -53,7 +53,7 @@ public class KakaoServiceImpl implements KakaoService{
     }
 
     @Override
-    public AuthId login(String accessToken) {
+    public AuthId verify(String accessToken) {
         String url = KaKaoApi.USER_INFO.getUrl();
 
         HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);

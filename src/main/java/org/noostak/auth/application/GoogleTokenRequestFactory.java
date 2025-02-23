@@ -1,5 +1,6 @@
 package org.noostak.auth.application;
 
+import org.noostak.auth.dto.GoogleAccessTokenRequest;
 import org.noostak.auth.dto.GoogleTokenRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -25,5 +26,9 @@ public class GoogleTokenRequestFactory {
 
     public GoogleTokenRequest createRequest(String code) {
         return GoogleTokenRequest.of(clientId, redirectUri, code, clientSecret);
+    }
+
+    public GoogleAccessTokenRequest createAccessTokenRequest(String refreshToken) {
+        return GoogleAccessTokenRequest.of(clientId, refreshToken, clientSecret);
     }
 }
