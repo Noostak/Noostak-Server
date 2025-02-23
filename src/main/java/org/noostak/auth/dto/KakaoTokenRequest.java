@@ -22,15 +22,18 @@ public class KakaoTokenRequest {
 
     private String code;
 
-    private KakaoTokenRequest(String clientId, String redirectUri, String code) {
+    private String clientSecret;
+
+    private KakaoTokenRequest(String clientId, String redirectUri, String code, String clientSecret) {
         this.grantType = "authorization_code";
         this.clientId = clientId;
         this.redirectUri = redirectUri;
         this.code = code;
+        this.clientSecret = clientSecret;
     }
 
-    public static KakaoTokenRequest of(String clientId, String redirectUri, String code){
-        return new KakaoTokenRequest(clientId,redirectUri,code);
+    public static KakaoTokenRequest of(String clientId, String redirectUri, String code, String clientSecret){
+        return new KakaoTokenRequest(clientId,redirectUri,code, clientSecret);
     }
 
     public String getUrlEncodedParams() {
@@ -40,6 +43,7 @@ public class KakaoTokenRequest {
         params.append("&client_id=").append(URLEncoder.encode(clientId, StandardCharsets.UTF_8));
         params.append("&redirect_uri=").append(URLEncoder.encode(redirectUri, StandardCharsets.UTF_8));
         params.append("&code=").append(URLEncoder.encode(code, StandardCharsets.UTF_8));
+        params.append("&client_secret=").append(URLEncoder.encode(clientSecret, StandardCharsets.UTF_8));
 
         return params.toString();
     }
