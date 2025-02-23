@@ -1,13 +1,13 @@
 package org.noostak.auth.common.exception;
 
 
-public class GoogleApiException extends RuntimeException {
+public class GoogleApiException extends ExternalApiException {
 
     public GoogleApiException(GoogleApiErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
     }
 
     public GoogleApiException(GoogleApiErrorCode errorCode, Object ... args) {
-        super(errorCode.getMessage(args));
+        super(errorCode, args);
     }
 }

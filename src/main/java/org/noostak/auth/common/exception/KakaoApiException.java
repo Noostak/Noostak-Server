@@ -1,13 +1,13 @@
 package org.noostak.auth.common.exception;
 
 
-public class KakaoApiException extends RuntimeException {
+public class KakaoApiException extends ExternalApiException {
 
     public KakaoApiException(KakaoApiErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
     }
 
     public KakaoApiException(KakaoApiErrorCode errorCode, Object ... args) {
-        super(errorCode.getMessage(args));
+        super(errorCode, args);
     }
 }
