@@ -20,6 +20,6 @@ public interface AuthInfoRepository extends JpaRepository<AuthInfo, Long> {
 
     default AuthInfo getAuthInfoByAuthId(AuthId authid){
         return this.findByAuthId(authid)
-                .orElseThrow(()->new AuthException(AuthErrorCode.AUTH_INFO_NOT_EXISTS, authid));
+                .orElseThrow(()->new AuthException(AuthErrorCode.AUTH_ID_NOT_EXISTS, authid));
     }
 }
