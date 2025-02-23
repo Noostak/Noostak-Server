@@ -21,16 +21,21 @@ public class GoogleServiceImpl implements GoogleService{
     private final RestClient restClient;
 
     @Override
-    public void requestAccessToken(String refreshToken) {
+    public JwtToken requestAccessToken(String givenRefreshToken) {
+        String url = GoogleApi.TOKEN_REQUEST.getUrl();
 
+        GoogleAccessTokenRequest request =
+                googleTokenRequestFactory.createAccessTokenRequest(givenRefreshToken);
+
+        GoogleAccessTokenResponse response =
+                restClient.postRequest(url,
+                        request.getUrlEncodedParams(),
+                        GoogleAccessTokenResponse.class);
+
+        response.validate();
+
+        return JwtTokenProvider.createToken(response.getAccessToken(), response.getRefreshToken());
     }
-
-
-    @Override
-    public TokenInfo fetchTokenInfo(String accessToken) {
-        return null;
-    }
-
 
     @Override
     public JwtToken requestToken(String code) {
@@ -50,7 +55,7 @@ public class GoogleServiceImpl implements GoogleService{
     }
 
     @Override
-    public AuthId login(String accessToken) {
+    public AuthId verify(String accessToken) {
         String url = GoogleApi.USER_INFO.getUrl();
 
         HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
