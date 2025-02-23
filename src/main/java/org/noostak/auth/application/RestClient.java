@@ -1,6 +1,5 @@
 package org.noostak.auth.application;
 
-import lombok.extern.slf4j.Slf4j;
 import org.noostak.auth.common.exception.RestClientErrorCode;
 import org.noostak.auth.common.exception.RestClientException;
 import org.springframework.http.HttpEntity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-@Slf4j
 public class RestClient {
 
     private final RestTemplate restTemplate;

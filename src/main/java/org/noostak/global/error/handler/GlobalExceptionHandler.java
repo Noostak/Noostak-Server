@@ -1,18 +1,17 @@
 package org.noostak.global.error.handler;
 
-import lombok.extern.slf4j.Slf4j;
 import org.noostak.global.error.core.BaseException;
 import org.noostak.global.error.core.ErrorResponse;
+import org.noostak.global.utils.GlobalLogger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException e) {
-        log.error("Error: {}",e.toString());
+        GlobalLogger.error(e.toString());
 
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
@@ -21,7 +20,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
-        log.error("Error: {}",e.toString());
+        GlobalLogger.error(e.toString());
 
         return ResponseEntity
                 .status(GlobalErrorCode.INTERNAL_SERVER_ERROR.getStatus())
@@ -30,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
-        log.error("Error: {}",e.toString());
+        GlobalLogger.error(e.toString());
 
         return ResponseEntity
                 .status(GlobalErrorCode.INTERNAL_SERVER_ERROR.getStatus())

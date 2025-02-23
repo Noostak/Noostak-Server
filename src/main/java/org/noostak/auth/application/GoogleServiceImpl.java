@@ -2,7 +2,6 @@ package org.noostak.auth.application;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class GoogleServiceImpl implements GoogleService{
 
     private final GoogleTokenRequestFactory googleTokenRequestFactory;
@@ -48,7 +46,6 @@ public class GoogleServiceImpl implements GoogleService{
                         request.getUrlEncodedParams(),
                         GoogleTokenResponse.class);
 
-        log.info("googleTokenResponse: {}",response);
         response.validate();
 
         return JwtTokenProvider.createToken(response.getAccessToken(),response.getRefreshToken());

@@ -2,19 +2,15 @@ package org.noostak.auth.application.jwt;
 
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 
 @Component
-@Slf4j
 public class JwtTokenProvider {
     private final SecretKey secretKey;
 
     public JwtTokenProvider(String secretKey) {
-        log.info("secret: " + secretKey);
         this.secretKey = Jwts.SIG.HS256.key().build();
     }
 
