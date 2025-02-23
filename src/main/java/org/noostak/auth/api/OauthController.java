@@ -84,7 +84,7 @@ public class OauthController {
         return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.SIGN_UP_COMPLETED,response)));
     }
 
-    @PostMapping("/token-reissue")
+    @PostMapping("/token-reissue/access-token")
     public ResponseEntity<?> tokenReissue(HttpServletRequest request){
         String bearerToken = request.getHeader("Authorization");
         String givenRefreshToken = JwtToken.extractToken(bearerToken);
