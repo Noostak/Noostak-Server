@@ -3,6 +3,8 @@ package org.noostak.auth.domain.vo;
 
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
+import org.noostak.auth.common.exception.AuthErrorCode;
+import org.noostak.auth.common.exception.AuthException;
 
 @Embeddable
 @EqualsAndHashCode
@@ -15,11 +17,18 @@ public class RefreshToken {
     }
 
     private RefreshToken(String token) {
+        validate();
         this.token = token;
     }
 
     public static RefreshToken from(String token){
         return new RefreshToken(token);
+    }
+
+    private void validate(){
+        if(token == null){
+            throw new AuthException(AuthErrorCode.REFRESH_TOKEN_IS_NOT_NULL);
+        }
     }
 
     public String value(){

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum AuthErrorCode implements ErrorCode {
+    REFRESH_TOKEN_IS_NOT_NULL(HttpStatus.BAD_REQUEST,"refreshToken은 null이 될 수 없습니다."),
     AUTH_TYPE_NOT_EXISTS(HttpStatus.NOT_FOUND, "입력된 AuthType을 찾을 수 없습니다. 입력값 : %s"),
     AUTH_INFO_NOT_EXISTS(HttpStatus.NOT_FOUND, "입력된 AuthId를 찾을 수 없습니다. 입력값 : %s"),
     AUTHID_ALREADY_EXISTS(HttpStatus.NOT_FOUND, "동일한 AuthId가 존재합니다. 입력값 : %s"),
