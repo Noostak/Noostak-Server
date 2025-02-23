@@ -1,7 +1,5 @@
 package org.noostak.auth.application.jwt;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
