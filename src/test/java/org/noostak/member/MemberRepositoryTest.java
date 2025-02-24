@@ -22,25 +22,24 @@ public class MemberRepositoryTest implements MemberRepository {
     @Override
     public Member save(Member member) {
         try {
-            if (member.getMemberId() == null) {
-                var memberIdField = Member.class.getDeclaredField("memberId");
-                memberIdField.setAccessible(true);
-                memberIdField.set(member, idGenerator.getAndIncrement());
+            if (member.getId() == null) {
+                var idField = Member.class.getDeclaredField("id"); // ✅ 변경: "memberId" → "id"
+                idField.setAccessible(true);
+                idField.set(member, idGenerator.getAndIncrement());
             }
         } catch (NoSuchFieldException e) {
-            throw new RuntimeException("[ERROR] 'memberId' 필드를 Member 클래스에서 찾을 수 없습니다. 필드 이름이 정확한지 확인하세요.", e);
+            throw new RuntimeException("[ERROR] 'id' 필드를 Member 클래스에서 찾을 수 없습니다. 필드 이름이 정확한지 확인하세요.", e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("[ERROR] Member 클래스의 'memberId' 필드에 접근할 수 없습니다. 접근 제한자가 적절한지 확인하세요.", e);
+            throw new RuntimeException("[ERROR] Member 클래스의 'id' 필드에 접근할 수 없습니다. 접근 제한자가 적절한지 확인하세요.", e);
         }
         members.add(member);
         return member;
     }
 
-
     @Override
     public Optional<Member> findById(Long id) {
         return members.stream()
-                .filter(member -> member.getMemberId().equals(id))
+                .filter(member -> member.getId().equals(id))
                 .findFirst();
     }
 
@@ -56,7 +55,7 @@ public class MemberRepositoryTest implements MemberRepository {
 
     @Override
     public void deleteById(Long id) {
-        members.removeIf(member -> member.getMemberId().equals(id));
+        members.removeIf(member -> member.getId().equals(id));
     }
 
     @Override
@@ -76,7 +75,7 @@ public class MemberRepositoryTest implements MemberRepository {
 
     @Override
     public boolean existsById(Long id) {
-        return members.stream().anyMatch(member -> member.getMemberId().equals(id));
+        return members.stream().anyMatch(member -> member.getId().equals(id));
     }
 
     @Override

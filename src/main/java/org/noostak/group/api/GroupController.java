@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.group.application.GroupService;
 import org.noostak.group.dto.request.GroupCreateRequest;
-import org.noostak.group.dto.response.GroupCreateResponse;
-import org.noostak.group.dto.response.GroupsRetrieveResponse;
+import org.noostak.group.dto.response.create.GroupCreateResponse;
+import org.noostak.group.dto.response.info.GroupInfoResponse;
+import org.noostak.group.dto.response.retrieve.GroupsRetrieveResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static org.noostak.group.common.success.GroupSuccessCode.GROUP_CREATED;
-import static org.noostak.group.common.success.GroupSuccessCode.GROUP_RETRIEVED;
+import static org.noostak.group.common.success.GroupSuccessCode.*;
 
 @RestController
 @RequestMapping("/api/v1/groups")
@@ -40,5 +40,15 @@ public class GroupController {
         Long memberId = 1L;
         GroupsRetrieveResponse groups = groupService.findGroups(memberId);
         return ResponseEntity.ok(SuccessResponse.of(GROUP_RETRIEVED, groups));
+    }
+
+    @GetMapping("/{groupId}/members")
+    public ResponseEntity<SuccessResponse<GroupInfoResponse>> getGroupInfo(
+            // @AuthenticationPrincipal Long memberId,
+            @PathVariable Long groupId
+    ) {
+        Long memberId = 1L;
+        GroupInfoResponse groupInfo = groupService.getGroupInfo(memberId, groupId);
+        return ResponseEntity.ok(SuccessResponse.of(GROUP_INFO, groupInfo));
     }
 }

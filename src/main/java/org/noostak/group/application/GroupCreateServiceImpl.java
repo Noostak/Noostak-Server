@@ -9,13 +9,12 @@ import org.noostak.group.domain.vo.GroupInvitationCode;
 import org.noostak.group.domain.vo.GroupName;
 import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.group.dto.request.GroupCreateRequest;
-import org.noostak.group.dto.response.GroupCreateInternalResponse;
+import org.noostak.group.dto.response.create.GroupCreateInternalResponse;
 import org.noostak.infra.KeyAndUrl;
 import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,7 +50,7 @@ public class GroupCreateServiceImpl implements GroupCreateService {
     private Group createGroup(Member groupHost, String groupName, String profileImageKey) {
         GroupInvitationCode invitationCode = invitationCodeGenerator.generate();
         return Group.of(
-                groupHost.getMemberId(),
+                groupHost.getId(),
                 GroupName.from(groupName),
                 GroupProfileImageKey.from(profileImageKey),
                 invitationCode.value()
