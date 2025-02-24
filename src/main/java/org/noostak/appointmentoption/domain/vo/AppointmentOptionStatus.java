@@ -7,10 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AppointmentOptionStatus {
-
     CONFIRMED("확정"),
-    UNCONFIRMED("미확정")
-
+    UNCONFIRMED("미정")
     ;
 
     private final String message;
