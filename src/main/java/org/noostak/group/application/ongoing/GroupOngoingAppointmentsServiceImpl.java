@@ -3,6 +3,7 @@ package org.noostak.group.application.ongoing;
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointment.domain.AppointmentRepository;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.Group;
@@ -23,6 +24,7 @@ public class GroupOngoingAppointmentsServiceImpl implements GroupOngoingAppointm
 
     private final GroupRepository groupRepository;
     private final AppointmentRepository appointmentRepository;
+    private final AppointmentMemberRepository appointmentMemberRepository;
     private final S3Service s3Service;
 
     @Override
@@ -56,11 +58,16 @@ public class GroupOngoingAppointmentsServiceImpl implements GroupOngoingAppointm
         List<Appointment> ongoingAppointments = appointmentRepository.findOngoingAppointmentsByGroup(group);
 
         return ongoingAppointments.stream()
-                .map(appointment -> OngoingAppointmentResponse.of(
-                        appointment.getId(),
-                        appointment.getName().value(),
-                        appointment.getMemberCount().value()
-                ))
+                .map(appointment -> {
+                    Long availableGroupMemberCount = appointmentMemberRepository.countMembersWithTimeSet(appointment.getId());
+
+                    return OngoingAppointmentResponse.of(
+                            appointment.getId(),
+                            appointment.getName().value(),
+                            availableGroupMemberCount,
+                            appointment.getTime()
+                    );
+                })
                 .toList();
     }
 }
