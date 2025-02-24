@@ -1,4 +1,4 @@
-package org.noostak.group.application;
+package org.noostak.group.application.info;
 
 import lombok.RequiredArgsConstructor;
 import org.noostak.group.common.exception.GroupErrorCode;
