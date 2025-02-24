@@ -75,7 +75,7 @@ class GroupRetrieveServiceImplTest {
             // given
             Long memberId = savedMemberId;
 
-            List<MemberGroup> memberGroups = memberGroupRepository.findByMember_MemberId(memberId);
+            List<MemberGroup> memberGroups = memberGroupRepository.findByMemberId(memberId);
             assertThat(memberGroups).isNotEmpty();
 
             // when

@@ -50,7 +50,7 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     }
 
     @Override
-    public List<MemberGroup> findByMember_MemberId(Long memberId) {
+    public List<MemberGroup> findByMemberId(Long memberId) {
         return memberGroups.stream()
                 .filter(memberGroup -> memberGroup.getMember().getId().equals(memberId))
                 .toList();

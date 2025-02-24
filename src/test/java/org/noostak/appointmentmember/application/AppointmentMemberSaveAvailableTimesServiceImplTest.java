@@ -24,8 +24,6 @@ import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointment.domain.AppointmentRepositoryTest;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -245,10 +243,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
         Member savedMember = memberRepository.save(
                 Member.of(
                         MemberName.from(name),
-                        MemberProfileImageKey.from("default-key"),
-                        AuthType.GOOGLE,
-                        AuthId.from("auth-id"),
-                        "refresh-token"
+                        MemberProfileImageKey.from("default-key")
                 )
         );
         return savedMember.getId();
