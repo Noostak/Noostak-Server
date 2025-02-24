@@ -41,4 +41,13 @@ public class AppointmentMemberRepositoryImpl implements AppointmentMemberReposit
                 .distinct()
                 .fetch();
     }
+
+    @Override
+    public Long countMembersWithTimeSet(Long appointmentId) {
+        return queryFactory
+                .selectFrom(appointmentMember)
+                .where(appointmentMember.appointment.id.eq(appointmentId))
+                .where(appointmentMember.appointmentTimeSet.isTrue())
+                .fetchCount();
+    }
 }
