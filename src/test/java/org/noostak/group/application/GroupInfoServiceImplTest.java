@@ -1,6 +1,8 @@
 package org.noostak.group.application;
 
 import org.junit.jupiter.api.*;
+import org.noostak.group.application.info.GroupInfoService;
+import org.noostak.group.application.info.GroupInfoServiceImpl;
 import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.Group;

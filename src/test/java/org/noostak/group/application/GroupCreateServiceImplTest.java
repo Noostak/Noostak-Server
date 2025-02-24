@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.noostak.group.application.create.GroupCreateServiceImpl;
 import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.GroupRepository;
