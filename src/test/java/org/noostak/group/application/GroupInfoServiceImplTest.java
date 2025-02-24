@@ -13,8 +13,6 @@ import org.noostak.infra.S3Service;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -118,7 +116,7 @@ public class GroupInfoServiceImplTest {
     private void initializeMembers() {
         members.clear();
         IntStream.rangeClosed(1, 10)
-                .mapToObj(i -> createAndSaveMember("장순" + (char) ('가' + i), "key" + i, "authId" + i, "refreshToken" + i))
+                .mapToObj(i -> createAndSaveMember("장순" + (char) ('가' + i), "key" + i))
                 .map(memberId -> memberRepository.findById(memberId).orElseThrow())
                 .forEach(members::add);
         savedMemberId = members.get(0).getId();
@@ -133,13 +131,10 @@ public class GroupInfoServiceImplTest {
         savedGroupId = groups.get(0).getId();
     }
 
-    private Long createAndSaveMember(String name, String key, String authId, String refreshToken) {
+    private Long createAndSaveMember(String name, String key) {
         return memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from(key),
-                AuthType.GOOGLE,
-                AuthId.from(authId),
-                refreshToken
+                MemberProfileImageKey.from(key)
         )).getId();
     }
 

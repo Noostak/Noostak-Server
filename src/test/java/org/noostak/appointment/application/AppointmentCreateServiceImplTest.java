@@ -16,8 +16,6 @@ import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -120,7 +118,7 @@ public class AppointmentCreateServiceImplTest {
     }
 
     private void initializeTestData() {
-        savedMemberId = createAndSaveMember("사용자One", "profilekeyOne", "authid12", "refresh-token1");
+        savedMemberId = createAndSaveMember("사용자One", "profilekeyOne");
         savedGroupId = createAndSaveGroup(savedMemberId, "테스트그룹", "group-image/1", "INVITE");
         saveMemberGroup(savedMemberId, savedGroupId);
     }
@@ -135,13 +133,10 @@ public class AppointmentCreateServiceImplTest {
         );
     }
 
-    private Long createAndSaveMember(String name, String profileKey, String authId, String refreshToken) {
+    private Long createAndSaveMember(String name, String profileKey) {
         return memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from(profileKey),
-                AuthType.GOOGLE,
-                AuthId.from(authId),
-                refreshToken
+                MemberProfileImageKey.from(profileKey)
         )).getId();
     }
 

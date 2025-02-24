@@ -48,37 +48,6 @@ class KakaoServiceImplTest {
     @Nested
     @DisplayName("성공 케이스")
     class Success {
-        @Test
-        @DisplayName("토큰 정보 조회 테스트")
-        void fetchTokenInfoTest() {
-            // given
-            KakaoTokenInfoResponse mockResponse = mock(KakaoTokenInfoResponse.class);
-            when(mockResponse.getId()).thenReturn(MOCK_KAKAO_ID);
-            doNothing().when(mockResponse).validate();
-
-            when(restClient.postRequest(
-                    eq(KaKaoApi.FETCH_TOKEN.getUrl()),
-                    any(HttpHeaders.class),
-                    eq(KakaoTokenInfoResponse.class)))
-                    .thenReturn(mockResponse);
-
-            try (MockedStatic<TokenInfo> mockedStatic = mockStatic(TokenInfo.class)) {
-                TokenInfo expectedTokenInfo = mock(TokenInfo.class);
-                mockedStatic.when(() -> TokenInfo.of(MOCK_KAKAO_ID)).thenReturn(expectedTokenInfo);
-
-                // when
-                TokenInfo result = kakaoService.fetchTokenInfo(MOCK_ACCESS_TOKEN);
-
-                // then
-                assertThat(result).isEqualTo(expectedTokenInfo);
-
-                verify(mockResponse).validate();
-                verify(restClient).postRequest(
-                        eq(KaKaoApi.FETCH_TOKEN.getUrl()),
-                        any(HttpHeaders.class),
-                        eq(KakaoTokenInfoResponse.class));
-            }
-        }
 
         @Test
         @DisplayName("토큰 요청 테스트")
