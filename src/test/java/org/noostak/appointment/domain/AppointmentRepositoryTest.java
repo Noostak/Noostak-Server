@@ -1,11 +1,14 @@
 package org.noostak.appointment.domain;
 
+import org.noostak.appointment.domain.vo.AppointmentStatus;
+import org.noostak.group.domain.Group;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class AppointmentRepositoryTest implements AppointmentRepository {
@@ -37,7 +40,6 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
         }
         return result;
     }
-
 
     @Override
     public Optional<Appointment> findById(Long id) {
@@ -90,12 +92,10 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
 
     @Override
     public List<Appointment> findAllById(Iterable<Long> ids) {
-        List<Appointment> result = new ArrayList<>();
-        StreamSupport.stream(ids.spliterator(), false)
+        return StreamSupport.stream(ids.spliterator(), false)
                 .map(this::findById)
                 .flatMap(Optional::stream)
-                .forEach(result::add);
-        return result;
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -189,5 +189,13 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
     @Override
     public <S extends Appointment, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
+    }
+
+    @Override
+    public List<Appointment> findOngoingAppointmentsByGroup(Group group) {
+        return appointments.stream()
+                .filter(appointment -> appointment.getGroup().equals(group))
+                .filter(appointment -> appointment.getAppointmentStatus().equals(AppointmentStatus.PROGRESS))
+                .collect(Collectors.toList());
     }
 }
