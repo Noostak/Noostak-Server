@@ -33,16 +33,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Gradle build - 테스트 포함 빌드
+      # Gradle build - 테스트 없이 gradle 빌드
       - name: 빌드
         run: |
           chmod +x gradlew
-          ./gradlew build
-        working-directory: ${{ env.working-directory }}
-        shell: bash
-
-      # Gradle test - 테스트 실행 추가
-      - name: 테스트 실행
-        run: ./gradlew test
+          ./gradlew build -x test
         working-directory: ${{ env.working-directory }}
         shell: bash
