@@ -12,7 +12,8 @@ import java.util.Arrays;
 public enum AuthType {
     KAKAO("KAKAO"),
     GOOGLE("GOOGLE"),
-    APPLE("APPLE");
+
+    ;
 
     private final String name;
 
