@@ -12,6 +12,7 @@ import org.noostak.likes.common.exception.LikesErrorCode;
 import org.noostak.likes.common.exception.LikesException;
 import org.noostak.likes.domain.Like;
 import org.noostak.likes.domain.LikeRepository;
+import org.noostak.likes.dto.DecreaseResponse;
 import org.noostak.likes.dto.IncreaseResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,16 @@ public class LikeServiceImpl implements LikeService{
         createLike(memberId, appointmentId, appointmentOptionId);
 
         int likes = getLikeCountByOptionId(appointmentOptionId);
-        return IncreaseResponse.of(likes+1);
+        return IncreaseResponse.of(likes);
+    }
+
+    @Override
+    @Transactional
+    public DecreaseResponse decrease(Long memberId, Long appointmentId, Long appointmentOptionId) {
+        deleteLike(memberId, appointmentId, appointmentOptionId);
+
+        int likes = getLikeCountByOptionId(appointmentOptionId);
+        return DecreaseResponse.of(likes);
     }
 
     @Override
@@ -40,6 +50,24 @@ public class LikeServiceImpl implements LikeService{
         return likeRepository.getLikeCountByOptionId(appointmentOptionId);
     }
 
+
+    private void deleteLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+
+        int count = getLikeCountByOptionId(appointmentOptionId);
+
+        if(count == 0){
+            throw new LikesException(LikesErrorCode.LIKES_NOT_NEGATIVE);
+        }
+
+        AppointmentMember appointmentMember =
+                appointmentMemberRepository
+                        .findByMemberIdAndAppointmentId(memberId, appointmentId)
+                        .orElseThrow(()->new AppointmentMemberException(AppointmentErrorCode.APPOINTMENT_NOT_FOUND));
+
+        Long appointmentMemberId = appointmentMember.getId();
+
+        likeRepository.deleteLikeByAppointmentMemberIdAndOptionId(appointmentMemberId,appointmentOptionId);
+    }
 
     private void createLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
 
