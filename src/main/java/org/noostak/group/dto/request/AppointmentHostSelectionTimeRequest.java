@@ -1,4 +1,4 @@
-package org.noostak.appointment.dto.request;
+package org.noostak.group.dto.request;
 
 import java.time.LocalDateTime;
 
