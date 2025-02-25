@@ -1,6 +1,7 @@
 package org.noostak.group.api;
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.group.dto.request.AppointmentCreateRequest;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.group.application.GroupService;
 import org.noostak.group.dto.request.GroupCreateRequest;
@@ -50,5 +51,16 @@ public class GroupController {
         Long memberId = 1L;
         GroupInfoResponse groupInfo = groupService.getGroupInfo(memberId, groupId);
         return ResponseEntity.ok(SuccessResponse.of(GROUP_INFO, groupInfo));
+    }
+
+    @PostMapping("/{groupId}/appointments")
+    public ResponseEntity<SuccessResponse> createAppointment(
+            // @AuthenticationPrincipal Long memberId,
+            @PathVariable(name = "groupId") Long groupId,
+            @RequestBody AppointmentCreateRequest request
+    ) {
+        Long memberId = 1L;
+        groupService.createAppointment(memberId, groupId, request);
+        return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CREATED));
     }
 }
