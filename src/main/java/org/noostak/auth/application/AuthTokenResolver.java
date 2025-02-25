@@ -2,6 +2,7 @@ package org.noostak.auth.application;
 
 
 import lombok.Getter;
+import lombok.ToString;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
@@ -53,9 +54,9 @@ public class AuthTokenResolver {
 
     public void put(AuthId authId, JwtToken jwtToken) {
         if(authId == null){
-            throw new AuthException(AuthErrorCode.AUTH_ID_NOT_EXISTS,authId.value());
+            throw new AuthException(AuthErrorCode.AUTH_ID_NOT_EXISTS,authId);
         }
-
+        GlobalLogger.info("입력값: "+authId+", 토큰: "+jwtToken);
         map.put(authId, JwtTokenWithExpireDate.of(jwtToken, EXPIRED_AT));
     }
 
@@ -71,6 +72,7 @@ public class AuthTokenResolver {
             throw new AuthException(AuthErrorCode.EXPIRED_AUTH);
         }
 
+        GlobalLogger.info(token);
         return token.getJwtToken();
     }
 
@@ -86,6 +88,7 @@ public class AuthTokenResolver {
 }
 
 @Getter
+@ToString
 class JwtTokenWithExpireDate {
     private final JwtToken jwtToken;
     private final LocalDateTime expireDate;
