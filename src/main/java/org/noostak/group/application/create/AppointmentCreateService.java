@@ -1,6 +1,6 @@
-package org.noostak.appointment.application;
+package org.noostak.group.application.create;
 
-import org.noostak.appointment.dto.request.AppointmentCreateRequest;
+import org.noostak.group.dto.request.AppointmentCreateRequest;
 
 public interface AppointmentCreateService {
     void createAppointment(Long memberId, Long groupId, AppointmentCreateRequest request);
