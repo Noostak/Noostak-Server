@@ -1,14 +1,14 @@
-package org.noostak.appointment.application;
+package org.noostak.group.application.create;
 
 import lombok.RequiredArgsConstructor;
-import org.noostak.appointment.common.exception.AppointmentErrorCode;
-import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointment.domain.AppointmentHostSelectionTime;
 import org.noostak.appointment.domain.AppointmentHostSelectionTimeRepository;
 import org.noostak.appointment.domain.AppointmentRepository;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
-import org.noostak.appointment.dto.request.AppointmentCreateRequest;
+import org.noostak.group.common.exception.GroupErrorCode;
+import org.noostak.group.common.exception.GroupException;
+import org.noostak.group.dto.request.AppointmentCreateRequest;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.membergroup.domain.MemberGroupRepository;
@@ -40,13 +40,13 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
     private void verifyMemberIsInGroup(Long memberId, Long groupId) {
         boolean isMemberOfGroup = memberGroupRepository.existsByMemberIdAndGroupId(memberId, groupId);
         if (!isMemberOfGroup) {
-            throw new AppointmentException(AppointmentErrorCode.MEMBER_NOT_IN_GROUP);
+            throw new GroupException(GroupErrorCode.MEMBER_NOT_IN_GROUP);
         }
     }
 
     private Group findGroupById(Long groupId) {
         return groupRepository.findById(groupId)
-                .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.GROUP_NOT_FOUND));
+                .orElseThrow(() -> new GroupException(GroupErrorCode.GROUP_NOT_FOUND));
     }
 
     private Appointment createAppointment(Group group, Long hostId, AppointmentCreateRequest request) {
