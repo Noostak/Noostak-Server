@@ -1,4 +1,4 @@
-package org.noostak.group.application;
+package org.noostak.group.application.create;
 
 import org.noostak.group.dto.request.GroupCreateRequest;
 import org.noostak.group.dto.response.create.GroupCreateInternalResponse;
