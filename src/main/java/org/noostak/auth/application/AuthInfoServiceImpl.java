@@ -56,6 +56,11 @@ public class AuthInfoServiceImpl implements AuthInfoService {
     }
 
     @Override
+    public AuthInfo findByAuthId(AuthId authId) {
+        return authInfoRepository.getAuthInfoByAuthId(authId);
+    }
+
+    @Override
     @Transactional
     public AuthInfo updateRefreshToken(AuthId authId, String refreshToken) {
         AuthInfo authInfo = authInfoRepository.getAuthInfoByAuthId(authId);

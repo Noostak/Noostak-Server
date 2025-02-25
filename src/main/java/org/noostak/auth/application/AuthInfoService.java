@@ -13,6 +13,8 @@ public interface AuthInfoService {
 
     SignInResponse fetchByAuthId(AuthId authId, String accessToken);
 
+    AuthInfo findByAuthId(AuthId authId);
+
     AuthInfo updateRefreshToken(AuthId authId, String refreshToken);
 
     AuthorizeResponse authorize(String authType, AuthId authId, JwtToken refreshToken);
