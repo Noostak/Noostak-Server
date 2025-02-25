@@ -17,7 +17,7 @@ public class RefreshToken {
     }
 
     private RefreshToken(String token) {
-        validate();
+        validate(token);
         this.token = token;
     }
 
@@ -25,7 +25,7 @@ public class RefreshToken {
         return new RefreshToken(token);
     }
 
-    private void validate(){
+    private void validate(String token){
         if(token == null){
             throw new AuthException(AuthErrorCode.REFRESH_TOKEN_IS_NOT_NULL);
         }
