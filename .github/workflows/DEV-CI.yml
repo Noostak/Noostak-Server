@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       working-directory: .
+      CI_ENV: true  
 
     # Checkout - 가상 머신에 체크아웃
     steps:
@@ -33,10 +34,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Gradle build - 테스트 없이 gradle 빌드
+      # Gradle build - CI 환경에서만 테스트 제외
       - name: 빌드
         run: |
           chmod +x gradlew
-          ./gradlew build -x test
+          if [ "$CI_ENV" = "true" ]; then
+            ./gradlew build -x test
+          else
+            ./gradlew build
+          fi
         working-directory: ${{ env.working-directory }}
         shell: bash
