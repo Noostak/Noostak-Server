@@ -1,4 +1,4 @@
-package org.noostak.group.application;
+package org.noostak.group.application.info;
 
 import org.noostak.group.dto.response.info.GroupInfoResponse;
 
