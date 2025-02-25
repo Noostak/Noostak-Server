@@ -15,7 +15,7 @@ public class JwtTokenProvider {
     }
 
     public static JwtToken createToken(String accessToken, String refreshToken){
-        return new JwtToken("Bearer",accessToken,refreshToken);
+        return JwtToken.of(accessToken,refreshToken);
     }
 
     public boolean validateToken(String token) {
