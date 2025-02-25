@@ -6,21 +6,17 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.global.entity.BaseTimeEntity;
-import org.noostak.likes.domain.vo.LikesCount;
 
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class Likes extends BaseTimeEntity {
+@Table(name = "likes")
+public class Like extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "likes_id")
     private Long id;
-
-    @Embedded
-    @AttributeOverride(name = "count", column = @Column(name = "likes_count"))
-    private LikesCount likesCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_member_id")
@@ -29,4 +25,13 @@ public class Likes extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_option_id")
     private AppointmentOption appointmentOption;
+
+    private Like(AppointmentMember appointmentMember, AppointmentOption option) {
+        this.appointmentMember = appointmentMember;
+        this.appointmentOption = option;
+    }
+
+    public static Like of(AppointmentMember appointmentMember, AppointmentOption option) {
+        return new Like(appointmentMember, option);
+    }
 }
