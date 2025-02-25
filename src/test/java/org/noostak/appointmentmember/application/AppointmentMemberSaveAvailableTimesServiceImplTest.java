@@ -15,6 +15,8 @@ import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimeR
 import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
+import org.noostak.group.common.exception.GroupErrorCode;
+import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.GroupRepositoryTest;
@@ -268,7 +270,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
                 .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.GROUP_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.MEMBER_NOT_IN_GROUP));
+                .orElseThrow(() -> new GroupException(GroupErrorCode.MEMBER_NOT_IN_GROUP));
 
         memberGroupRepository.save(MemberGroup.of(member, group));
     }
