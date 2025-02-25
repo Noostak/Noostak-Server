@@ -11,6 +11,7 @@ public enum MemberErrorCode implements ErrorCode {
     MEMBER_NAME_NOT_EMPTY(HttpStatus.BAD_REQUEST, "멤버 이름은 비어 있을 수 없습니다."),
     MEMBER_NAME_LENGTH_EXCEEDED(HttpStatus.BAD_REQUEST, "멤버 이름의 길이는 15글자를 넘을 수 없습니다."),
     INVALID_MEMBER_NAME(HttpStatus.BAD_REQUEST, "멤버 이름에는 한글, 영문, 이모지만 포함될 수 있습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."),
 
     MEMBER_PROFILE_IMAGE_KEY_NOT_EMPTY(HttpStatus.BAD_REQUEST, "멤버 프로필 이미지 키는 비어 있을 수 없습니다."),
 
