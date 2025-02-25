@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum LikesSuccessCode implements SuccessCode {
     LIKE_CREATED(HttpStatus.CREATED, "좋아요가 생성되었습니다."),
+    LIKE_DELETED(HttpStatus.OK, "좋아요가 삭제되었습니다."),
 
     ;
 
