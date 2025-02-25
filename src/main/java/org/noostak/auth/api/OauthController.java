@@ -126,7 +126,7 @@ public class OauthController {
 
                 return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.TOKEN_REISSUE_COMPLETED, response)));
             }catch (ExternalApiException | RestClientException e){
-                GlobalLogger.warn("{}, {}",e.getMessage(),",",AuthErrorCode.INVALID_TOKEN.getMessage());
+                GlobalLogger.warn(AuthErrorCode.INVALID_TOKEN.getMessage());
             }
         }
 
