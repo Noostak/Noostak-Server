@@ -2,7 +2,11 @@ package org.noostak.likes.api;
 
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.global.success.SuccessResponse;
 import org.noostak.likes.application.LikeService;
+import org.noostak.likes.common.success.LikesSuccessCode;
+import org.noostak.likes.dto.IncreaseResponse;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,11 +16,14 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/{appointmentId}/appointment-options/{appointmentOptionId}/like")
-    public void increase(
+    public ResponseEntity<?> increase(
                         @RequestAttribute("memberId") Long memberId,
                         @PathVariable long appointmentId,
                         @PathVariable long appointmentOptionId){
-        likeService.increase(memberId, appointmentId, appointmentOptionId);
+
+        IncreaseResponse response = likeService.increase(memberId, appointmentId, appointmentOptionId);
+
+        return ResponseEntity.ok(SuccessResponse.of(LikesSuccessCode.LIKE_CREATED,response));
     }
 
 }
