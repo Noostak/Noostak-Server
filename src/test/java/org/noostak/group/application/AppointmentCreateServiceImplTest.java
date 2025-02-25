@@ -1,13 +1,16 @@
-package org.noostak.appointment.application;
+package org.noostak.group.application;
 
 import org.junit.jupiter.api.*;
+import org.noostak.group.application.create.AppointmentCreateServiceImpl;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.*;
 import org.noostak.appointment.domain.vo.AppointmentCategory;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
-import org.noostak.appointment.dto.request.AppointmentCreateRequest;
-import org.noostak.appointment.dto.request.AppointmentHostSelectionTimeRequest;
+import org.noostak.group.common.exception.GroupErrorCode;
+import org.noostak.group.common.exception.GroupException;
+import org.noostak.group.dto.request.AppointmentCreateRequest;
+import org.noostak.group.dto.request.AppointmentHostSelectionTimeRequest;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.GroupRepositoryTest;
@@ -94,8 +97,8 @@ public class AppointmentCreateServiceImplTest {
             AppointmentCreateRequest request = AppointmentCreateRequest.of("회의", "일정", 60L, List.of());
 
             assertThatThrownBy(() -> appointmentCreateService.createAppointment(invalidMemberId, savedGroupId, request))
-                    .isInstanceOf(AppointmentException.class)
-                    .hasMessage(AppointmentErrorCode.MEMBER_NOT_IN_GROUP.getMessage());
+                    .isInstanceOf(GroupException.class)
+                    .hasMessage(GroupErrorCode.MEMBER_NOT_IN_GROUP.getMessage());
         }
 
         @Test
@@ -105,8 +108,8 @@ public class AppointmentCreateServiceImplTest {
             AppointmentCreateRequest request = AppointmentCreateRequest.of("회의", "취미", 60L, List.of());
 
             assertThatThrownBy(() -> appointmentCreateService.createAppointment(savedMemberId, nonExistentGroupId, request))
-                    .isInstanceOf(AppointmentException.class)
-                    .hasMessage(AppointmentErrorCode.MEMBER_NOT_IN_GROUP.getMessage());
+                    .isInstanceOf(GroupException.class)
+                    .hasMessage(GroupErrorCode.MEMBER_NOT_IN_GROUP.getMessage());
         }
     }
 
@@ -156,9 +159,9 @@ public class AppointmentCreateServiceImplTest {
 
     private void saveMemberGroup(Long memberId, Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.GROUP_NOT_FOUND));
+                .orElseThrow(() -> new GroupException(GroupErrorCode.GROUP_NOT_FOUND));
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.MEMBER_NOT_IN_GROUP));
+                .orElseThrow(() -> new GroupException(GroupErrorCode.MEMBER_NOT_IN_GROUP));
 
         memberGroupRepository.save(MemberGroup.of(member, group));
     }
