@@ -107,19 +107,7 @@ public class LikeRepositoryTest implements LikeRepository {
         return new PageImpl<>(pageContent, pageable, likes.size());
     }
 
-    @Override
-    public Long countByAppointmentOptionId(Long appointmentOptionId) {
-        return likes.stream()
-                .filter(like -> like.getAppointmentOption().getId().equals(appointmentOptionId))
-                .count();
-    }
 
-    @Override
-    public boolean existsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId) {
-        return likes.stream()
-                .anyMatch(like -> like.getAppointmentOption().getId().equals(appointmentOptionId) &&
-                        like.getAppointmentMember().getId().equals(appointmentMemberId));
-    }
 
     @Override
     public void flush() {
@@ -199,5 +187,25 @@ public class LikeRepositoryTest implements LikeRepository {
     @Override
     public <S extends Like, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
+    }
+
+    @Override
+    public Long getLikeCountByOptionId(Long optionId) {
+        return null;
+    }
+
+    @Override
+    public int getLikeCountByAppointmentMemberId(Long appointmentMemberId) {
+        return 0;
+    }
+
+    @Override
+    public void deleteLikeByAppointmentMemberIdAndOptionId(Long appointmentMemberId, Long optionId) {
+
+    }
+
+    @Override
+    public boolean getExistsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId) {
+        return false;
     }
 }

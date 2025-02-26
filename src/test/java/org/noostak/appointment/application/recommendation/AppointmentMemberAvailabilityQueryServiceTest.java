@@ -111,10 +111,7 @@ class AppointmentMemberAvailabilityQueryServiceTest {
     private Long createAndSaveMember(String name) {
         Member member = memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from("profile-key"),
-                AuthType.GOOGLE,
-                AuthId.from("auth-id"),
-                "refresh-token"
+                MemberProfileImageKey.from("profile-key")
         ));
         return member.getId();
     }

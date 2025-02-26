@@ -11,8 +11,6 @@ import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -128,10 +126,7 @@ class AppointmentHostSelectedTimeQueryServiceImplTest {
     private Long createAndSaveMember(String name) {
         Member member = memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from("profile-key"),
-                AuthType.GOOGLE,
-                AuthId.from("auth-id"),
-                "refresh-token"
+                MemberProfileImageKey.from("profile-key")
         ));
         return member.getId();
     }
