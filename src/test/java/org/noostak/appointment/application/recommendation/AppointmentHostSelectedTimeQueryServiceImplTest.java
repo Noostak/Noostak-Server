@@ -6,29 +6,32 @@ import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.*;
 import org.noostak.appointment.util.TimeSlot;
 import org.noostak.group.domain.Group;
+import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
+import org.noostak.member.domain.MemberRepository;
 import org.noostak.member.domain.vo.AuthId;
 import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
 import org.noostak.membergroup.domain.MemberGroup;
+import org.noostak.membergroup.domain.MemberGroupRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class AppointmentHostSelectedTimeQueryServiceTest {
+class AppointmentHostSelectedTimeQueryServiceImplTest {
 
     private AppointmentHostSelectedTimeQueryService queryService;
-    private AppointmentHostSelectionTimeRepositoryTest repository;
-    private AppointmentRepositoryTest appointmentRepository;
-    private MemberRepositoryTest memberRepository;
-    private GroupRepositoryTest groupRepository;
-    private MemberGroupRepositoryTest memberGroupRepository;
+    private AppointmentHostSelectionTimeRepositoryTest appointmentHostSelectionTimeRepository;
+    private AppointmentRepository appointmentRepository;
+    private MemberRepository memberRepository;
+    private GroupRepository groupRepository;
+    private MemberGroupRepository memberGroupRepository;
 
     private Long savedMemberId;
     private Long savedGroupId;
@@ -42,7 +45,7 @@ class AppointmentHostSelectedTimeQueryServiceTest {
 
     @AfterEach
     void tearDown() {
-        repository.deleteAll();
+        appointmentHostSelectionTimeRepository.deleteAll();
         appointmentRepository.deleteAll();
         memberRepository.deleteAll();
         groupRepository.deleteAll();
@@ -79,7 +82,7 @@ class AppointmentHostSelectedTimeQueryServiceTest {
         @DisplayName("저장된 호스트 선택 시간이 없을 경우 예외 발생")
         void shouldFailWhenHostSelectionTimeNotFound() {
             // Given
-            repository.deleteByAppointmentId(savedAppointmentId);
+            appointmentHostSelectionTimeRepository.deleteByAppointmentId(savedAppointmentId);
 
             // When & Then
             assertThatThrownBy(() -> queryService.splitHostSelectedTimeSlots(savedAppointmentId, 60L))
@@ -101,17 +104,18 @@ class AppointmentHostSelectedTimeQueryServiceTest {
                 startTime,
                 endTime
         );
-        repository.save(selectionTime);
+        appointmentHostSelectionTimeRepository.save(selectionTime);
     }
 
     private void initializeRepositories() {
-        repository = new AppointmentHostSelectionTimeRepositoryTest();
+        appointmentHostSelectionTimeRepository = new AppointmentHostSelectionTimeRepositoryTest();
         appointmentRepository = new AppointmentRepositoryTest();
         memberRepository = new MemberRepositoryTest();
         groupRepository = new GroupRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
-        queryService = new AppointmentHostSelectedTimeQueryService(repository);
+        queryService = new org.noostak.appointment.application.recommendation.impl.AppointmentHostSelectedTimeQueryServiceImpl(appointmentHostSelectionTimeRepository);
     }
+
 
     private void initializeTestData() {
         savedMemberId = createAndSaveMember("사용자One");
