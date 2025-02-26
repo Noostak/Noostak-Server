@@ -10,9 +10,19 @@ import org.springframework.stereotype.Repository;
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
     @Query(nativeQuery = true, value = "SELECT COUNT(*) FROM likes WHERE appointment_option_id = :optionId")
-    int getLikeCountByOptionId(@Param("optionId") Long optionId);
+    Long getLikeCountByOptionId(@Param("optionId") Long optionId);
 
     @Query(nativeQuery = true, value = "SELECT COUNT(*) FROM likes WHERE appointment_member_id = :appointmentMemberId")
     int getLikeCountByAppointmentMemberId(@Param("appointmentMemberId") Long appointmentMemberId);
 
+
+    @Query(nativeQuery = true,
+            value = "SELECT 1 " +
+                    "FROM likes " +
+                    "WHERE appointment_option_id = :optionId " +
+                    "AND appointment_member_id = :memberId")
+    boolean getExistsByAppointmentOptionIdAndAppointmentMemberId(
+            @Param("optionId") Long appointmentOptionId,
+            @Param("memberId") Long appointmentMemberId
+    );
 }

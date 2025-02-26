@@ -31,19 +31,19 @@ public class LikeServiceImpl implements LikeService{
     public IncreaseResponse increase(Long memberId, Long appointmentId, Long appointmentOptionId) {
         createLike(memberId, appointmentId, appointmentOptionId);
 
-        int likes = getLikeCountByOptionId(appointmentOptionId);
+        long likes = getLikeCountByOptionId(appointmentOptionId);
         return IncreaseResponse.of(likes+1);
     }
 
     @Override
-    public int getLikeCountByOptionId(Long appointmentOptionId) {
+    public Long getLikeCountByOptionId(Long appointmentOptionId) {
         return likeRepository.getLikeCountByOptionId(appointmentOptionId);
     }
 
 
     private void createLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
 
-        int count = getLikeCountByOptionId(appointmentOptionId);
+        long count = getLikeCountByOptionId(appointmentOptionId);
 
         if(count == MAX_LIKES){
             throw new LikesException(LikesErrorCode.OVER_MAX_LIKES,MAX_LIKES);

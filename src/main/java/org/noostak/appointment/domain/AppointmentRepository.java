@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long>, AppointmentRepositoryCustom {
     default Appointment getById(Long appointmentId){
         return findById(appointmentId)
                 .orElseThrow(()-> new AppointmentException(AppointmentErrorCode.APPOINTMENT_NOT_FOUND));

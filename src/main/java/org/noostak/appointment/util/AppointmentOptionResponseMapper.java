@@ -87,11 +87,11 @@ public class AppointmentOptionResponseMapper {
     }
 
     private static Long countLikes(AppointmentOption option, LikeRepository likeRepository) {
-        return likeRepository.countByAppointmentOptionId(option.getId());
+        return likeRepository.getLikeCountByOptionId(option.getId());
     }
 
     private static boolean checkIfLiked(AppointmentOption option, Long memberId, LikeRepository likeRepository) {
-        return likeRepository.existsByAppointmentOptionIdAndAppointmentMemberId(option.getId(), memberId);
+        return likeRepository.getExistsByAppointmentOptionIdAndAppointmentMemberId(option.getId(), memberId);
     }
 
     private static Long findGroupMemberCount(AppointmentOption option, GroupRepository groupRepository) {
