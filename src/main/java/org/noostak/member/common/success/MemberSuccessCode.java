@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum MemberSuccessCode implements SuccessCode {
     MEMBER_FETCH_COMPLETE(HttpStatus.OK,"멤버 프로필 조회에 성공했습니다."),
     MEMBER_UPDATE_COMPLETE(HttpStatus.OK,"프로필이 성공적으로 업데이트되었습니다."),
+    MEMBER_DELETE_COMPLETE(HttpStatus.OK,"회원 탈퇴에 성공하였습니다."),
     ;
 
 
