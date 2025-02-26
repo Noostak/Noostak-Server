@@ -31,4 +31,12 @@ public class MemberController {
         memberService.updateMember(memberId, request.getMemberName(), request.getMemberProfileImage());
         return ResponseEntity.ok(SuccessResponse.of(MemberSuccessCode.MEMBER_UPDATE_COMPLETE));
     }
+
+    @DeleteMapping
+    public ResponseEntity<SuccessResponse> deleteMember(
+            @RequestAttribute Long memberId
+    ){
+        memberService.deleteMember(memberId);
+        return ResponseEntity.ok(SuccessResponse.of(MemberSuccessCode.MEMBER_DELETE_COMPLETE));
+    }
 }
