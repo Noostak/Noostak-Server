@@ -5,16 +5,16 @@ import lombok.Getter;
 
 @Getter
 public class GetProfileResponse {
-    String membername;
+    String memberName;
     String memberProfileImage;
 
-    private GetProfileResponse(String membername, String memberProfileImage) {
+    private GetProfileResponse(String memberName, String memberProfileImage) {
 
-        this.membername = membername;
+        this.memberName = memberName;
         this.memberProfileImage = memberProfileImage;
     }
 
-    public static GetProfileResponse of(String membername, String memberProfileImage){
-        return new GetProfileResponse(membername,memberProfileImage);
+    public static GetProfileResponse of(String memberName, String memberProfileImage){
+        return new GetProfileResponse(memberName,memberProfileImage);
     }
 }
