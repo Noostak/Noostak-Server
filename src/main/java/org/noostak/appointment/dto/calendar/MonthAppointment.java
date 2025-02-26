@@ -21,7 +21,7 @@ public class MonthAppointment implements Comparable<MonthAppointment>{
 
 
     public static MonthAppointment from(Appointment appointment, AppointmentOption appointmentOption){
-        if(appointmentOption.getStatus().equals(AppointmentOptionStatus.CONFIRMED)){
+        if(!appointmentOption.getStatus().equals(AppointmentOptionStatus.CONFIRMED)){
             // TODO : 에러메시지 수정
             throw new RuntimeException("확정된 옵션이 아닙니다.");
         }

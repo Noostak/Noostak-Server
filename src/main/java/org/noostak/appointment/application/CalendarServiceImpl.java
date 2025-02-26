@@ -30,7 +30,7 @@ public class CalendarServiceImpl implements CalendarService {
     public CalendarResponse getCalendarViewByGroupId(Long groupId, int year, int month) {
 
         List<Appointment> appointmentList =
-                appointmentRepository.getAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED,groupId);
+                appointmentRepository.getAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId);
 
         // 이번 달의 캘린더 정보 목록 불러오기
         ArrayList<MonthAppointments> currentMonthAppointments =
@@ -65,7 +65,8 @@ public class CalendarServiceImpl implements CalendarService {
         return getMonthAppointments(currentMonthAppointmentMapper);
     }
 
-    private HashMap<Integer, ArrayList<MonthAppointment>> getMonthAppointmentsMapper(List<Appointment> appointmentList, LocalDate firstDate, LocalDate previousDate) {
+    private HashMap<Integer, ArrayList<MonthAppointment>>
+    getMonthAppointmentsMapper(List<Appointment> appointmentList, LocalDate firstDate, LocalDate previousDate) {
         HashMap<Integer, ArrayList<MonthAppointment>> previousMonthAppointmentMapper = new HashMap<>();
 
         for (Appointment appointment : appointmentList) {
@@ -89,7 +90,7 @@ public class CalendarServiceImpl implements CalendarService {
 
     private HashMap<Integer, ArrayList<MonthAppointment>>
     getMonthAppointmentsMapper(List<Appointment> appointmentList, int year, int month) {
-        HashMap<Integer, ArrayList<MonthAppointment>> MonthAppointmentMapper = new HashMap<>();
+        HashMap<Integer, ArrayList<MonthAppointment>> monthAppointmentMapper = new HashMap<>();
 
         for (Appointment appointment : appointmentList) {
 
@@ -98,18 +99,18 @@ public class CalendarServiceImpl implements CalendarService {
 
             int day = appointmentOption.getDayOfMonth();
 
-            ArrayList<MonthAppointment> dayOfOptions = MonthAppointmentMapper.getOrDefault(day, new ArrayList<>());
+            ArrayList<MonthAppointment> dayOfOptions = monthAppointmentMapper.getOrDefault(day, new ArrayList<>());
 
             MonthAppointment monthAppointment = MonthAppointment.from(appointment, appointmentOption);
             dayOfOptions.add(monthAppointment);
 
-            MonthAppointmentMapper.put(day, dayOfOptions);
+            monthAppointmentMapper.put(day, dayOfOptions);
         }
 
-        return MonthAppointmentMapper;
+        return monthAppointmentMapper;
     }
 
-    private static ArrayList<MonthAppointments> getMonthAppointments
+    private ArrayList<MonthAppointments> getMonthAppointments
             (HashMap<Integer, ArrayList<MonthAppointment>> monthAppointmentMapper) {
         ArrayList<MonthAppointments> currentMonthAppointments = new ArrayList<>();
 
