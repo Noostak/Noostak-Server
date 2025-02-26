@@ -1,6 +1,7 @@
 package org.noostak.appointment.application.recommendation;
 
 import org.junit.jupiter.api.*;
+import org.noostak.appointment.application.recommendation.impl.AppointmentMemberAvailabilityQueryServiceImpl;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.*;
@@ -96,7 +97,7 @@ class AppointmentMemberAvailabilityQueryServiceTest {
         groupRepository = new GroupRepositoryTest();
         memberRepository = new MemberRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
-        queryService = new AppointmentMemberAvailabilityQueryService(availableTimesRepository);
+        queryService = new AppointmentMemberAvailabilityQueryServiceImpl(availableTimesRepository);
     }
 
     private void initializeTestData() {

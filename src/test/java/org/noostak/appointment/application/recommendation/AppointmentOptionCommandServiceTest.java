@@ -1,6 +1,7 @@
 package org.noostak.appointment.application.recommendation;
 
 import org.junit.jupiter.api.*;
+import org.noostak.appointment.application.recommendation.impl.AppointmentOptionCommandServiceImpl;
 import org.noostak.appointment.domain.*;
 import org.noostak.appointment.dto.response.AppointmentOptionAvailabilityResponse;
 import org.noostak.appointmentoption.domain.*;
@@ -82,7 +83,7 @@ class AppointmentOptionCommandServiceTest {
         groupRepository = new GroupRepositoryTest();
         memberRepository = new MemberRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
-        commandService = new AppointmentOptionCommandService(appointmentOptionRepository);
+        commandService = new AppointmentOptionCommandServiceImpl(appointmentOptionRepository);
     }
 
     private void initializeTestData() {

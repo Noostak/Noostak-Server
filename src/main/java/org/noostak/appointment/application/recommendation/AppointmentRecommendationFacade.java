@@ -31,9 +31,9 @@ public class AppointmentRecommendationFacade {
 
         Map<Long, List<AppointmentMemberAvailableTime>> memberAvailability = appointmentMemberAvailabilityQueryService.findAvailableTimeSlotsByAppointmentId(appointmentId);
 
-        List<AppointmentOptionAvailabilityResponse> optionDTOs = AppointmentAvailabilityMatcher.matchAvailability(timeSlots, memberAvailability);
+        List<AppointmentOptionAvailabilityResponse> options = AppointmentAvailabilityMatcher.matchAvailability(timeSlots, memberAvailability);
 
-        List<AppointmentOption> savedOptions = appointmentOptionCommandService.saveOptions(appointment, optionDTOs);
+        List<AppointmentOption> savedOptions = appointmentOptionCommandService.saveOptions(appointment, options);
 
         List<AppointmentOption> sortedOptions = AppointmentOptionSorter.sortAndFilterOptions(savedOptions, memberAvailability);
 
