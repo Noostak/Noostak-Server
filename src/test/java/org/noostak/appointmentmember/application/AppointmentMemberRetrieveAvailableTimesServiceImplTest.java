@@ -18,8 +18,6 @@ import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepositoryTest;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -72,7 +70,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
         @DisplayName("멤버의 약속 가능 시간을 정상적으로 조회할 수 있다.")
         void shouldRetrieveAvailableTimesSuccessfully() {
             AppointmentMembersAvailableTimesResponse response =
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(savedMemberId, savedAppointmentId);
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, savedAppointmentId);
 
             assertThat(response).isNotNull();
             assertThat(response.isAppointMemberTimeSet()).isTrue();
@@ -83,7 +81,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
         void shouldRetrieveCorrectAvailableTimes() {
             // Given
             AppointmentMembersAvailableTimesResponse response =
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(savedMemberId, savedAppointmentId);
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, savedAppointmentId);
 
             // When
             List<AppointmentMemberAvailableTimeResponse> availableTimes = response.appointmentScheduleResponse()
@@ -107,7 +105,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
 
             // When
             AppointmentMembersAvailableTimesResponse response =
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(savedMemberId, savedAppointmentId);
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, savedAppointmentId);
 
             List<AppointmentMemberInfoResponse> membersInfo = response.appointmentScheduleResponse().appointmentMemberInfoResponse();
 
@@ -137,7 +135,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
             Long invalidMemberId = 999L;
 
             assertThatThrownBy(() ->
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(invalidMemberId, savedAppointmentId))
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(invalidMemberId, savedAppointmentId))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -148,7 +146,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
             Long nonExistentMemberId = 888L;
 
             assertThatThrownBy(() ->
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(nonExistentMemberId, savedAppointmentId))
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(nonExistentMemberId, savedAppointmentId))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -159,7 +157,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
             Long nonExistentAppointmentId = 777L;
 
             assertThatThrownBy(() ->
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(savedMemberId, nonExistentAppointmentId))
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, nonExistentAppointmentId))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -170,7 +168,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
             Long anotherMemberId = createAndSaveMember("사용자Three");
 
             assertThatThrownBy(() ->
-                    appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(anotherMemberId, savedAppointmentId))
+                    appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(anotherMemberId, savedAppointmentId))
                     .isInstanceOf(AppointmentMemberException.class)
                     .hasMessage(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND.getMessage());
         }
@@ -208,10 +206,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
     private Long createAndSaveMember(String name) {
         Member member = memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from("profile-key"),
-                AuthType.GOOGLE,
-                AuthId.from("auth-id"),
-                "refresh-token"
+                MemberProfileImageKey.from("profile-key")
         ));
         return member.getId();
     }
