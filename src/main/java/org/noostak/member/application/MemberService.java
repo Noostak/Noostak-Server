@@ -16,6 +16,6 @@ public interface MemberService {
     void updateMember(Long memberId, String memberName, MultipartFile image);
 
     // delete
-    void deleteMember();
+    void deleteMember(Long memberId);
 
 }
