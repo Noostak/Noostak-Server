@@ -42,7 +42,7 @@ public class LikeServiceImpl implements LikeService{
         deleteLike(memberId, appointmentId, appointmentOptionId);
 
         long likes = getLikeCountByOptionId(appointmentOptionId);
-        return IncreaseResponse.of(likes+1);
+        return DecreaseResponse.of(likes);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LikeServiceImpl implements LikeService{
 
     private void deleteLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
 
-        int count = getLikeCountByOptionId(appointmentOptionId);
+        long count = getLikeCountByOptionId(appointmentOptionId);
 
         if(count == 0){
             throw new LikesException(LikesErrorCode.LIKES_NOT_NEGATIVE);

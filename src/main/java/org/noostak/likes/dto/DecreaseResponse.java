@@ -7,9 +7,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class DecreaseResponse {
-    int likes;
+    long likes;
 
-    public static DecreaseResponse of(int likes){
+    public static DecreaseResponse of(long likes){
         return new DecreaseResponse(likes);
     }
 }
