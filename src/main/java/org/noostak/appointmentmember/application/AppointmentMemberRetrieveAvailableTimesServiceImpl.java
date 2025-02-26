@@ -24,24 +24,24 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
     private final AppointmentMemberRepository appointmentMemberRepository;
 
     @Override
-    public AppointmentMembersAvailableTimesResponse getAvailableTimes(Long memberId, Long appointmentId) {
-        AppointmentMember appointmentMember = findAppointmentMember(memberId, appointmentId);
+    public AppointmentMembersAvailableTimesResponse retrieveAvailableTimes(Long memberId, Long appointmentId) {
+        AppointmentMember appointmentMember = getAppointmentMemberOrThrow(memberId, appointmentId);
 
         boolean appointmentTimeSet = appointmentMember.isAppointmentTimeSet();
 
-        AppointmentHostSelectionTimesResponse hostSelectionTimesResponse = findHostSelectionTimes(appointmentId);
+        AppointmentHostSelectionTimesResponse hostSelectionTimesResponse = retrieveHostSelectionTimes(appointmentId);
 
-        List<AppointmentMemberInfoResponse> appointmentMembersInfo = findAppointmentMembersInfo(appointmentId);
+        List<AppointmentMemberInfoResponse> appointmentMembersInfo = retrieveAppointmentMembersInfo(appointmentId);
 
-        return createAppointmentResponse(appointmentTimeSet, hostSelectionTimesResponse, appointmentMembersInfo);
+        return assembleAppointmentResponse(appointmentTimeSet, hostSelectionTimesResponse, appointmentMembersInfo);
     }
 
-    private AppointmentMember findAppointmentMember(Long memberId, Long appointmentId) {
+    private AppointmentMember getAppointmentMemberOrThrow(Long memberId, Long appointmentId) {
         return appointmentMemberRepository.findByMemberIdAndAppointmentId(memberId, appointmentId)
                 .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
     }
 
-    private AppointmentHostSelectionTimesResponse findHostSelectionTimes(Long appointmentId) {
+    private AppointmentHostSelectionTimesResponse retrieveHostSelectionTimes(Long appointmentId) {
         List<AppointmentHostSelectionTimeResponse> hostSelectionTimeDtos =
                 appointmentHostSelectionTimeRepository.findByAppointmentId(appointmentId).stream()
                         .map(time -> AppointmentHostSelectionTimeResponse.of(
@@ -54,10 +54,10 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
         return AppointmentHostSelectionTimesResponse.of(hostSelectionTimeDtos);
     }
 
-    private List<AppointmentMemberInfoResponse> findAppointmentMembersInfo(Long appointmentId) {
+    private List<AppointmentMemberInfoResponse> retrieveAppointmentMembersInfo(Long appointmentId) {
         return appointmentMemberRepository.findAllWithAvailableTimes(appointmentId).stream()
                 .map(member -> {
-                    List<AppointmentMemberAvailableTimeResponse> availableTimeDtos = findAvailableTimesForMember(member);
+                    List<AppointmentMemberAvailableTimeResponse> availableTimeDtos = retrieveAvailableTimesForMember(member);
                     return AppointmentMemberInfoResponse.of(
                             member.getId(),
                             member.getMember().getName().value(),
@@ -67,7 +67,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
                 .collect(Collectors.toList());
     }
 
-    private List<AppointmentMemberAvailableTimeResponse> findAvailableTimesForMember(AppointmentMember member) {
+    private List<AppointmentMemberAvailableTimeResponse> retrieveAvailableTimesForMember(AppointmentMember member) {
         return appointmentMemberAvailableTimesRepository.findByAppointmentMember(member).stream()
                 .map(time -> new AppointmentMemberAvailableTimeResponse(
                         time.getDate(),
@@ -77,7 +77,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
                 .collect(Collectors.toList());
     }
 
-    private AppointmentMembersAvailableTimesResponse createAppointmentResponse(
+    private AppointmentMembersAvailableTimesResponse assembleAppointmentResponse(
             boolean appointmentTimeSet,
             AppointmentHostSelectionTimesResponse hostSelectionTimesResponse,
             List<AppointmentMemberInfoResponse> appointmentMembersInfo) {

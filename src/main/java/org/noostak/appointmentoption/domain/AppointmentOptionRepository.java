@@ -2,6 +2,8 @@ package org.noostak.appointmentoption.domain;
 
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
+import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
+import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -59,5 +61,9 @@ public interface AppointmentOptionRepository extends JpaRepository<AppointmentOp
                 startDate,
                 endDate
         );
+
+    default AppointmentOption getById(Long optionId){
+        return findById(optionId)
+                .orElseThrow(()-> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
     }
 }

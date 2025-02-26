@@ -43,10 +43,14 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
 
     @Override
     public List<AppointmentOption> findAllById(Iterable<Long> ids) {
+        Set<Long> idSet = new HashSet<>();
+        ids.forEach(idSet::add);
+
         return appointmentOptions.stream()
-                .filter(option -> ids.iterator().hasNext() && ids.iterator().next().equals(option.getId()))
+                .filter(option -> idSet.contains(option.getId()))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public void deleteAll() {
