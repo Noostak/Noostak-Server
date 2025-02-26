@@ -1,4 +1,4 @@
-package org.noostak.appointment.application;
+package org.noostak.appointment.application.create;
 
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
