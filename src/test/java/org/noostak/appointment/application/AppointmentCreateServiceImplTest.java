@@ -1,6 +1,7 @@
 package org.noostak.appointment.application;
 
 import org.junit.jupiter.api.*;
+import org.noostak.appointment.application.create.AppointmentCreateServiceImpl;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.*;
