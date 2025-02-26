@@ -190,4 +190,9 @@ public class AppointmentRepositoryTest implements AppointmentRepository {
     public <S extends Appointment, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
+
+    @Override
+    public List<Appointment> findAllByGroupIdConfirmed(String status, Long groupId) {
+        return null;
+    }
 }
