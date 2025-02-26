@@ -14,6 +14,7 @@ import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.likes.common.exception.LikesErrorCode;
 import org.noostak.likes.common.exception.LikesException;
+import org.noostak.likes.dto.DecreaseResponse;
 import org.noostak.likes.dto.IncreaseResponse;
 
 import java.util.Optional;
@@ -44,8 +45,30 @@ class LikeServiceImplTest {
     private FakeAppointmentMemberRepository appointmentMemberRepository;
 
     @Nested
-    @DisplayName("좋아요 증가 (Success)")
+    @DisplayName("좋아요 감소 (Success)")
     class Success {
+
+        @Test
+        @DisplayName("좋아요를 삭제하면 개수가 감소한다.")
+        void decreaseLike() {
+            // given
+            Long memberId = 1L;
+            Long appointmentId = 2L;
+            Long appointmentOptionId = 3L;
+            int initialLikes = 5;
+
+            Mockito.lenient().when(optionRepository.getById(appointmentOptionId)).thenReturn(mockOption);
+            Mockito.lenient().when(appointmentMemberRepository.findByMemberIdAndAppointmentId(memberId, appointmentId))
+                    .thenReturn(Optional.of(mockMember));
+            Mockito.lenient().when(likeRepository.getLikeCountByOptionId(appointmentOptionId)).thenReturn(initialLikes);
+
+            // when
+            DecreaseResponse response = likeService.decrease(memberId, appointmentId, appointmentOptionId);
+
+            // then
+            verify(likeRepository, times(1)).deleteLikeByAppointmentMemberIdAndOptionId(anyLong(), anyLong());
+            assertThat(response.getLikes()).isEqualTo(initialLikes);
+        }
 
         @Test
         @DisplayName("좋아요를 추가하면 갯수가 증가한다.")
@@ -72,7 +95,43 @@ class LikeServiceImplTest {
     @Nested
     @DisplayName("좋아요 증가 (Failure)")
     class Failure {
+        @Test
+        @DisplayName("좋아요 개수가 0이면 예외 발생")
+        void decreaseLike_Fail_LikesNotNegative() {
+            // given
+            Long memberId = 1L;
+            Long appointmentId = 2L;
+            Long appointmentOptionId = 3L;
 
+            when(likeRepository.getLikeCountByOptionId(appointmentOptionId)).thenReturn(0);
+
+            // when & then
+            assertThatThrownBy(() -> likeService.decrease(memberId, appointmentId, appointmentOptionId))
+                    .isInstanceOf(LikesException.class)
+                    .hasMessageContaining(LikesErrorCode.LIKES_NOT_NEGATIVE.getMessage());
+
+            verify(likeRepository, never()).deleteLikeByAppointmentMemberIdAndOptionId(anyLong(), anyLong());
+        }
+
+        @Test
+        @DisplayName("회원이 약속에 참여하지 않은 경우 예외 발생")
+        void decreaseLike_Fail_AppointmentMemberNotFound() {
+            // given
+            Long memberId = 1L;
+            Long appointmentId = 2L;
+            Long appointmentOptionId = 3L;
+
+            when(likeRepository.getLikeCountByOptionId(appointmentOptionId)).thenReturn(5);
+            when(appointmentMemberRepository.findByMemberIdAndAppointmentId(memberId, appointmentId))
+                    .thenReturn(Optional.empty());
+
+            // when & then
+            assertThatThrownBy(() -> likeService.decrease(memberId, appointmentId, appointmentOptionId))
+                    .isInstanceOf(AppointmentMemberException.class)
+                    .hasMessage(AppointmentErrorCode.APPOINTMENT_NOT_FOUND.getMessage());
+
+            verify(likeRepository, never()).deleteLikeByAppointmentMemberIdAndOptionId(anyLong(), anyLong());
+        }
         @Test
         @DisplayName("좋아요 개수가 최대값을 초과하면 예외 발생")
         void increaseLike_Fail_OverMaxLikes() {
@@ -118,7 +177,6 @@ class LikeServiceImplTest {
     }
 
     // ======================== Fake Service ========================
-
     static class FakeLikeService {
         private final FakeAppointmentOptionRepository optionRepository;
         private final FakeAppointmentMemberRepository appointmentMemberRepository;
@@ -135,6 +193,12 @@ class LikeServiceImplTest {
             createLike(memberId, appointmentId, appointmentOptionId);
             int likes = getLikeCountByOptionId(appointmentOptionId);
             return IncreaseResponse.of(likes);
+        }
+
+        public DecreaseResponse decrease(Long memberId, Long appointmentId, Long appointmentOptionId) {
+            deleteLike(memberId, appointmentId, appointmentOptionId);
+            int likes = getLikeCountByOptionId(appointmentOptionId);
+            return DecreaseResponse.of(likes);
         }
 
         public int getLikeCountByOptionId(Long appointmentOptionId) {
@@ -154,14 +218,34 @@ class LikeServiceImplTest {
             Like newLike = Like.of(appointmentMember, appointmentOption);
             likeRepository.save(newLike);
         }
+
+        private void deleteLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+            int count = getLikeCountByOptionId(appointmentOptionId);
+
+            if (count == 0) {
+                throw new LikesException(LikesErrorCode.LIKES_NOT_NEGATIVE);
+            }
+
+            AppointmentMember appointmentMember =
+                    appointmentMemberRepository.findByMemberIdAndAppointmentId(memberId, appointmentId)
+                            .orElseThrow(() -> new AppointmentMemberException(AppointmentErrorCode.APPOINTMENT_NOT_FOUND));
+
+            Long appointmentMemberId = appointmentMember.getId();
+            likeRepository.deleteLikeByAppointmentMemberIdAndOptionId(appointmentMemberId, appointmentOptionId);
+        }
     }
+
 
     // ======================== Fake Repository ========================
 
     static class FakeLikeRepository {
         void save(Like like) {}
+
         int getLikeCountByOptionId(Long appointmentOptionId) { return 0; }
+
+        void deleteLikeByAppointmentMemberIdAndOptionId(Long appointmentMemberId, Long appointmentOptionId) {}
     }
+
 
     static class FakeAppointmentOptionRepository {
         AppointmentOption getById(Long id) { return null; }

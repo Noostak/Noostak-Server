@@ -15,6 +15,14 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query(nativeQuery = true, value = "SELECT COUNT(*) FROM likes WHERE appointment_member_id = :appointmentMemberId")
     int getLikeCountByAppointmentMemberId(@Param("appointmentMemberId") Long appointmentMemberId);
 
+    @Query(nativeQuery = true,
+            value = "DELETE  " +
+                    "FROM likes " +
+                    "WHERE appointment_member_id = :appointmentMemberId AND appointment_option_id = :optionId")
+    void deleteLikeByAppointmentMemberIdAndOptionId(
+            @Param("appointmentMemberId") Long appointmentMemberId,
+            @Param("optionId") Long optionId
+            );
 
     @Query(nativeQuery = true,
             value = "SELECT 1 " +
