@@ -11,11 +11,12 @@ import org.noostak.likes.domain.vo.LikesCount;
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class Likes extends BaseTimeEntity {
+@Table(name = "likes")
+public class Like extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likes_id")
+    @Column(name = "like_id")
     private Long id;
 
     @Embedded
@@ -29,4 +30,14 @@ public class Likes extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_option_id")
     private AppointmentOption appointmentOption;
+
+    private Like(LikesCount likesCount, AppointmentMember appointmentMember, AppointmentOption appointmentOption) {
+        this.likesCount = likesCount;
+        this.appointmentMember = appointmentMember;
+        this.appointmentOption = appointmentOption;
+    }
+
+    public static Like of(LikesCount likesCount, AppointmentMember appointmentMember, AppointmentOption appointmentOption) {
+        return new Like(likesCount, appointmentMember, appointmentOption);
+    }
 }
