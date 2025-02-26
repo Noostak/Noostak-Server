@@ -182,4 +182,5 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
     public Page<AppointmentMember> findAll(Pageable pageable) {
         return null;
     }
+
 }

@@ -1,6 +1,7 @@
 package org.noostak.appointment.application;
 
 import org.junit.jupiter.api.*;
+import org.noostak.appointment.application.create.AppointmentCreateServiceImpl;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.*;
@@ -16,8 +17,6 @@ import org.noostak.group.domain.vo.GroupProfileImageKey;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.membergroup.MemberGroupRepositoryTest;
@@ -138,10 +137,7 @@ public class AppointmentCreateServiceImplTest {
     private Long createAndSaveMember(String name, String profileKey, String authId, String refreshToken) {
         return memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from(profileKey),
-                AuthType.GOOGLE,
-                AuthId.from(authId),
-                refreshToken
+                MemberProfileImageKey.from(profileKey)
         )).getId();
     }
 

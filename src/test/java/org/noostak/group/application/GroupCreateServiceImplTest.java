@@ -20,8 +20,6 @@ import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
-import org.noostak.member.domain.vo.AuthId;
-import org.noostak.member.domain.vo.AuthType;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.member.MemberRepositoryTest;
@@ -60,7 +58,7 @@ class GroupCreateServiceImplTest {
         groupRepository.deleteAll();
         memberRepository.deleteAll();
 
-        Member savedMember = saveMember("jsoonworld", "key", "123456", "refreshToken1");
+        Member savedMember = saveMember("jsoonworld", "key");
         savedMemberId = savedMember.getId();
 
         Mockito.when(invitationCodeGenerator.generate()).thenReturn(GroupInvitationCode.from("ABC123"));
@@ -117,14 +115,11 @@ class GroupCreateServiceImplTest {
         }
     }
 
-    private Member saveMember(String name, String key, String authId, String refreshToken) {
+    private Member saveMember(String name, String key) {
         return memberRepository.save(
                 Member.of(
                         MemberName.from(name),
-                        MemberProfileImageKey.from(key),
-                        AuthType.GOOGLE,
-                        AuthId.from(authId),
-                        refreshToken
+                        MemberProfileImageKey.from(key)
                 )
         );
     }

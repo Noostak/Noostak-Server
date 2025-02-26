@@ -26,9 +26,9 @@ public class Like extends BaseTimeEntity {
     @JoinColumn(name = "appointment_option_id")
     private AppointmentOption appointmentOption;
 
-    private Like(AppointmentMember appointmentMember, AppointmentOption option) {
+    private Like(AppointmentMember appointmentMember, AppointmentOption appointmentOption) {
         this.appointmentMember = appointmentMember;
-        this.appointmentOption = option;
+        this.appointmentOption = appointmentOption;
     }
 
     public static Like of(AppointmentMember appointmentMember, AppointmentOption option) {

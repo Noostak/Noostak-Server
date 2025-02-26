@@ -27,26 +27,13 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_account_status")
     private MemberAccountStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "auth_type")
-    private AuthType type;
-
-    @Embedded
-    @AttributeOverride(name = "id", column = @Column(name = "auth_id"))
-    private AuthId authId;
-
-    private String refreshToken;
-
-    private Member(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId authId, final String refreshToken) {
+    private Member(final MemberName name, final MemberProfileImageKey key) {
         this.name = name;
         this.key = key;
         this.status = MemberAccountStatus.ACTIVE;
-        this.type = type;
-        this.authId = authId;
-        this.refreshToken = refreshToken;
     }
-
-    public static Member of(final MemberName name, final MemberProfileImageKey key, final AuthType type, final AuthId authId, final String refreshToken) {
-        return new Member(name, key, type, authId, refreshToken);
+    
+    public static Member of(final MemberName name, final MemberProfileImageKey key) {
+        return new Member(name, key);
     }
 }

@@ -33,12 +33,12 @@ public class AppointmentMemberController {
     }
 
     @GetMapping("/{appointmentId}/timetable")
-    public ResponseEntity<SuccessResponse<AppointmentMembersAvailableTimesResponse>> getAvailableTimes(
+    public ResponseEntity<SuccessResponse<AppointmentMembersAvailableTimesResponse>> retrieveAvailableTimes(
             // @AuthenticationPrincipal Long memberId
             @PathVariable(name = "appointmentId") Long appointmentId
     ) {
         Long memberId = 3L;
-        AppointmentMembersAvailableTimesResponse response = appointmentMemberRetrieveAvailableTimesService.getAvailableTimes(memberId, appointmentId);
+        AppointmentMembersAvailableTimesResponse response = appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(memberId, appointmentId);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_MEMBER_AVAILABLE_TIMES_RETRIEVED, response));
     }
 }
