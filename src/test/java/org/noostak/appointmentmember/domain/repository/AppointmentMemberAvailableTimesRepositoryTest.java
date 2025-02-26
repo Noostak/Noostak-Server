@@ -9,11 +9,14 @@ import org.springframework.data.repository.query.FluentQuery;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class AppointmentMemberAvailableTimesRepositoryTest implements AppointmentMemberAvailableTimesRepository {
 
     private final List<AppointmentMemberAvailableTime> availableTimes = new ArrayList<>();
     private final AtomicLong idGenerator = new AtomicLong(1);
+    private final Map<Long, List<AppointmentMemberAvailableTime>> appointmentIdToTimesMap = new HashMap<>();
 
     @Override
     public AppointmentMemberAvailableTime save(AppointmentMemberAvailableTime entity) {
@@ -26,7 +29,12 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException("[ERROR] 'id' 필드에 접근할 수 없습니다.", e);
         }
+
         availableTimes.add(entity);
+        appointmentIdToTimesMap
+                .computeIfAbsent(entity.getAppointmentMember().getAppointment().getId(), k -> new ArrayList<>())
+                .add(entity);
+
         return entity;
     }
 
@@ -34,52 +42,37 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     public List<AppointmentMemberAvailableTime> findByAppointmentMember(AppointmentMember appointmentMember) {
         return availableTimes.stream()
                 .filter(time -> time.getAppointmentMember().equals(appointmentMember))
-                .toList();
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AppointmentMemberAvailableTime> findByAppointmentMember_AppointmentId(Long appointmentId) {
+        return appointmentIdToTimesMap.getOrDefault(appointmentId, Collections.emptyList());
     }
 
     @Override
     public void deleteByAppointmentMember(AppointmentMember appointmentMember) {
         availableTimes.removeIf(time -> time.getAppointmentMember().equals(appointmentMember));
-    }
-
-    @Override
-    public List<AppointmentMemberAvailableTime> findAll() {
-        return new ArrayList<>(availableTimes);
-    }
-
-    @Override
-    public List<AppointmentMemberAvailableTime> findAllById(Iterable<Long> longs) {
-        return List.of();
+        appointmentIdToTimesMap.values().forEach(list -> list.removeIf(time -> time.getAppointmentMember().equals(appointmentMember)));
     }
 
     @Override
     public Optional<AppointmentMemberAvailableTime> findById(Long id) {
-        return availableTimes.stream().filter(time -> time.getId().equals(id)).findFirst();
-    }
-
-    @Override
-    public void deleteAll() {
-        availableTimes.clear();
+        return availableTimes.stream()
+                .filter(time -> time.getId().equals(id))
+                .findFirst();
     }
 
     @Override
     public void deleteById(Long id) {
         availableTimes.removeIf(time -> time.getId().equals(id));
-    }
-
-    @Override
-    public boolean existsById(Long id) {
-        return availableTimes.stream().anyMatch(time -> time.getId().equals(id));
-    }
-
-    @Override
-    public long count() {
-        return availableTimes.size();
+        appointmentIdToTimesMap.values().forEach(list -> list.removeIf(time -> time.getId().equals(id)));
     }
 
     @Override
     public void delete(AppointmentMemberAvailableTime entity) {
         availableTimes.remove(entity);
+        appointmentIdToTimesMap.values().forEach(list -> list.remove(entity));
     }
 
     @Override
@@ -93,6 +86,35 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return availableTimes.stream().anyMatch(time -> time.getId().equals(id));
+    }
+
+    @Override
+    public long count() {
+        return availableTimes.size();
+    }
+
+    @Override
+    public void deleteAll() {
+        availableTimes.clear();
+        appointmentIdToTimesMap.clear();
+    }
+
+    @Override
+    public List<AppointmentMemberAvailableTime> findAll() {
+        return new ArrayList<>(availableTimes);
+    }
+
+    @Override
+    public List<AppointmentMemberAvailableTime> findAllById(Iterable<Long> ids) {
+        return StreamSupport.stream(ids.spliterator(), false)
+                .map(this::findById)
+                .flatMap(Optional::stream)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public <S extends AppointmentMemberAvailableTime> List<S> saveAll(Iterable<S> entities) {
         List<S> result = new ArrayList<>();
         for (S entity : entities) {
@@ -102,6 +124,20 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     }
 
     @Override
+    public List<AppointmentMemberAvailableTime> findAll(Sort sort) {
+        return new ArrayList<>(availableTimes);
+    }
+
+    @Override
+    public Page<AppointmentMemberAvailableTime> findAll(Pageable pageable) {
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), availableTimes.size());
+        List<AppointmentMemberAvailableTime> pageContent = availableTimes.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, availableTimes.size());
+    }
+
+    // 사용하지 않는 메서드는 빈 구현으로 둠
+    @Override
     public void flush() {}
 
     @Override
@@ -109,25 +145,21 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
         return null;
     }
 
-
     @Override
     public <S extends AppointmentMemberAvailableTime> List<S> saveAllAndFlush(Iterable<S> entities) {
         return List.of();
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<AppointmentMemberAvailableTime> entities) {
-
-    }
+    public void deleteAllInBatch(Iterable<AppointmentMemberAvailableTime> entities) {}
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> longs) {
-
-    }
+    public void deleteAllByIdInBatch(Iterable<Long> longs) {}
 
     @Override
     public void deleteAllInBatch() {
         availableTimes.clear();
+        appointmentIdToTimesMap.clear();
     }
 
     @Override
@@ -162,7 +194,7 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
 
     @Override
     public <S extends AppointmentMemberAvailableTime> Page<S> findAll(Example<S> example, Pageable pageable) {
-        return null;
+        return Page.empty();
     }
 
     @Override
@@ -177,16 +209,6 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
 
     @Override
     public <S extends AppointmentMemberAvailableTime, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-        return null;
-    }
-
-    @Override
-    public List<AppointmentMemberAvailableTime> findAll(Sort sort) {
-        return List.of();
-    }
-
-    @Override
-    public Page<AppointmentMemberAvailableTime> findAll(Pageable pageable) {
         return null;
     }
 }

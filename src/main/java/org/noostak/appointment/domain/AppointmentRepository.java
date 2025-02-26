@@ -11,5 +11,4 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         return findById(appointmentId)
                 .orElseThrow(()-> new AppointmentException(AppointmentErrorCode.APPOINTMENT_NOT_FOUND));
     }
-
 }

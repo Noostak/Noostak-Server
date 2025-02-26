@@ -1,11 +1,13 @@
 package org.noostak.infra;
 
-import org.springframework.stereotype.Component;
+import org.noostak.infra.error.S3UploadErrorCode;
+import org.noostak.infra.error.S3UploadException;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
-@Component
+@Primary
+@Service("prod")
 public class S3ServiceImpl implements S3Service {
 
     private final S3Storage s3Storage;
@@ -19,8 +21,12 @@ public class S3ServiceImpl implements S3Service {
     }
 
     @Override
-    public KeyAndUrl uploadImage(S3DirectoryPath dirPath, MultipartFile image) throws IOException {
-        return s3Storage.upload(dirPath, image);
+    public KeyAndUrl uploadImage(S3DirectoryPath dirPath, MultipartFile image) {
+        try {
+            return s3Storage.upload(dirPath, image);
+        } catch (Exception e) {
+            throw new S3UploadException(S3UploadErrorCode.IMAGE_UPLOAD_FAILED,e.getMessage());
+        }
     }
 
     @Override

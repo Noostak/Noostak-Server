@@ -16,4 +16,3 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     int getLikeCountByAppointmentMemberId(@Param("appointmentMemberId") Long appointmentMemberId);
 
 }
-

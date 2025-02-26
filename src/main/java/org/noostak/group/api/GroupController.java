@@ -6,6 +6,7 @@ import org.noostak.group.application.GroupService;
 import org.noostak.group.dto.request.GroupCreateRequest;
 import org.noostak.group.dto.response.create.GroupCreateResponse;
 import org.noostak.group.dto.response.info.GroupInfoResponse;
+import org.noostak.group.dto.response.ongoing.GroupOngoingAppointmentsResponse;
 import org.noostak.group.dto.response.retrieve.GroupsRetrieveResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +51,15 @@ public class GroupController {
         Long memberId = 1L;
         GroupInfoResponse groupInfo = groupService.getGroupInfo(memberId, groupId);
         return ResponseEntity.ok(SuccessResponse.of(GROUP_INFO, groupInfo));
+    }
+
+    @GetMapping("/{groupId}/appointments/ongoing")
+    public ResponseEntity<SuccessResponse<GroupOngoingAppointmentsResponse>> getGroupOngoingAppointments(
+            // @AuthenticationPrincipal Long memberId,
+            @PathVariable Long groupId
+    ) {
+        Long memberId = 1L;
+        GroupOngoingAppointmentsResponse groupOngoingAppointments = groupService.getGroupOngoingAppointments(memberId, groupId);
+        return ResponseEntity.ok(SuccessResponse.of(GROUP_ONGOING_APPOINTMENTS_LOADED, groupOngoingAppointments));
     }
 }

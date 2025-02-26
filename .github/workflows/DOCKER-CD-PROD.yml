@@ -57,6 +57,13 @@ jobs:
           echo "${{ secrets.AWS_CONFIG_YML }}" > ./aws-config.yml
         working-directory: ${{ env.working-directory }}
 
+      - name: oauth-config.yml 생성
+        run: |
+          cd ./src/main/resources
+          touch ./oauth-config.yml
+          echo "${{ secrets.PROD_OAUTH_CONFIG_YML }}" > ./oauth-config.yml
+        working-directory: ${{ env.working-directory }}
+
       - name: 빌드
         run: |
           chmod +x gradlew
