@@ -1,4 +1,4 @@
-package org.noostak.appointment.application;
+package org.noostak.appointment.application.create;
 
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
 

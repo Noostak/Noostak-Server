@@ -28,6 +28,9 @@ public enum AppointmentErrorCode implements ErrorCode {
     INVALID_APPOINTMENT_NAME_CHARACTER(HttpStatus.BAD_REQUEST, "약속 이름은 한글, 영어, 숫자, 공백만 허용됩니다."),
 
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 멤버를 찾을 수 없습니다."),
+    HOST_SELECTION_TIME_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 약속의 호스트 선택 시간을 찾을 수 없습니다."),
+    MEMBER_AVAILABILITY_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 약속의 멤버 가용 시간을 찾을 수 없습니다."),
+    INVALID_DURATION(HttpStatus.BAD_REQUEST, "유효하지 않은 소요 시간입니다."),
     ;
 
     public static final String PREFIX = "[APPOINTMENT ERROR] ";
