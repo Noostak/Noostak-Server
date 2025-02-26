@@ -1,6 +1,7 @@
 package org.noostak.appointment.application.recommendation;
 
 import org.junit.jupiter.api.*;
+import org.noostak.appointment.application.recommendation.impl.AppointmentOptionPriorityServiceImpl;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.Appointment;
@@ -107,7 +108,7 @@ class AppointmentOptionPriorityServiceTest {
         groupRepository = new GroupRepositoryTest();
         memberRepository = new MemberRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
-        priorityService = new AppointmentOptionPriorityService(likeRepository, groupRepository);
+        priorityService = new AppointmentOptionPriorityServiceImpl(likeRepository, groupRepository);
         appointmentRepository = new AppointmentRepositoryTest();
         appointmentMemberRepository = new AppointmentMemberRepositoryTest();
     }
