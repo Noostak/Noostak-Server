@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public interface AppointmentOptionRepository extends JpaRepository<AppointmentOption, Long> {
@@ -54,13 +53,14 @@ public interface AppointmentOptionRepository extends JpaRepository<AppointmentOp
             Appointment appointment,
             LocalDate startDate,
             LocalDate endDate
-    ){
+    ) {
         return findAllByAppointmentConfirmedBetweenDate(
                 appointment.getId(),
                 AppointmentOptionStatus.CONFIRMED.name(),
                 startDate,
                 endDate
         );
+    }
 
     default AppointmentOption getById(Long optionId){
         return findById(optionId)
