@@ -61,8 +61,17 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void updateMember() {
+    @Transactional
+    public void updateMember(Long memberId, String memberName, MultipartFile givenImage) {
+        Member member = memberRepository.getById(memberId);
+        String previousProfileKey = member.getKey().value();
 
+        // 이미지 삭제 후 새로운 이미지 업로드
+        s3Service.deleteImage(previousProfileKey);
+        KeyAndUrl keyAndUrl = s3Service.uploadImage(S3DirectoryPath.MEMBER, givenImage);
+
+        member.setName(MemberName.from(memberName));
+        member.setKey(MemberProfileImageKey.from(keyAndUrl.getKey()));
     }
 
     @Override
