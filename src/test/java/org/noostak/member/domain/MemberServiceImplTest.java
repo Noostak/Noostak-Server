@@ -39,6 +39,37 @@ class MemberServiceImplTest {
     @DisplayName("멤버 성공 케이스")
     class Success {
         @Test
+        @DisplayName("회원 정보 업데이트가 성공적으로 이루어져야 한다")
+        void updateMember_Success() {
+            // given
+            Long memberId = 1L;
+            String newMemberName = "김철수";
+            MultipartFile newImage = mock(MultipartFile.class);
+
+            Member existingMember = spy(Member.of(
+                    MemberName.from("홍길동"),
+                    MemberProfileImageKey.from("previous-key")
+            ));
+
+            when(memberRepository.getById(memberId)).thenReturn(existingMember);
+            when(s3Service.uploadImage(eq(S3DirectoryPath.MEMBER), eq(newImage)))
+                    .thenReturn(KeyAndUrl.of("new-key", "new-url"));
+
+            // when
+            memberService.updateMember(memberId, newMemberName, newImage);
+
+            // then
+            verify(memberRepository, times(1)).getById(memberId);
+            verify(s3Service, times(1)).deleteImage("previous-key");
+            verify(s3Service, times(1)).uploadImage(eq(S3DirectoryPath.MEMBER), eq(newImage));
+            verify(existingMember, times(1)).setName(any(MemberName.class));
+            verify(existingMember, times(1)).setKey(any(MemberProfileImageKey.class));
+
+            // 값이 정상적으로 변경되었는지 확인
+            assertEquals(newMemberName, existingMember.getName().value());
+            assertEquals("new-key", existingMember.getKey().value());
+        }
+        @Test
         @DisplayName("정상적인 회원 가입 요청 시 멤버가 성공적으로 생성된다")
         void createMember_Success() {
             // given
@@ -80,7 +111,7 @@ class MemberServiceImplTest {
 
             // then
             assertNotNull(response);
-            assertEquals("홍길동", response.getMembername());
+            assertEquals("홍길동", response.getMemberName());
             assertEquals("profile-url", response.getMemberProfileImage());
 
             verify(memberRepository, times(1)).getById(memberId);
@@ -145,6 +176,92 @@ class MemberServiceImplTest {
 
             verify(s3Service, times(1)).uploadImage(any(S3DirectoryPath.class), eq(mockFile));
             verify(memberRepository, never()).save(any(Member.class));
+        }
+
+        @Test
+        @DisplayName("회원 정보 업데이트 중 이미지 업로드 실패 시 예외가 발생해야 한다")
+        void updateMember_Fail_WhenImageUploadFails() {
+            // given
+            Long memberId = 1L;
+            String newMemberName = "김철수";
+            MultipartFile newImage = mock(MultipartFile.class);
+
+            Member existingMember = Member.of(
+                    MemberName.from("홍길동"),
+                    MemberProfileImageKey.from("previous-key")
+            );
+
+            when(memberRepository.getById(memberId)).thenReturn(existingMember);
+            doNothing().when(s3Service).deleteImage(anyString());
+            when(s3Service.uploadImage(any(S3DirectoryPath.class), any(MultipartFile.class)))
+                    .thenThrow(new RuntimeException("이미지 업로드 실패"));
+
+            // when & then
+            assertThrows(RuntimeException.class, () -> {
+                memberService.updateMember(memberId, newMemberName, newImage);
+            });
+
+            // 검증
+            verify(memberRepository, times(1)).getById(memberId);
+            verify(s3Service, times(1)).deleteImage("previous-key");
+            verify(s3Service, times(1)).uploadImage(any(S3DirectoryPath.class), any(MultipartFile.class));
+
+            // 예외 발생 시 회원 정보가 변경되지 않아야 함
+            assertEquals("홍길동", existingMember.getName().value());
+            assertEquals("previous-key", existingMember.getKey().value());
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 회원 ID로 업데이트 시도 시 예외가 발생해야 한다")
+        void updateMember_Fail_WithNonExistingId() {
+            // given
+            Long nonExistingMemberId = 999L;
+            String newMemberName = "김철수";
+            MultipartFile newImage = mock(MultipartFile.class);
+
+            when(memberRepository.getById(nonExistingMemberId))
+                    .thenThrow(new IllegalArgumentException("회원을 찾을 수 없습니다"));
+
+            // when & then
+            assertThrows(IllegalArgumentException.class, () -> {
+                memberService.updateMember(nonExistingMemberId, newMemberName, newImage);
+            });
+
+            // 검증
+            verify(memberRepository, times(1)).getById(nonExistingMemberId);
+            verify(s3Service, never()).deleteImage(anyString());
+            verify(s3Service, never()).uploadImage(any(S3DirectoryPath.class), any(MultipartFile.class));
+        }
+
+        @Test
+        @DisplayName("잘못된 회원명으로 업데이트 시도 시 예외가 발생해야 한다")
+        void updateMember_Fail_WithInvalidName() {
+            // given
+            Long memberId = 1L;
+            String invalidName = "";  // 빈 문자열은 유효하지 않다고 가정
+            MultipartFile newImage = mock(MultipartFile.class);
+
+            Member existingMember = Member.of(
+                    MemberName.from("홍길동"),
+                    MemberProfileImageKey.from("previous-key")
+            );
+
+            when(memberRepository.getById(memberId)).thenReturn(existingMember);
+            doNothing().when(s3Service).deleteImage(anyString());
+            when(s3Service.uploadImage(any(S3DirectoryPath.class), any(MultipartFile.class)))
+                    .thenReturn(KeyAndUrl.of("new-key", "new-url"));
+
+            // MemberName.from(invalidName)에서 예외 발생을 가정
+
+            // when & then
+            assertThrows(MemberException.class, () -> {
+                memberService.updateMember(memberId, invalidName, newImage);
+            });
+
+            // 검증
+            verify(memberRepository, times(1)).getById(memberId);
+            verify(s3Service, times(1)).deleteImage("previous-key");
+            verify(s3Service, times(1)).uploadImage(any(S3DirectoryPath.class), any(MultipartFile.class));
         }
     }
 }
