@@ -27,6 +27,14 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_account_status")
     private MemberAccountStatus status;
 
+    public void setName(MemberName name) {
+        this.name = name;
+    }
+
+    public void setKey(MemberProfileImageKey key) {
+        this.key = key;
+    }
+
     private Member(final MemberName name, final MemberProfileImageKey key) {
         this.name = name;
         this.key = key;
