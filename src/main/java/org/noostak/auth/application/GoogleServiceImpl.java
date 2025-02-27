@@ -65,6 +65,23 @@ public class GoogleServiceImpl implements GoogleService{
         return AuthId.from(response.getId());
     }
 
+    @Override
+    public void logout(String accessToken) {
+        // 별도로 처리 해줄 로직 없음
+    }
+
+    @Override
+    public void unlink(String accessToken) {
+        String url = GoogleApi.UNLINK.getUrl();
+
+        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
+
+        GoogleUnlinkResponse response =
+                restClient.postRequest(url, headers, GoogleUnlinkResponse.class);
+
+        response.validate();
+    }
+
     public HttpHeaders makeAuthorizationBearerTokenHeader(String token){
         HttpHeaders headers = new HttpHeaders();
 
