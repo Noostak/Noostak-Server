@@ -35,14 +35,18 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
 
     @Override
     public List<Appointment> findAllByGroupIdConfirmed(AppointmentStatus status, Long groupId) {
-        return List.of();
+        return appointments.stream()
+                .filter(appointment -> appointment.getGroup().getId().equals(groupId))
+                .filter(appointment -> appointment.getAppointmentStatus().equals(status))
+                .sorted(Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Appointment> findAllByGroupIdConfirmed(String status, Long groupId) {
+    public List<Appointment> findAllByGroupIdConfirmed(Long groupId) {
         return appointments.stream()
                 .filter(appointment -> appointment.getGroup().getId().equals(groupId))
-                .filter(appointment -> appointment.getAppointmentStatus().name().equals(status))
+                .filter(appointment -> appointment.getAppointmentStatus().equals(AppointmentStatus.CONFIRMED)) // 확정된 약속만 필터링
                 .sorted(Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
     }
@@ -137,6 +141,11 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
 
     @Override
     public Appointment getOne(Long aLong) {
+        return null;
+    }
+
+    @Override
+    public Appointment getById(Long aLong) {
         return null;
     }
 
