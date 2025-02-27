@@ -1,8 +1,8 @@
 package org.noostak.auth.application;
 
-import org.noostak.auth.dto.KakaoAccessTokenRequest;
-import org.noostak.auth.dto.KakaoLogoutRequest;
-import org.noostak.auth.dto.KakaoTokenRequest;
+import org.noostak.auth.dto.kakao.KakaoAccessTokenRequest;
+import org.noostak.auth.dto.kakao.KakaoLogoutRequest;
+import org.noostak.auth.dto.kakao.KakaoTokenRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
