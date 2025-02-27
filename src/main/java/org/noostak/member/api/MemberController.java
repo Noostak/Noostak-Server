@@ -11,32 +11,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/profile")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/profile")
+    @GetMapping
     public ResponseEntity<SuccessResponse> getProfile(@RequestAttribute Long memberId){
         GetProfileResponse response = memberService.fetchMember(memberId);
         return ResponseEntity.ok(SuccessResponse.of(MemberSuccessCode.MEMBER_FETCH_COMPLETE,response));
     }
 
-    @PatchMapping("/profile")
+    @PatchMapping
     public ResponseEntity<SuccessResponse> updateProfile(
             @RequestAttribute Long memberId,
             @ModelAttribute UpdateProfileRequest request
             ){
         memberService.updateMember(memberId, request.getMemberName(), request.getMemberProfileImage());
         return ResponseEntity.ok(SuccessResponse.of(MemberSuccessCode.MEMBER_UPDATE_COMPLETE));
-    }
-
-    @DeleteMapping("/auth/withdraw")
-    public ResponseEntity<SuccessResponse> deleteMember(
-            @RequestAttribute Long memberId
-    ){
-        memberService.deleteMember(memberId);
-        return ResponseEntity.ok(SuccessResponse.of(MemberSuccessCode.MEMBER_DELETE_COMPLETE));
     }
 }
