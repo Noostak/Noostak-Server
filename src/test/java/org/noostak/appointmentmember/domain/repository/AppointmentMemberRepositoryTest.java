@@ -31,6 +31,13 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
     }
 
     @Override
+    public List<AppointmentMember> findByAppointmentId(Long appointmentId) {
+        return appointmentMembers.stream()
+                .filter(member -> member.getAppointment().getId().equals(appointmentId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<AppointmentMember> findByMemberIdAndAppointmentId(Long memberId, Long appointmentId) {
         return appointmentMembers.stream()
                 .filter(member -> member.getMember().getId().equals(memberId) && member.getAppointment().getId().equals(appointmentId))
@@ -85,10 +92,14 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Long> longs) {}
+    public void deleteAllById(Iterable<? extends Long> longs) {
+
+    }
 
     @Override
-    public void deleteAll(Iterable<? extends AppointmentMember> entities) {}
+    public void deleteAll(Iterable<? extends AppointmentMember> entities) {
+
+    }
 
     @Override
     public <S extends AppointmentMember> List<S> saveAll(Iterable<S> entities) {
@@ -113,14 +124,18 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<AppointmentMember> entities) {}
+    public void deleteAllInBatch(Iterable<AppointmentMember> entities) {
+
+    }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> longs) {}
+    public void deleteAllByIdInBatch(Iterable<Long> longs) {
+
+    }
 
     @Override
     public void deleteAllInBatch() {
-        appointmentMembers.clear();
+
     }
 
     @Override
@@ -175,12 +190,11 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
 
     @Override
     public List<AppointmentMember> findAll(Sort sort) {
-        return List.of();
+        return new ArrayList<>(appointmentMembers);
     }
 
     @Override
     public Page<AppointmentMember> findAll(Pageable pageable) {
-        return null;
+        return new PageImpl<>(appointmentMembers, pageable, appointmentMembers.size());
     }
-
 }
