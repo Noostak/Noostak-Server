@@ -62,4 +62,9 @@ public class GroupController {
         GroupOngoingAppointmentsResponse groupOngoingAppointments = groupService.getGroupOngoingAppointments(memberId, groupId);
         return ResponseEntity.ok(SuccessResponse.of(GROUP_ONGOING_APPOINTMENTS_LOADED, groupOngoingAppointments));
     }
+
+    @PostMapping("/join")
+    public ResponseEntity<SuccessResponse<GroupOngoingAppointmentsResponse>> joinGroup(
+            @RequestAttribute Long memberId
+    ){return null;}
 }
