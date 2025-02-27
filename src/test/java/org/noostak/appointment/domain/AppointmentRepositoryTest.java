@@ -1,8 +1,10 @@
 package org.noostak.appointment.domain;
 
+import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -26,24 +28,23 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
     @Override
     public List<Appointment> findAllByGroupId(Long groupId) {
         return appointments.stream()
-                .filter(appointment -> {
-                    boolean matches = appointment.getGroup().getId().equals(groupId);
-                    return matches;
-                })
-                .sorted((a1, a2) -> {
-                    return Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed()
-                            .compare(a1, a2);
-                })
+                .filter(appointment -> appointment.getGroup().getId().equals(groupId))
+                .sorted(Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
     }
 
     @Override
-    public <S extends Appointment> List<S> saveAll(Iterable<S> entities) {
-        List<S> savedEntities = new ArrayList<>();
-        for (S entity : entities) {
-            savedEntities.add((S) save(entity));
-        }
-        return savedEntities;
+    public List<Appointment> findAllByGroupIdConfirmed(AppointmentStatus status, Long groupId) {
+        return List.of();
+    }
+
+    @Override
+    public List<Appointment> findAllByGroupIdConfirmed(String status, Long groupId) {
+        return appointments.stream()
+                .filter(appointment -> appointment.getGroup().getId().equals(groupId))
+                .filter(appointment -> appointment.getAppointmentStatus().name().equals(status))
+                .sorted(Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -56,11 +57,6 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
     @Override
     public List<Appointment> findAll() {
         return new ArrayList<>(appointments);
-    }
-
-    @Override
-    public List<Appointment> findAllById(Iterable<Long> longs) {
-        return List.of();
     }
 
     @Override
@@ -112,9 +108,8 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
     }
 
     @Override
-    public void flush() {
+    public void flush() {}
 
-    }
     @Override
     public <S extends Appointment> S saveAndFlush(S entity) {
         return null;
@@ -122,7 +117,7 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
 
     @Override
     public <S extends Appointment> List<S> saveAllAndFlush(Iterable<S> entities) {
-        return List.of();
+        return saveAll(entities);
     }
 
     @Override
@@ -146,13 +141,46 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
     }
 
     @Override
-    public Appointment getById(Long aLong) {
+    public Appointment getReferenceById(Long aLong) {
         return null;
     }
 
     @Override
-    public Appointment getReferenceById(Long aLong) {
-        return null;
+    public <S extends Appointment> List<S> saveAll(Iterable<S> entities) {
+        List<S> savedEntities = new ArrayList<>();
+        for (S entity : entities) {
+            savedEntities.add((S) save(entity));
+        }
+        return savedEntities;
+    }
+
+    @Override
+    public List<Appointment> findAllById(Iterable<Long> ids) {
+        return appointments.stream()
+                .filter(appointment -> StreamSupport.stream(ids.spliterator(), false).anyMatch(id -> id.equals(appointment.getId())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Appointment> findAll(Sort sort) {
+        return appointments.stream()
+                .sorted((a1, a2) -> {
+                    Comparator<Appointment> comparator = Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder()));
+                    return sort.isSorted() ? comparator.reversed().compare(a1, a2) : 0;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Appointment> findAll(Pageable pageable) {
+        int pageSize = pageable.getPageSize();
+        int pageNumber = pageable.getPageNumber();
+        List<Appointment> sortedAppointments = appointments.stream()
+                .sorted(Comparator.comparing(Appointment::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                .skip((long) pageNumber * pageSize)
+                .limit(pageSize)
+                .collect(Collectors.toList());
+        return new PageImpl<>(sortedAppointments, pageable, appointments.size());
     }
 
     @Override
@@ -187,20 +215,6 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
 
     @Override
     public <S extends Appointment, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-        return null;
-    }
-
-    @Override
-    public List<Appointment> findAllByGroupIdConfirmed(String status, Long groupId) {
-      return null;
-    }
-  
-    public List<Appointment> findAll(Sort sort) {
-        return List.of();
-    }
-
-    @Override
-    public Page<Appointment> findAll(Pageable pageable) {
         return null;
     }
 }
