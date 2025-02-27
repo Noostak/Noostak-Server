@@ -19,13 +19,6 @@ jobs:
         with:
           ref: staging  # 바로 staging 브랜치를 체크아웃
 
-      # remote branch에서 pull
-      - name: Pull specific branch
-        run: |
-            git pull origin staging
-        working-directory: ${{ env.working-directory }}
-
-
       # JDK setting - Amazon Corretto JDK 21 설정
       - name: Set up Amazon Corretto JDK 21
         uses: actions/setup-java@v3
@@ -108,4 +101,4 @@ jobs:
           key: ${{ secrets.STAGING_SERVER_KEY }}
           script: |
             cd ~
-            ./deploy-staging.sh
+            ./deploy-dev.sh
