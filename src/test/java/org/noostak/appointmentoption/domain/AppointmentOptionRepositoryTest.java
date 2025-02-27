@@ -25,14 +25,30 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
             throw new RuntimeException("[ERROR] 'id' 필드에 접근할 수 없습니다.", e);
         }
         appointmentOptions.add(entity);
+
+        // ✅ 저장 후 즉시 조회하여 데이터 유효성 검사
+        Optional<AppointmentOption> savedOption = findById(entity.getId());
+        if (savedOption.isEmpty()) {
+            throw new RuntimeException("[ERROR] save() 후 findById()에서 데이터를 찾을 수 없습니다.");
+        }
         return entity;
     }
 
     @Override
     public Optional<AppointmentOption> findById(Long id) {
         return appointmentOptions.stream()
-                .filter(option -> option.getId().equals(id))
+                .filter(option -> id.equals(option.getId())) // ✅ equals() 비교 방식 수정
                 .findFirst();
+    }
+
+    @Override
+    public boolean existsById(Long aLong) {
+        return false;
+    }
+
+    @Override
+    public <S extends AppointmentOption> List<S> saveAll(Iterable<S> entities) {
+        return List.of();
     }
 
     @Override
@@ -41,15 +57,34 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public List<AppointmentOption> findAllById(Iterable<Long> ids) {
-        Set<Long> idSet = new HashSet<>();
-        ids.forEach(idSet::add);
-
-        return appointmentOptions.stream()
-                .filter(option -> idSet.contains(option.getId()))
-                .collect(Collectors.toList());
+    public List<AppointmentOption> findAllById(Iterable<Long> longs) {
+        return List.of();
     }
 
+    @Override
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public void deleteById(Long aLong) {
+
+    }
+
+    @Override
+    public void delete(AppointmentOption entity) {
+
+    }
+
+    @Override
+    public void deleteAllById(Iterable<? extends Long> longs) {
+
+    }
+
+    @Override
+    public void deleteAll(Iterable<? extends AppointmentOption> entities) {
+
+    }
 
     @Override
     public void deleteAll() {
@@ -57,42 +92,9 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public void deleteById(Long id) {
-        appointmentOptions.removeIf(option -> option.getId().equals(id));
+    public void flush() {
+
     }
-
-    @Override
-    public boolean existsById(Long id) {
-        return appointmentOptions.stream().anyMatch(option -> option.getId().equals(id));
-    }
-
-    @Override
-    public long count() {
-        return appointmentOptions.size();
-    }
-
-    @Override
-    public void delete(AppointmentOption entity) {
-        appointmentOptions.remove(entity);
-    }
-
-    @Override
-    public void deleteAllById(Iterable<? extends Long> ids) {}
-
-    @Override
-    public void deleteAll(Iterable<? extends AppointmentOption> entities) {}
-
-    @Override
-    public <S extends AppointmentOption> List<S> saveAll(Iterable<S> entities) {
-        List<S> result = new ArrayList<>();
-        for (S entity : entities) {
-            result.add((S) save(entity));
-        }
-        return result;
-    }
-
-    @Override
-    public void flush() {}
 
     @Override
     public <S extends AppointmentOption> S saveAndFlush(S entity) {
@@ -105,28 +107,32 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<AppointmentOption> entities) {}
+    public void deleteAllInBatch(Iterable<AppointmentOption> entities) {
+
+    }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> ids) {}
+    public void deleteAllByIdInBatch(Iterable<Long> longs) {
+
+    }
 
     @Override
     public void deleteAllInBatch() {
-        appointmentOptions.clear();
+
     }
 
     @Override
-    public AppointmentOption getOne(Long id) {
+    public AppointmentOption getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public AppointmentOption getById(Long id) {
+    public AppointmentOption getById(Long aLong) {
         return null;
     }
 
     @Override
-    public AppointmentOption getReferenceById(Long id) {
+    public AppointmentOption getReferenceById(Long aLong) {
         return null;
     }
 
