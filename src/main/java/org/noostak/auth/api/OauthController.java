@@ -162,4 +162,25 @@ public class OauthController {
         throw new AuthException(AuthErrorCode.INVALID_TOKEN);
     }
 
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request){
+        String givenAccessToken = request.getHeader("Authorization");
+        givenAccessToken = JwtToken.extractToken(givenAccessToken);
+
+        // 토큰 provider 찾기
+        for(AuthType authType : AuthType.values()){
+            OauthService oauthService = oauthServiceFactory.getService(authType);
+
+            try {
+                oauthService.logout(givenAccessToken);
+                return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.LOGOUT_COMPLETED)));
+            }catch (ExternalApiException | RestClientException e){
+                GlobalLogger.warn(AuthErrorCode.INVALID_TOKEN.getMessage());
+            }
+        }
+
+        // 통과하지 못한다면 유효한 토큰이 아닌 것으로 판단
+        throw new AuthException(AuthErrorCode.INVALID_TOKEN);
+    }
 }
