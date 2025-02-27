@@ -12,4 +12,7 @@ public interface OauthService {
 
     AuthId verify(String accessToken); // 로그인 처리
 
+    void logout(String accessToken); // 로그 아웃
+
+    void unlink(String accessToken); // 연결 끊기
 }

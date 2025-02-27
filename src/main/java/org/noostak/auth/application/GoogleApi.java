@@ -8,7 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum GoogleApi {
     TOKEN_REQUEST("https://oauth2.googleapis.com/token"),
-    USER_INFO("https://www.googleapis.com/oauth2/v2/userinfo")
+    USER_INFO("https://www.googleapis.com/oauth2/v2/userinfo"),
+    UNLINK("https://oauth2.googleapis.com/revoke")
+
     ;
 
     private final String url;
