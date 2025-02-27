@@ -3,6 +3,8 @@ package org.noostak.member.application;
 import org.noostak.infra.KeyAndUrl;
 import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
+import org.noostak.member.common.exception.MemberErrorCode;
+import org.noostak.member.common.exception.MemberException;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
 import org.noostak.member.domain.vo.MemberName;
@@ -75,7 +77,14 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void deleteMember() {
+    @Transactional
+    public void deleteMember(Long memberId) {
+        Member member = memberRepository.getById(memberId);
 
+        // 탈퇴 시 이미지 삭제
+        String removedProfileKey = member.getKey().value();
+        s3Service.deleteImage(removedProfileKey);
+
+        memberRepository.delete(member);
     }
 }

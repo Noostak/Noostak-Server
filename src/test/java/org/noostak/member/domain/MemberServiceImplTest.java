@@ -117,6 +117,30 @@ class MemberServiceImplTest {
             verify(memberRepository, times(1)).getById(memberId);
             verify(s3Service, times(1)).getImageUrl("profile-key");
         }
+
+        @Test
+        @DisplayName("회원 삭제가 성공적으로 이루어져야 한다")
+        void deleteMember_Success() {
+            // given
+            Long memberId = 1L;
+
+            Member existingMember = Member.of(
+                    MemberName.from("홍길동"),
+                    MemberProfileImageKey.from("profile-key")
+            );
+
+            when(memberRepository.getById(memberId)).thenReturn(existingMember);
+            doNothing().when(s3Service).deleteImage(anyString());
+            doNothing().when(memberRepository).delete(any(Member.class));
+
+            // when
+            memberService.deleteMember(memberId);
+
+            // then
+            verify(memberRepository, times(1)).getById(memberId);
+            verify(s3Service, times(1)).deleteImage("profile-key");
+            verify(memberRepository, times(1)).delete(existingMember);
+        }
     }
 
     @Nested
@@ -262,6 +286,78 @@ class MemberServiceImplTest {
             verify(memberRepository, times(1)).getById(memberId);
             verify(s3Service, times(1)).deleteImage("previous-key");
             verify(s3Service, times(1)).uploadImage(any(S3DirectoryPath.class), any(MultipartFile.class));
+        }
+
+
+        @Test
+        @DisplayName("존재하지 않는 회원 ID로 삭제 시도 시 예외가 발생해야 한다")
+        void deleteMember_Fail_WithNonExistingId() {
+            // given
+            Long nonExistingMemberId = 999L;
+
+            when(memberRepository.getById(nonExistingMemberId))
+                    .thenThrow(new IllegalArgumentException("회원을 찾을 수 없습니다"));
+
+            // when & then
+            assertThrows(IllegalArgumentException.class, () -> {
+                memberService.deleteMember(nonExistingMemberId);
+            });
+
+            // 검증
+            verify(memberRepository, times(1)).getById(nonExistingMemberId);
+            verify(s3Service, never()).deleteImage(anyString());
+            verify(memberRepository, never()).delete(any(Member.class));
+        }
+
+        @Test
+        @DisplayName("이미지 삭제 실패 시 예외가 발생해야 한다")
+        void deleteMember_Fail_WhenImageDeleteFails() {
+            // given
+            Long memberId = 1L;
+
+            Member existingMember = Member.of(
+                    MemberName.from("홍길동"),
+                    MemberProfileImageKey.from("profile-key")
+            );
+
+            when(memberRepository.getById(memberId)).thenReturn(existingMember);
+            doThrow(new RuntimeException("이미지 삭제 실패")).when(s3Service).deleteImage(anyString());
+
+            // when & then
+            assertThrows(RuntimeException.class, () -> {
+                memberService.deleteMember(memberId);
+            });
+
+            // 검증
+            verify(memberRepository, times(1)).getById(memberId);
+            verify(s3Service, times(1)).deleteImage("profile-key");
+            verify(memberRepository, never()).delete(any(Member.class));
+        }
+
+        @Test
+        @DisplayName("회원 레포지토리 삭제 실패 시 예외가 발생해야 한다")
+        void deleteMember_Fail_WhenRepositoryDeleteFails() {
+            // given
+            Long memberId = 1L;
+
+            Member existingMember = Member.of(
+                    MemberName.from("홍길동"),
+                    MemberProfileImageKey.from("profile-key")
+            );
+
+            when(memberRepository.getById(memberId)).thenReturn(existingMember);
+            doNothing().when(s3Service).deleteImage(anyString());
+            doThrow(new RuntimeException("회원 삭제 실패")).when(memberRepository).delete(any(Member.class));
+
+            // when & then
+            assertThrows(RuntimeException.class, () -> {
+                memberService.deleteMember(memberId);
+            });
+
+            // 검증
+            verify(memberRepository, times(1)).getById(memberId);
+            verify(s3Service, times(1)).deleteImage("profile-key");
+            verify(memberRepository, times(1)).delete(existingMember);
         }
     }
 }
