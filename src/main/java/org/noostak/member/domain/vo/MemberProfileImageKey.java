@@ -2,9 +2,8 @@ package org.noostak.member.domain.vo;
 
 import jakarta.persistence.Embeddable;
 import lombok.EqualsAndHashCode;
-import org.noostak.group.domain.vo.GroupProfileImageKey;
-import org.noostak.member.common.MemberErrorCode;
-import org.noostak.member.common.MemberException;
+import org.noostak.member.common.exception.MemberErrorCode;
+import org.noostak.member.common.exception.MemberException;
 
 @Embeddable
 @EqualsAndHashCode

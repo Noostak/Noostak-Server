@@ -1,7 +1,7 @@
 package org.noostak.member.domain;
 
-import org.noostak.member.common.MemberErrorCode;
-import org.noostak.member.common.MemberException;
+import org.noostak.member.common.exception.MemberErrorCode;
+import org.noostak.member.common.exception.MemberException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
