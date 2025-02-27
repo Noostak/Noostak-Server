@@ -23,14 +23,4 @@ public class AppointmentOptionController {
         appointmentService.confirmAppointment(appointmentOptionId);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CONFIRMED));
     }
-
-    @GetMapping("/{appointmentOptionId}/confirmed")
-    public ResponseEntity<SuccessResponse<AppointmentConfirmedOptionResponse>> getConfirmedAppointment(
-            // @AuthenticationPrincipal Long memberId,
-            @PathVariable Long appointmentOptionId
-    ) {
-        Long memberId = 1L;
-        AppointmentConfirmedOptionResponse response = appointmentService.getConfirmedAppointmentOption(memberId, appointmentOptionId);
-        return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CONFIRMED, response));
-    }
 }
