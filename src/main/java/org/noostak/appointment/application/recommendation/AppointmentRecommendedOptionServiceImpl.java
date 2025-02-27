@@ -5,8 +5,8 @@ import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointment.domain.AppointmentRepository;
-import org.noostak.appointment.dto.response.AppointmentPriorityGroupResponse;
-import org.noostak.appointment.dto.response.AppointmentRecommendedOptionsResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentPriorityGroupResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentRecommendedOptionsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

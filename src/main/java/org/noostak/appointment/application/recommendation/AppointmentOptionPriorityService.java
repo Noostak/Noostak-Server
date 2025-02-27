@@ -1,6 +1,6 @@
 package org.noostak.appointment.application.recommendation;
 
-import org.noostak.appointment.dto.response.AppointmentPriorityGroupResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentPriorityGroupResponse;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 

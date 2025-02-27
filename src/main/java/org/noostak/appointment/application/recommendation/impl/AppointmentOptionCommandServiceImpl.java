@@ -3,7 +3,7 @@ package org.noostak.appointment.application.recommendation.impl;
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.recommendation.AppointmentOptionCommandService;
 import org.noostak.appointment.domain.Appointment;
-import org.noostak.appointment.dto.response.AppointmentOptionAvailabilityResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentOptionAvailabilityResponse;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.domain.AppointmentOptionRepository;
 import org.springframework.stereotype.Service;
