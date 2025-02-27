@@ -3,11 +3,12 @@ package org.noostak.appointmentoption.domain;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
+import java.util.function.Function;
 
 public class AppointmentOptionRepositoryTest implements AppointmentOptionRepository {
 
@@ -16,35 +17,49 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
 
     @Override
     public AppointmentOption save(AppointmentOption entity) {
-        try {
-            if (entity.getId() == null) {
+        if (entity.getId() == null) {
+            try {
                 var idField = AppointmentOption.class.getDeclaredField("id");
                 idField.setAccessible(true);
                 idField.set(entity, idGenerator.getAndIncrement());
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException("[ERROR] 'id' 필드에 접근할 수 없습니다.", e);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("[ERROR] 'id' 필드에 접근할 수 없습니다.", e);
         }
         appointmentOptions.add(entity);
-
-        // ✅ 저장 후 즉시 조회하여 데이터 유효성 검사
-        Optional<AppointmentOption> savedOption = findById(entity.getId());
-        if (savedOption.isEmpty()) {
-            throw new RuntimeException("[ERROR] save() 후 findById()에서 데이터를 찾을 수 없습니다.");
-        }
         return entity;
     }
 
     @Override
     public Optional<AppointmentOption> findById(Long id) {
         return appointmentOptions.stream()
-                .filter(option -> id.equals(option.getId())) // ✅ equals() 비교 방식 수정
+                .filter(option -> id.equals(option.getId()))
                 .findFirst();
     }
 
     @Override
-    public boolean existsById(Long aLong) {
-        return false;
+    public Optional<AppointmentOption> findByAppointmentConfirmedYearAndMonth(Long appointmentId, int year, int month) {
+        return appointmentOptions.stream()
+                .filter(option -> option.getAppointment().getId().equals(appointmentId))
+                .filter(option -> option.getStatus() == AppointmentOptionStatus.CONFIRMED)
+                .filter(option -> option.getDate().getYear() == year)
+                .filter(option -> option.getDate().getMonthValue() == month)
+                .findFirst();
+    }
+
+    @Override
+    public Optional<AppointmentOption> findByAppointmentConfirmedBetweenDate(Long appointmentId, LocalDate startDate, LocalDate endDate) {
+        return appointmentOptions.stream()
+                .filter(option -> option.getAppointment().getId().equals(appointmentId))
+                .filter(option -> option.getStatus() == AppointmentOptionStatus.CONFIRMED)
+                .filter(option -> !option.getDate().toLocalDate().isBefore(startDate) &&
+                        !option.getDate().toLocalDate().isAfter(endDate))
+                .findFirst();
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return appointmentOptions.stream().anyMatch(option -> option.getId().equals(id));
     }
 
     @Override
@@ -68,8 +83,8 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public void deleteById(Long aLong) {
-
+    public void deleteById(Long id) {
+        appointmentOptions.removeIf(option -> option.getId().equals(id));
     }
 
     @Override
@@ -91,6 +106,7 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     public void deleteAll() {
         appointmentOptions.clear();
     }
+
 
     @Override
     public void flush() {
@@ -179,16 +195,6 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
 
     @Override
     public Page<AppointmentOption> findAll(Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public AppointmentOption findByAppointmentConfirmedYearAndMonth(Long appointmentId, String status, int year, int month) {
-        return null;
-    }
-
-    @Override
-    public AppointmentOption findAllByAppointmentConfirmedBetweenDate(Long appointmentId, String status, LocalDate startDate, LocalDate endDate) {
         return null;
     }
 }
