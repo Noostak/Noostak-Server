@@ -1,6 +1,6 @@
 package org.noostak.appointment.util;
 
-import org.noostak.appointment.dto.response.AppointmentOptionAvailabilityResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentOptionAvailabilityResponse;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 
 import java.util.List;

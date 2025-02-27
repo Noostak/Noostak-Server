@@ -1,6 +1,5 @@
 package org.noostak.infra.error;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.noostak.global.error.core.ErrorCode;

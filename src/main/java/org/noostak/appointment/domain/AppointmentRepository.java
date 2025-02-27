@@ -1,9 +1,8 @@
 package org.noostak.appointment.domain;
 
-
-import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
+import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

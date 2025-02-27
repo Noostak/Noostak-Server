@@ -44,9 +44,9 @@ public interface AppointmentOptionRepository extends JpaRepository<AppointmentOp
                     "AND appointment_option_date BETWEEN :startDate AND :endDate " +
                     "LIMIT 1")
     AppointmentOption findAllByAppointmentConfirmedBetweenDate(Long appointmentId,
-                                                 String status,
-                                                 LocalDate startDate,
-                                                 LocalDate endDate);
+                                                               String status,
+                                                               LocalDate startDate,
+                                                               LocalDate endDate);
 
 
     default AppointmentOption getAllByAppointmentConfirmedBetweenDate(

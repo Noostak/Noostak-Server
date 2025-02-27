@@ -1,6 +1,7 @@
 package org.noostak.appointmentoption.api;
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.appointmentoption.dto.response.confirmed.AppointmentConfirmedOptionResponse;
 import org.noostak.appointmentoption.application.AppointmentOptionService;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,15 @@ public class AppointmentOptionController {
     ) {
         appointmentService.confirmAppointment(appointmentOptionId);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CONFIRMED));
+    }
+
+    @GetMapping("/{appointmentOptionId}/confirmed")
+    public ResponseEntity<SuccessResponse<AppointmentConfirmedOptionResponse>> getConfirmedAppointment(
+            // @AuthenticationPrincipal Long memberId,
+            @PathVariable Long appointmentOptionId
+    ) {
+        Long memberId = 1L;
+        AppointmentConfirmedOptionResponse response = appointmentService.getConfirmedAppointmentOption(memberId, appointmentOptionId);
+        return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CONFIRMED, response));
     }
 }
