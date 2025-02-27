@@ -1,0 +1,86 @@
+package org.noostak.auth.application;
+
+
+import lombok.RequiredArgsConstructor;
+import org.noostak.auth.application.jwt.JwtToken;
+import org.noostak.auth.application.jwt.JwtTokenProvider;
+import org.noostak.auth.common.exception.AuthErrorCode;
+import org.noostak.auth.common.exception.AuthException;
+import org.noostak.auth.common.exception.ExternalApiException;
+import org.noostak.auth.domain.vo.AuthId;
+import org.noostak.auth.dto.apple.AppleAccessTokenRequest;
+import org.noostak.auth.dto.apple.AppleAccessTokenResponse;
+import org.noostak.auth.dto.apple.AppleTokenRequest;
+import org.noostak.auth.dto.apple.AppleTokenResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AppleServiceImpl implements KakaoService {
+
+    private final AppleTokenRequestFactory tokenRequestFactory;
+    private final RestClient restClient;
+
+    @Override
+    public JwtToken requestAccessToken(String givenRefreshToken) throws ExternalApiException {
+        String url = KaKaoApi.TOKEN_REQUEST.getUrl();
+
+        AppleAccessTokenRequest request =
+                tokenRequestFactory.createAccessTokenRequest(givenRefreshToken);
+
+        AppleAccessTokenResponse response =
+                restClient.postRequest(url,
+                        request.getUrlEncodedParams(),
+                        AppleAccessTokenResponse.class);
+
+        response.validate();
+
+        return JwtTokenProvider.createToken(response.getAccessToken(), response.getRefreshToken());
+    }
+
+
+    @Override
+    public JwtToken requestToken(String code) {
+        String url = KaKaoApi.TOKEN_REQUEST.getUrl();
+
+        AppleTokenRequest request = tokenRequestFactory.createRequest(code);
+
+        AppleTokenResponse response =
+                restClient.postRequest(url,
+                        request.getUrlEncodedParams(),
+                        AppleTokenResponse.class);
+
+        response.validate();
+
+        return JwtTokenProvider.createToken(response.getIdToken(), response.getRefreshToken());
+    }
+
+    @Override
+    public AuthId verify(String idToken) {
+        // TODO: idToken을 디코딩하여 돌려주기 -> 상세내용 추후 적용
+        return null;
+    }
+
+    @Override
+    public void logout(String accessToken) {
+        // 별도로 로직 처리하지 않음
+    }
+
+    @Override
+    public void unlink(String accessToken) {
+        // 별도로 로직 처리하지 않음
+    }
+
+    public HttpHeaders makeAuthorizationBearerTokenHeader(String token) {
+        HttpHeaders headers = new HttpHeaders();
+
+        if (token == null || token.isEmpty() || token.isBlank()) {
+            throw new AuthException(AuthErrorCode.INVALID_TOKEN);
+        }
+
+        headers.set("Authorization", "Bearer " + token);
+
+        return headers;
+    }
+}
