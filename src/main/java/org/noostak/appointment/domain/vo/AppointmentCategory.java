@@ -6,6 +6,7 @@ import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Getter
 @AllArgsConstructor
@@ -19,10 +20,7 @@ public enum AppointmentCategory {
 
     public static AppointmentCategory from(String category) {
         validateCategory(category);
-
-        return Arrays.stream(values())
-                .filter(c -> c.name().equalsIgnoreCase(category.trim()) || c.message.equals(category.trim()))
-                .findFirst()
+        return findCategory(category)
                 .orElseThrow(() -> new AppointmentException(AppointmentErrorCode.APPOINTMENT_CATEGORY_NOT_FOUND));
     }
 
@@ -30,5 +28,14 @@ public enum AppointmentCategory {
         if (category == null || category.isBlank()) {
             throw new AppointmentException(AppointmentErrorCode.APPOINTMENT_CATEGORY_NULL_OR_BLANK);
         }
+        if (!category.trim().equals(category) || category.contains(" ")) {
+            throw new AppointmentException(AppointmentErrorCode.APPOINTMENT_CATEGORY_INVALID_FORMAT);
+        }
+    }
+
+    private static Optional<AppointmentCategory> findCategory(String category) {
+        return Arrays.stream(values())
+                .filter(c -> c.message.equals(category))
+                .findFirst();
     }
 }

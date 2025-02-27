@@ -4,8 +4,6 @@ package org.noostak.infra;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.noostak.global.config.AwsConfig;
 import org.noostak.infra.error.S3UploadErrorCode;
 import org.noostak.infra.error.S3UploadException;
 import org.springframework.mock.web.MockMultipartFile;
@@ -32,7 +30,7 @@ class S3ServiceTest {
                     bucketName,
                     maxFileSize);
 
-    private final S3Service s3Service = S3Service.of(s3Storage);
+    private final S3ServiceImpl s3ServiceImpl = S3ServiceImpl.of(s3Storage);
 
     @Nested
     @DisplayName("이미지 업로드 테스트")
@@ -42,7 +40,6 @@ class S3ServiceTest {
         @DisplayName("이미지 업로드 - 성공")
         void uploadImage_success() throws IOException {
             // Given
-            String directoryPath = "images/";
             MultipartFile image = new MockMultipartFile(
                     "image",
                     "test.jpg",
@@ -51,10 +48,11 @@ class S3ServiceTest {
             );
 
             // When
-            String result = s3Service.uploadImage(directoryPath, image);
+            S3DirectoryPath directoryPath = S3DirectoryPath.DEFAULT ;
+            KeyAndUrl result = s3ServiceImpl.uploadImage(directoryPath, image);
 
             // Then
-            assertThat(result).startsWith(directoryPath).endsWith(".jpg");
+            assertThat(result.getKey()).startsWith(directoryPath.getPath()).endsWith(".jpg");
             verify(s3Storage.getS3Client()).putObject(any(PutObjectRequest.class), any(RequestBody.class));
         }
 
@@ -72,7 +70,7 @@ class S3ServiceTest {
             );
 
             // When & Then
-            assertThatThrownBy(() -> s3Service.uploadImage(directoryPath, image))
+            assertThatThrownBy(() -> s3ServiceImpl.uploadImage(S3DirectoryPath.DEFAULT, image))
                     .isInstanceOf(S3UploadException.class)
                     .hasMessageContaining(S3UploadErrorCode.INVALID_EXTENSION.getMessage());
         }
@@ -90,7 +88,7 @@ class S3ServiceTest {
             );
 
             // When & Then
-            assertThatThrownBy(() -> s3Service.uploadImage(directoryPath, image))
+            assertThatThrownBy(() -> s3ServiceImpl.uploadImage(S3DirectoryPath.DEFAULT, image))
                     .isInstanceOf(S3UploadException.class)
                     .hasMessageContaining(S3UploadErrorCode.FILE_SIZE_EXCEEDED.getMessage());
         }
@@ -107,7 +105,7 @@ class S3ServiceTest {
             String key = "images/test.jpg";
 
             // When
-            s3Service.deleteImage(key);
+            s3ServiceImpl.deleteImage(key);
 
             // Then
             verify(s3Storage.getS3Client()).deleteObject(any(DeleteObjectRequest.class));

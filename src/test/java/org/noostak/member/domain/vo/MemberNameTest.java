@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.noostak.member.common.MemberErrorCode;
-import org.noostak.member.common.MemberException;
+import org.noostak.member.common.exception.MemberErrorCode;
+import org.noostak.member.common.exception.MemberException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("멤버 이름 테스트")
 class MemberNameTest {
 
     @Nested

@@ -6,13 +6,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
-import org.noostak.member.common.MemberErrorCode;
-import org.noostak.member.common.MemberException;
+import org.noostak.auth.domain.vo.AuthId;
+import org.noostak.member.common.exception.MemberErrorCode;
+import org.noostak.member.common.exception.MemberException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("Auth ID 테스트")
 class AuthIdTest {
 
     @Nested
@@ -30,7 +30,7 @@ class AuthIdTest {
                 "unique.auth.id",
                 "simpleid"
         })
-        void shouldCreateAuthIdSuccessfully(String validId) {
+        void shouldCreateCodeSuccessfully(String validId) {
             // Given & When
             AuthId authId = AuthId.from(validId);
 

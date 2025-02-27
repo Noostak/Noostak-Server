@@ -2,11 +2,13 @@ package org.noostak.infra;
 
 import org.noostak.infra.error.S3UploadErrorCode;
 import org.noostak.infra.error.S3UploadException;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+@Primary
 @Component
 public class S3StorageImpl implements S3Storage {
 
@@ -30,28 +33,35 @@ public class S3StorageImpl implements S3Storage {
         this.maxFileSize = maxFileSize;
     }
 
-
     public static S3StorageImpl of(S3Client s3Client, String s3BucketName, long maxFileSize) {
         return new S3StorageImpl(s3Client, s3BucketName, maxFileSize);
     }
 
     @Override
-    public String upload(String directoryPath, MultipartFile image) throws IOException {
-        final String key = directoryPath + generateImageFileName();
+    public KeyAndUrl upload(S3DirectoryPath dirPath, MultipartFile image) throws IOException {
+        final String fileName = dirPath.getPath() + generateImageFileName();
 
-        validateExtension(image);
-        validateFileSize(image);
+        validateImage(image);
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(s3BucketName)
-                .key(key)
+                .key(fileName)
                 .contentType(image.getContentType())
                 .contentDisposition("inline")
                 .build();
 
         RequestBody requestBody = RequestBody.fromBytes(image.getBytes());
+
         s3Client.putObject(request, requestBody);
-        return key;
+
+        String publicUrl = findPublicUrlByKey(fileName);
+
+        return KeyAndUrl.of(fileName, publicUrl);
+    }
+
+    private void validateImage(MultipartFile image) {
+        validateExtension(image);
+        validateFileSize(image);
     }
 
     @Override
@@ -63,6 +73,15 @@ public class S3StorageImpl implements S3Storage {
 
         s3Client.deleteObject(deleteRequest);
     }
+
+    @Override
+    public String findPublicUrlByKey(String key) {
+        GetUrlRequest urlRequest =
+                GetUrlRequest.builder().bucket(s3BucketName).key(key).build();
+
+        return s3Client.utilities().getUrl(urlRequest).toString();
+    }
+
 
     private void validateExtension(MultipartFile image) {
         String contentType = image.getContentType();
