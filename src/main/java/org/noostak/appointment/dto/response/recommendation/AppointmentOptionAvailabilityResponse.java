@@ -1,4 +1,4 @@
-package org.noostak.appointment.dto.response;
+package org.noostak.appointment.dto.response.recommendation;
 
 import java.time.LocalDateTime;
 import java.util.List;
