@@ -101,4 +101,4 @@ jobs:
           key: ${{ secrets.STAGING_SERVER_KEY }}
           script: |
             cd ~
-            ./deploy-dev.sh
+            ./deploy-deploy.sh
