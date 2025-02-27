@@ -67,7 +67,7 @@ public class GoogleServiceImpl implements GoogleService{
 
     @Override
     public void logout(String accessToken) {
-        String url = KaKaoApi.LOGOUT.getUrl();
+        // 별도로 처리 해줄 로직 없음
     }
 
     @Override
