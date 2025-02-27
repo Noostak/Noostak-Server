@@ -7,4 +7,5 @@ import java.util.List;
 public interface AppointmentRepositoryCustom {
     List<Appointment> findAllByGroupId(Long groupId);
     List<Appointment> findAllByGroupIdConfirmed(AppointmentStatus status, Long groupId);
+    List<Appointment> findAllByGroupIdConfirmed(Long groupId);
 }
