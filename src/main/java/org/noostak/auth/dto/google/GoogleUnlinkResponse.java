@@ -1,4 +1,4 @@
-package org.noostak.auth.dto.kakao;
+package org.noostak.auth.dto.google;
 
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

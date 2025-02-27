@@ -1,7 +1,7 @@
 package org.noostak.auth.application;
 
-import org.noostak.auth.dto.kakao.GoogleAccessTokenRequest;
-import org.noostak.auth.dto.kakao.GoogleTokenRequest;
+import org.noostak.auth.dto.google.GoogleAccessTokenRequest;
+import org.noostak.auth.dto.google.GoogleTokenRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
