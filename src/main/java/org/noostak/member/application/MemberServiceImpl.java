@@ -54,7 +54,8 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public GetProfileResponse fetchMember(Long memberId) {
-        Member member = memberRepository.getById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         String memberName = member.getName().value();
         String imageUrl = s3Service.getImageUrl(member.getKey().value());
@@ -65,7 +66,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void updateMember(Long memberId, String memberName, MultipartFile givenImage) {
-        Member member = memberRepository.getById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         String previousProfileKey = member.getKey().value();
 
         // 이미지 삭제 후 새로운 이미지 업로드
@@ -79,7 +81,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void deleteMember(Long memberId) {
-        Member member = memberRepository.getById(memberId);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         // 탈퇴 시 이미지 삭제
         String removedProfileKey = member.getKey().value();

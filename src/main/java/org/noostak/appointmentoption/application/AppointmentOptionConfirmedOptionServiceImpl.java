@@ -1,6 +1,5 @@
 package org.noostak.appointmentoption.application;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentmember.domain.AppointmentMember;
