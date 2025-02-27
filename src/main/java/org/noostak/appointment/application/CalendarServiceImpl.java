@@ -8,6 +8,8 @@ import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.calendar.CalendarResponse;
 import org.noostak.appointment.dto.calendar.MonthAppointment;
 import org.noostak.appointment.dto.calendar.MonthAppointments;
+import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
+import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.domain.AppointmentOptionRepository;
 import org.springframework.stereotype.Service;
@@ -126,13 +128,14 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     private AppointmentOption getAppointmentConfirmed(Appointment appointment, int year, int month) {
-        return appointmentOptionRepository.
-                getByAppointmentConfirmedYearAndMonth(
-                        appointment, year, month);
+        return appointmentOptionRepository
+                .findByAppointmentConfirmedYearAndMonth(appointment.getId(), year, month)
+                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
     }
 
     private AppointmentOption getAppointmentConfirmed(LocalDate firstDate, LocalDate previousDate, Appointment appointment) {
         return appointmentOptionRepository
-                .getAllByAppointmentConfirmedBetweenDate(appointment, previousDate, firstDate);
+                .findByAppointmentConfirmedBetweenDate(appointment.getId(), previousDate, firstDate)
+                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
     }
 }
