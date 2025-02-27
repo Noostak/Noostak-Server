@@ -65,6 +65,23 @@ public class GoogleServiceImpl implements GoogleService{
         return AuthId.from(response.getId());
     }
 
+    @Override
+    public void logout(String accessToken) {
+        String url = KaKaoApi.LOGOUT.getUrl();
+    }
+
+    @Override
+    public void unlink(String accessToken) {
+        String url = GoogleApi.UNLINK.getUrl();
+
+        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
+
+        GoogleUnlinkResponse response =
+                restClient.postRequest(url, headers, GoogleUnlinkResponse.class);
+
+        response.validate();
+    }
+
     public HttpHeaders makeAuthorizationBearerTokenHeader(String token){
         HttpHeaders headers = new HttpHeaders();
 
