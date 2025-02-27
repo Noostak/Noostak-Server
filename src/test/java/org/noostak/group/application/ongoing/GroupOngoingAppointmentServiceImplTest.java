@@ -4,7 +4,7 @@ import org.junit.jupiter.api.*;
 import org.noostak.appointment.application.recommendation.AppointmentRecommendationFacade;
 import org.noostak.appointment.domain.*;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
-import org.noostak.appointment.dto.response.*;
+import org.noostak.appointment.dto.response.recommendation.*;
 import org.noostak.appointmentmember.domain.*;
 import org.noostak.appointmentmember.domain.repository.*;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
@@ -127,10 +127,7 @@ class GroupOngoingAppointmentServiceImplTest {
     private Long createAndSaveMember(String name) {
         Member member = memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from("profile-key"),
-                AuthType.GOOGLE,
-                AuthId.from("auth-id"),
-                "refresh-token"
+                MemberProfileImageKey.from("profile-key")
         ));
         return member.getId();
     }
