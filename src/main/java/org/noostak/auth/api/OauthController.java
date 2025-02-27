@@ -14,7 +14,7 @@ import org.noostak.auth.common.success.AuthSuccessCode;
 import org.noostak.auth.domain.AuthInfo;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
-import org.noostak.auth.dto.*;
+import org.noostak.auth.dto.common.*;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.auth.application.AuthInfoService;
 import org.noostak.global.utils.GlobalLogger;

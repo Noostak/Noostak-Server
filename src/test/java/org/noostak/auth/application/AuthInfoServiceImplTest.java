@@ -7,7 +7,7 @@ import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthId;
-import org.noostak.auth.dto.SignUpResponse;
+import org.noostak.auth.dto.common.SignUpResponse;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.vo.MemberName;

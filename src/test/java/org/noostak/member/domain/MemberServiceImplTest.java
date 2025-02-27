@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.noostak.auth.dto.SignUpRequest;
+import org.noostak.auth.dto.common.SignUpRequest;
 import org.noostak.infra.KeyAndUrl;
 import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
