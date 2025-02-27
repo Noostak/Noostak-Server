@@ -1,4 +1,4 @@
-package org.noostak.auth.dto;
+package org.noostak.auth.dto.common;
 
 import lombok.Getter;
 

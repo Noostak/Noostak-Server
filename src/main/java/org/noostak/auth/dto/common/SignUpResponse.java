@@ -1,9 +1,7 @@
-package org.noostak.auth.dto;
+package org.noostak.auth.dto.common;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 public class SignUpResponse {
