@@ -94,6 +94,18 @@ public class RestClient {
         }
     }
 
+    public <T> T getRequest(String url, HttpHeaders headers, String urlParams, Class<T> responseType) {
+        try {
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            HttpEntity<String> entity = new HttpEntity<>(urlParams, headers);
+
+            T response = restTemplate.exchange(url, HttpMethod.GET, entity, responseType).getBody();
+            return validate(response);
+        } catch (Exception e) {
+            throw new RestClientException(RestClientErrorCode.REST_CLIENT_ERROR, e.getMessage());
+        }
+    }
+
     private <T> T validate(T response){
         validateIsNull(response);
 
