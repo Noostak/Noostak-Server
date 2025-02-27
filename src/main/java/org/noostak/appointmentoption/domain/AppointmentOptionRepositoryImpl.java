@@ -48,4 +48,17 @@ public class AppointmentOptionRepositoryImpl implements AppointmentOptionReposit
                         .fetchOne()
         );
     }
+
+    @Override
+    public Optional<AppointmentOption> findConfirmedOptionByAppointmentId(Long appointmentId) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(appointmentOption)
+                        .where(
+                                appointmentOption.appointment.id.eq(appointmentId),
+                                appointmentOption.status.eq(AppointmentOptionStatus.CONFIRMED) // 확정된 옵션만 조회
+                        )
+                        .fetchOne()
+        );
+    }
 }
