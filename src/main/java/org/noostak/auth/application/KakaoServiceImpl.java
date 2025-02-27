@@ -66,6 +66,23 @@ public class KakaoServiceImpl implements KakaoService{
         return AuthId.from(response.getId());
     }
 
+    @Override
+    public void logout(String accessToken) {
+        String url = KaKaoApi.LOGOUT.getUrl();
+    }
+
+    @Override
+    public void unlink(String accessToken) {
+        String url = KaKaoApi.UNLINK.getUrl();
+
+        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
+
+        KakaoUnlinkResponse response =
+                restClient.postRequest(url, headers, KakaoUnlinkResponse.class);
+
+        response.validate();
+    }
+
     public HttpHeaders makeAuthorizationBearerTokenHeader(String token){
         HttpHeaders headers = new HttpHeaders();
 
