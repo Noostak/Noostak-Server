@@ -3,7 +3,7 @@ package org.noostak.appointment.application.recommendation;
 import org.junit.jupiter.api.*;
 import org.noostak.appointment.application.recommendation.impl.AppointmentOptionCommandServiceImpl;
 import org.noostak.appointment.domain.*;
-import org.noostak.appointment.dto.response.AppointmentOptionAvailabilityResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentOptionAvailabilityResponse;
 import org.noostak.appointmentoption.domain.*;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepositoryTest;
@@ -118,10 +118,7 @@ class AppointmentOptionCommandServiceTest {
     private Long createAndSaveMember(String name) {
         Member member = memberRepository.save(Member.of(
                 MemberName.from(name),
-                MemberProfileImageKey.from("profile-key"),
-                AuthType.GOOGLE,
-                AuthId.from("auth-id"),
-                "refresh-token"
+                MemberProfileImageKey.from("profile-key")
         ));
         return member.getId();
     }
