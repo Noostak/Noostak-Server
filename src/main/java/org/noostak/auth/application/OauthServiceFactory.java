@@ -16,11 +16,13 @@ public class OauthServiceFactory {
     private final Map<String, OauthService> serviceMap = new HashMap<>();
     private final KakaoService kakaoService;
     private final GoogleService googleService;
+    private final AppleService appleService;
 
     @PostConstruct
     public void init() {
         serviceMap.put(AuthType.KAKAO.getName(), kakaoService);
         serviceMap.put(AuthType.GOOGLE.getName(), googleService);
+        serviceMap.put(AuthType.APPLE.getName(), appleService);
     }
 
     public OauthService getService(String authType) {
