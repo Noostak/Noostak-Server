@@ -9,5 +9,4 @@ class NoostakApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
