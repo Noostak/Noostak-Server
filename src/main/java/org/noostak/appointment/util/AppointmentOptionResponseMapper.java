@@ -2,7 +2,7 @@ package org.noostak.appointment.util;
 
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
-import org.noostak.appointment.dto.response.*;
+import org.noostak.appointment.dto.response.recommendation.*;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
