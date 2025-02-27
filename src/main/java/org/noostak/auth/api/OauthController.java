@@ -133,4 +133,33 @@ public class OauthController {
         // 통과하지 못한다면 유효한 토큰이 아닌 것으로 판단
         throw new AuthException(AuthErrorCode.INVALID_TOKEN);
     }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<SuccessResponse> unlink(
+            HttpServletRequest request,
+            @RequestAttribute Long memberId
+    ){
+        String givenAccessToken = request.getHeader("Authorization");
+        givenAccessToken = JwtToken.extractToken(givenAccessToken);
+
+        for(AuthType authType : AuthType.values()){
+            OauthService oauthService = oauthServiceFactory.getService(authType);
+            try {
+
+                // 소셜 로그인 해제
+                oauthService.unlink(givenAccessToken);
+
+                // 멤버 삭제
+                memberService.deleteMember(memberId);
+
+                return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.UNLINK_COMPLETED)));
+            }catch (ExternalApiException | RestClientException e){
+                GlobalLogger.warn(AuthErrorCode.INVALID_TOKEN.getMessage());
+            }
+        }
+
+        // 통과하지 못한다면 유효한 토큰이 아닌 것으로 판단
+        throw new AuthException(AuthErrorCode.INVALID_TOKEN);
+    }
+
 }
