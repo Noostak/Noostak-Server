@@ -3,7 +3,6 @@ package org.noostak.appointmentoption.domain;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
 
 import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
 import org.springframework.data.domain.*;
@@ -56,6 +55,15 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
                         !option.getDate().toLocalDate().isAfter(endDate))
                 .findFirst();
     }
+
+    @Override
+    public Optional<AppointmentOption> findConfirmedOptionByAppointmentId(Long appointmentId) {
+        return appointmentOptions.stream()
+                .filter(option -> option.getAppointment().getId().equals(appointmentId))
+                .filter(option -> option.getStatus() == AppointmentOptionStatus.CONFIRMED)
+                .max(Comparator.comparing(AppointmentOption::getDate));
+    }
+
 
     @Override
     public boolean existsById(Long id) {
