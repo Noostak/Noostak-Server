@@ -58,11 +58,17 @@ public class LikeRepositoryTest implements LikeRepository {
 
     @Override
     public void deleteById(Long id) {
+        if (!existsById(id)) {
+            throw new NoSuchElementException("[ERROR] 해당 ID의 좋아요가 존재하지 않습니다: " + id);
+        }
         likes.removeIf(like -> like.getId().equals(id));
     }
 
     @Override
     public void delete(Like entity) {
+        if (!likes.contains(entity)) {
+            throw new NoSuchElementException("[ERROR] 해당 좋아요가 존재하지 않습니다.");
+        }
         likes.remove(entity);
     }
 
@@ -102,20 +108,31 @@ public class LikeRepositoryTest implements LikeRepository {
     @Override
     public Page<Like> findAll(Pageable pageable) {
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), likes.size());
+        int end = Math.min(start + pageable.getPageSize(), likes.size());
         List<Like> pageContent = likes.subList(start, end);
         return new PageImpl<>(pageContent, pageable, likes.size());
     }
 
     @Override
-    public Long countByAppointmentOptionId(Long appointmentOptionId) {
+    public Long getLikeCountByOptionId(Long optionId) {
         return likes.stream()
-                .filter(like -> like.getAppointmentOption().getId().equals(appointmentOptionId))
+                .filter(like -> like.getAppointmentOption().getId().equals(optionId))
                 .count();
     }
 
     @Override
-    public boolean existsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId) {
+    public void deleteLikeByAppointmentMemberIdAndOptionId(Long appointmentMemberId, Long optionId) {
+        Like likeToDelete = likes.stream()
+                .filter(like -> like.getAppointmentMember().getId().equals(appointmentMemberId) &&
+                        like.getAppointmentOption().getId().equals(optionId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] 해당 멤버와 옵션에 대한 좋아요가 존재하지 않습니다."));
+
+        likes.remove(likeToDelete);
+    }
+
+    @Override
+    public boolean getExistsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId) {
         return likes.stream()
                 .anyMatch(like -> like.getAppointmentOption().getId().equals(appointmentOptionId) &&
                         like.getAppointmentMember().getId().equals(appointmentMemberId));
