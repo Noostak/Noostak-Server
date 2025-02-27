@@ -16,13 +16,13 @@ jobs:
     steps:
       - name: 체크아웃
         uses: actions/checkout@v3
+        with:
+          ref: staging  # 바로 staging 브랜치를 체크아웃
 
       # remote branch에서 pull
       - name: Pull specific branch
         run: |
-            git checkout staging
             git pull origin staging
-              # remote branch에서 pull
         working-directory: ${{ env.working-directory }}
 
 
