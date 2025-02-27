@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KakaoServiceImpl implements KakaoService{
+public class KakaoServiceImpl implements KakaoService {
 
     private final KakaoTokenRequestFactory kakaoTokenRequestFactory;
     private final RestClient restClient;
+
     @Override
     public JwtToken requestAccessToken(String givenRefreshToken) throws ExternalApiException {
         String url = KaKaoApi.TOKEN_REQUEST.getUrl();
@@ -49,7 +50,7 @@ public class KakaoServiceImpl implements KakaoService{
 
         response.validate();
 
-        return JwtTokenProvider.createToken(response.getAccessToken(),response.getRefreshToken());
+        return JwtTokenProvider.createToken(response.getAccessToken(), response.getRefreshToken());
     }
 
     @Override
@@ -69,6 +70,17 @@ public class KakaoServiceImpl implements KakaoService{
     @Override
     public void logout(String accessToken) {
         String url = KaKaoApi.LOGOUT.getUrl();
+
+        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
+
+        KakaoLogoutRequest request = kakaoTokenRequestFactory.createLogoutRequest();
+
+        KakaoLogoutResponse response = restClient.getRequest(url,
+                headers,
+                request.getUrlEncodedParams(),
+                KakaoLogoutResponse.class);
+
+        response.validate();
     }
 
     @Override
@@ -83,10 +95,10 @@ public class KakaoServiceImpl implements KakaoService{
         response.validate();
     }
 
-    public HttpHeaders makeAuthorizationBearerTokenHeader(String token){
+    public HttpHeaders makeAuthorizationBearerTokenHeader(String token) {
         HttpHeaders headers = new HttpHeaders();
 
-        if(token == null || token.isEmpty() || token.isBlank()){
+        if (token == null || token.isEmpty() || token.isBlank()) {
             throw new AuthException(AuthErrorCode.INVALID_TOKEN);
         }
 
