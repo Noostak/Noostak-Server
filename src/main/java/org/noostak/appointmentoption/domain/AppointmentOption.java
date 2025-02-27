@@ -51,4 +51,8 @@ public class AppointmentOption extends BaseTimeEntity {
     public void confirm() {
         this.status = AppointmentOptionStatus.CONFIRMED;
     }
+
+    public int getDayOfMonth(){
+        return date.getDayOfMonth();
+    }
 }

@@ -191,6 +191,10 @@ public class AppointmentRepositoryTest implements AppointmentRepository, Appoint
     }
 
     @Override
+    public List<Appointment> findAllByGroupIdConfirmed(String status, Long groupId) {
+      return null;
+    }
+  
     public List<Appointment> findAll(Sort sort) {
         return List.of();
     }

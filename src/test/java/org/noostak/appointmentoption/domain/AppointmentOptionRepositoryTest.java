@@ -1,5 +1,6 @@
 package org.noostak.appointmentoption.domain;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -172,6 +173,16 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
 
     @Override
     public Page<AppointmentOption> findAll(Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public AppointmentOption findByAppointmentConfirmedYearAndMonth(Long appointmentId, String status, int year, int month) {
+        return null;
+    }
+
+    @Override
+    public AppointmentOption findAllByAppointmentConfirmedBetweenDate(Long appointmentId, String status, LocalDate startDate, LocalDate endDate) {
         return null;
     }
 }
