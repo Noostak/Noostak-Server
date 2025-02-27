@@ -32,7 +32,7 @@ public class CalendarServiceImpl implements CalendarService {
     public CalendarResponse getCalendarViewByGroupId(Long groupId, int year, int month) {
 
         List<Appointment> appointmentList =
-                appointmentRepository.getAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId);
+                appointmentRepository.findAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId);
 
         // 이번 달의 캘린더 정보 목록 불러오기
         ArrayList<MonthAppointments> currentMonthAppointments =
