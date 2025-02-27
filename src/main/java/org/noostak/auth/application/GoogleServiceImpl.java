@@ -7,7 +7,7 @@ import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthId;
-import org.noostak.auth.dto.*;
+import org.noostak.auth.dto.kakao.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,5 @@
-package org.noostak.auth.dto;
+package org.noostak.auth.dto.kakao;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.net.URLEncoder;
