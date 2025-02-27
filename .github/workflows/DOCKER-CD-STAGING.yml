@@ -49,7 +49,7 @@ jobs:
         run: |
           cd ./src/main/resources
           touch ./application-staging.yml
-          echo "${{ secrets.PROD_STAGING }}" > ./application-staging.yml
+          echo "${{ secrets.STAGING_YML }}" > ./application-staging.yml
         working-directory: ${{ env.working-directory }}
 
       - name: aws-config.yml 생성
