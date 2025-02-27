@@ -1,5 +1,7 @@
 package org.noostak.infra;
 
+import org.noostak.infra.error.S3DeleteErrorCode;
+import org.noostak.infra.error.S3DeleteException;
 import org.noostak.infra.error.S3UploadErrorCode;
 import org.noostak.infra.error.S3UploadException;
 import org.springframework.context.annotation.Primary;
@@ -36,6 +38,10 @@ public class S3ServiceImpl implements S3Service {
 
     @Override
     public void deleteImage(String key) {
-        s3Storage.delete(key);
+        try {
+            s3Storage.delete(key);
+        } catch (Exception e) {
+            throw new S3DeleteException(S3DeleteErrorCode.IMAGE_DELETE_FAILED,e.getMessage());
+        }
     }
 }
