@@ -3,7 +3,7 @@ package org.noostak.appointment.api;
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.AppointmentService;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
-import org.noostak.appointment.dto.response.AppointmentRecommendedOptionsResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentRecommendedOptionsResponse;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +37,4 @@ public class AppointmentController {
         AppointmentRecommendedOptionsResponse response = appointmentService.getRecommendedAppointmentOptions(memberId, appointmentId);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CREATED, response));
     }
-
 }

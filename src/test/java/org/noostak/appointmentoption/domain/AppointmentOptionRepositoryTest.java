@@ -3,11 +3,11 @@ package org.noostak.appointmentoption.domain;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
+import java.util.function.Function;
 
 public class AppointmentOptionRepositoryTest implements AppointmentOptionRepository {
 
@@ -16,14 +16,14 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
 
     @Override
     public AppointmentOption save(AppointmentOption entity) {
-        try {
-            if (entity.getId() == null) {
+        if (entity.getId() == null) {
+            try {
                 var idField = AppointmentOption.class.getDeclaredField("id");
                 idField.setAccessible(true);
                 idField.set(entity, idGenerator.getAndIncrement());
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException("[ERROR] 'id' 필드에 접근할 수 없습니다.", e);
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("[ERROR] 'id' 필드에 접근할 수 없습니다.", e);
         }
         appointmentOptions.add(entity);
         return entity;
@@ -32,8 +32,47 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     @Override
     public Optional<AppointmentOption> findById(Long id) {
         return appointmentOptions.stream()
-                .filter(option -> option.getId().equals(id))
+                .filter(option -> id.equals(option.getId()))
                 .findFirst();
+    }
+
+    @Override
+    public Optional<AppointmentOption> findByAppointmentConfirmedYearAndMonth(Long appointmentId, int year, int month) {
+        return appointmentOptions.stream()
+                .filter(option -> option.getAppointment().getId().equals(appointmentId))
+                .filter(option -> option.getStatus() == AppointmentOptionStatus.CONFIRMED)
+                .filter(option -> option.getDate().getYear() == year)
+                .filter(option -> option.getDate().getMonthValue() == month)
+                .findFirst();
+    }
+
+    @Override
+    public Optional<AppointmentOption> findByAppointmentConfirmedBetweenDate(Long appointmentId, LocalDate startDate, LocalDate endDate) {
+        return appointmentOptions.stream()
+                .filter(option -> option.getAppointment().getId().equals(appointmentId))
+                .filter(option -> option.getStatus() == AppointmentOptionStatus.CONFIRMED)
+                .filter(option -> !option.getDate().toLocalDate().isBefore(startDate) &&
+                        !option.getDate().toLocalDate().isAfter(endDate))
+                .findFirst();
+    }
+
+    @Override
+    public Optional<AppointmentOption> findConfirmedOptionByAppointmentId(Long appointmentId) {
+        return appointmentOptions.stream()
+                .filter(option -> option.getAppointment().getId().equals(appointmentId))
+                .filter(option -> option.getStatus() == AppointmentOptionStatus.CONFIRMED)
+                .max(Comparator.comparing(AppointmentOption::getDate));
+    }
+
+
+    @Override
+    public boolean existsById(Long id) {
+        return appointmentOptions.stream().anyMatch(option -> option.getId().equals(id));
+    }
+
+    @Override
+    public <S extends AppointmentOption> List<S> saveAll(Iterable<S> entities) {
+        return List.of();
     }
 
     @Override
@@ -42,19 +81,13 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public List<AppointmentOption> findAllById(Iterable<Long> ids) {
-        Set<Long> idSet = new HashSet<>();
-        ids.forEach(idSet::add);
-
-        return appointmentOptions.stream()
-                .filter(option -> idSet.contains(option.getId()))
-                .collect(Collectors.toList());
+    public List<AppointmentOption> findAllById(Iterable<Long> longs) {
+        return List.of();
     }
 
-
     @Override
-    public void deleteAll() {
-        appointmentOptions.clear();
+    public long count() {
+        return 0;
     }
 
     @Override
@@ -63,37 +96,30 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public boolean existsById(Long id) {
-        return appointmentOptions.stream().anyMatch(option -> option.getId().equals(id));
-    }
-
-    @Override
-    public long count() {
-        return appointmentOptions.size();
-    }
-
-    @Override
     public void delete(AppointmentOption entity) {
-        appointmentOptions.remove(entity);
+
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Long> ids) {}
+    public void deleteAllById(Iterable<? extends Long> longs) {
 
-    @Override
-    public void deleteAll(Iterable<? extends AppointmentOption> entities) {}
-
-    @Override
-    public <S extends AppointmentOption> List<S> saveAll(Iterable<S> entities) {
-        List<S> result = new ArrayList<>();
-        for (S entity : entities) {
-            result.add((S) save(entity));
-        }
-        return result;
     }
 
     @Override
-    public void flush() {}
+    public void deleteAll(Iterable<? extends AppointmentOption> entities) {
+
+    }
+
+    @Override
+    public void deleteAll() {
+        appointmentOptions.clear();
+    }
+
+
+    @Override
+    public void flush() {
+
+    }
 
     @Override
     public <S extends AppointmentOption> S saveAndFlush(S entity) {
@@ -106,28 +132,32 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<AppointmentOption> entities) {}
+    public void deleteAllInBatch(Iterable<AppointmentOption> entities) {
+
+    }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> ids) {}
+    public void deleteAllByIdInBatch(Iterable<Long> longs) {
+
+    }
 
     @Override
     public void deleteAllInBatch() {
-        appointmentOptions.clear();
+
     }
 
     @Override
-    public AppointmentOption getOne(Long id) {
+    public AppointmentOption getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public AppointmentOption getById(Long id) {
+    public AppointmentOption getById(Long aLong) {
         return null;
     }
 
     @Override
-    public AppointmentOption getReferenceById(Long id) {
+    public AppointmentOption getReferenceById(Long aLong) {
         return null;
     }
 
@@ -173,16 +203,6 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
 
     @Override
     public Page<AppointmentOption> findAll(Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public AppointmentOption findByAppointmentConfirmedYearAndMonth(Long appointmentId, String status, int year, int month) {
-        return null;
-    }
-
-    @Override
-    public AppointmentOption findAllByAppointmentConfirmedBetweenDate(Long appointmentId, String status, LocalDate startDate, LocalDate endDate) {
         return null;
     }
 }

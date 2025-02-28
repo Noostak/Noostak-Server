@@ -2,7 +2,7 @@ package org.noostak.appointment.application.recommendation.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.recommendation.AppointmentOptionPriorityService;
-import org.noostak.appointment.dto.response.AppointmentPriorityGroupResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentPriorityGroupResponse;
 import org.noostak.appointment.util.TimeSlot;
 import org.noostak.appointment.util.AppointmentAvailabilityMatcher;
 import org.noostak.appointment.util.AppointmentOptionResponseMapper;

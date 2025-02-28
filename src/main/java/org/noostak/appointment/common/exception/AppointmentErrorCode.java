@@ -14,6 +14,7 @@ public enum AppointmentErrorCode implements ErrorCode {
 
     APPOINTMENT_CATEGORY_NOT_FOUND(HttpStatus.BAD_REQUEST, "유효하지 않은 카테고리입니다."),
     APPOINTMENT_CATEGORY_NULL_OR_BLANK(HttpStatus.BAD_REQUEST, "약속 카테고리는 null이거나 공백일 수 없습니다."),
+    APPOINTMENT_CATEGORY_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "약속 카테고리는 공백을 포함할 수 없습니다."),
 
     APPOINTMENT_MEMBER_COUNT_NEGATIVE(HttpStatus.BAD_REQUEST, "약속 멤버 수는 음수가 될 수 없습니다."),
     APPOINTMENT_MEMBER_COUNT_MAX(HttpStatus.BAD_REQUEST, "약속 멤버 수는 최대 50명을 초과할 수 없습니다."),
@@ -31,6 +32,9 @@ public enum AppointmentErrorCode implements ErrorCode {
     HOST_SELECTION_TIME_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 약속의 호스트 선택 시간을 찾을 수 없습니다."),
     MEMBER_AVAILABILITY_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 약속의 멤버 가용 시간을 찾을 수 없습니다."),
     INVALID_DURATION(HttpStatus.BAD_REQUEST, "유효하지 않은 소요 시간입니다."),
+
+    APPOINTMENT_OPTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 약속의 옵션을 찾을 수 없습니다."),
+    CONFIRMED_OPTION_NOT_FOUND(HttpStatus.BAD_REQUEST, "확정된 약속 옵션을 찾을 수 없습니다."),
     ;
 
     public static final String PREFIX = "[APPOINTMENT ERROR] ";

@@ -2,9 +2,9 @@ package org.noostak.appointment.domain;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.noostak.appointment.domain.vo.AppointmentStatus;
 
 import java.util.List;
-
 
 import static org.noostak.appointment.domain.QAppointment.appointment;
 
@@ -21,4 +21,29 @@ public class AppointmentRepositoryImpl implements AppointmentRepositoryCustom {
                 .orderBy(appointment.createdAt.desc())
                 .fetch();
     }
+
+    @Override
+    public List<Appointment> findAllByGroupIdConfirmed(AppointmentStatus status, Long groupId) {
+        return queryFactory
+                .selectFrom(appointment)
+                .where(
+                        appointment.appointmentStatus.eq(status),
+                        appointment.group.id.eq(groupId)
+                )
+                .orderBy(appointment.createdAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Appointment> findAllByGroupIdConfirmed(Long groupId) {
+        return queryFactory
+                .selectFrom(appointment)
+                .where(
+                        appointment.appointmentStatus.eq(AppointmentStatus.CONFIRMED), // 확정된 약속만 조회
+                        appointment.group.id.eq(groupId)
+                )
+                .orderBy(appointment.createdAt.desc())
+                .fetch();
+    }
+
 }

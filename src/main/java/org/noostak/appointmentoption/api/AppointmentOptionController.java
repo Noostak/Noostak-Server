@@ -1,6 +1,7 @@
 package org.noostak.appointmentoption.api;
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.appointmentoption.dto.response.confirmed.AppointmentConfirmedOptionResponse;
 import org.noostak.appointmentoption.application.AppointmentOptionService;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;

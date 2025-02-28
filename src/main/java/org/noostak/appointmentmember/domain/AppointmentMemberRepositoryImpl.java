@@ -41,4 +41,12 @@ public class AppointmentMemberRepositoryImpl implements AppointmentMemberReposit
                 .distinct()
                 .fetch();
     }
+
+    @Override
+    public List<AppointmentMember> findByAppointmentId(Long appointmentId) {
+        return queryFactory
+                .selectFrom(appointmentMember)
+                .where(appointmentMember.appointment.id.eq(appointmentId))
+                .fetch();
+    }
 }

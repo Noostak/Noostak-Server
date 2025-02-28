@@ -1,9 +1,14 @@
 package org.noostak.group.application;
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.group.application.confirmed.GroupConfirmedAppointmentsService;
+import org.noostak.group.application.create.GroupCreateService;
+import org.noostak.group.application.info.GroupInfoService;
 import org.noostak.group.application.ongoing.GroupOngoingAppointmentService;
+import org.noostak.group.application.retrieve.GroupRetrieveService;
 import org.noostak.group.dto.request.GroupCreateRequest;
 import org.noostak.group.dto.response.GroupJoinResponse;
+import org.noostak.group.dto.response.confirmed.GroupConfirmedAppointmentsResponse;
 import org.noostak.group.dto.response.create.GroupCreateInternalResponse;
 import org.noostak.group.dto.response.create.GroupCreateResponse;
 import org.noostak.group.dto.response.info.GroupInfoResponse;
@@ -22,6 +27,7 @@ public class GroupService {
     private final GroupInfoService groupInfoService;
     private final GroupOngoingAppointmentService groupOngoingAppointmentsService;
     private final GroupJoinService groupJoinService;
+    private final GroupConfirmedAppointmentsService groupConfirmedAppointmentsService;
 
     public GroupCreateResponse createGroup(Long memberId, GroupCreateRequest request) throws IOException {
         GroupCreateInternalResponse response = groupCreateService.createGroup(memberId, request);
@@ -42,5 +48,9 @@ public class GroupService {
 
     public GroupJoinResponse joinGroup(Long memberId, String inviteCode){
         return groupJoinService.join(memberId,inviteCode);
+    }
+
+    public GroupConfirmedAppointmentsResponse getGroupConfirmedAppointments(Long memberId, Long groupId) {
+        return groupConfirmedAppointmentsService.getGroupConfirmedAppointments(memberId, groupId);
     }
 }

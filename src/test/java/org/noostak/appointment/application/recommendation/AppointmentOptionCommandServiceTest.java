@@ -3,7 +3,7 @@ package org.noostak.appointment.application.recommendation;
 import org.junit.jupiter.api.*;
 import org.noostak.appointment.application.recommendation.impl.AppointmentOptionCommandServiceImpl;
 import org.noostak.appointment.domain.*;
-import org.noostak.appointment.dto.response.AppointmentOptionAvailabilityResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentOptionAvailabilityResponse;
 import org.noostak.appointmentoption.domain.*;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepositoryTest;

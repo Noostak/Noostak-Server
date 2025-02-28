@@ -1,6 +1,7 @@
 package org.noostak.global.config;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.noostak.infra.S3Storage;
 import org.noostak.infra.S3StorageImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 @Configuration
 @Getter
+@RequiredArgsConstructor
 public class AwsConfig {
 
     @Value("${aws-property.s3-bucket-name}")

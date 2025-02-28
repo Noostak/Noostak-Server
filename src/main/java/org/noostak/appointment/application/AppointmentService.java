@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.create.AppointmentCreateService;
 import org.noostak.appointment.application.recommendation.AppointmentRecommendedOptionService;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
-import org.noostak.appointment.dto.response.AppointmentRecommendedOptionsResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentRecommendedOptionsResponse;
 import org.springframework.stereotype.Service;
 
 @Service

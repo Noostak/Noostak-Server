@@ -7,7 +7,7 @@ import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointment.domain.AppointmentRepository;
 import org.noostak.appointment.domain.AppointmentRepositoryTest;
-import org.noostak.appointment.dto.response.AppointmentPriorityGroupResponse;
+import org.noostak.appointment.dto.response.recommendation.AppointmentPriorityGroupResponse;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
