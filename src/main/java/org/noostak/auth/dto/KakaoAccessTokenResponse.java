@@ -16,7 +16,7 @@ public class KakaoAccessTokenResponse {
     private String accessToken;
     private String idToken;
     private int expiresIn;
-    private String refreshToken; // TODO: 만약 갱신이 필요할 경우 포함되어 전달됨
+    private String refreshToken; // 만약 갱신이 필요할 경우 포함되어 전달됨
     private String refreshTokenExpiresIn;
 
     private String error;
