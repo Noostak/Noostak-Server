@@ -3,6 +3,7 @@ package org.noostak.group.domain;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.Groups;
+import org.noostak.group.domain.vo.GroupInvitationCode;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -191,5 +192,12 @@ public class GroupRepositoryTest implements GroupRepository {
     @Override
     public Page<Group> findAll(Pageable pageable) {
         return null;
+    }
+
+    @Override
+    public Optional<Group> findByCode(GroupInvitationCode groupInvitationCode) {
+        return groups.stream()
+                .filter(group -> group.getCode().equals(groupInvitationCode))
+                .findFirst();
     }
 }
