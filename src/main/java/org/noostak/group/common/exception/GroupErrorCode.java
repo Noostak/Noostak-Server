@@ -26,6 +26,7 @@ public enum GroupErrorCode implements ErrorCode {
     GROUP_PROFILE_IMAGE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "그룹 프로필 이미지 삭제에 실패했습니다."),
 
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹을 찾을 수 없습니다."),
+    GROUP_NOT_FOUND_BY_CODE(HttpStatus.NOT_FOUND, "입력한 그룹 코드에 일치하는 그룹이 존재하지 않습니다."),
     GROUP_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹 멤버를 찾을 수 없습니다."),
 
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다.")
