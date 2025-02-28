@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.group.application.GroupService;
 import org.noostak.group.dto.request.GroupCreateRequest;
+import org.noostak.group.dto.request.GroupJoinRequest;
+import org.noostak.group.dto.response.GroupJoinResponse;
 import org.noostak.group.dto.response.create.GroupCreateResponse;
 import org.noostak.group.dto.response.info.GroupInfoResponse;
 import org.noostak.group.dto.response.ongoing.GroupOngoingAppointmentsResponse;
@@ -64,7 +66,12 @@ public class GroupController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<SuccessResponse<GroupOngoingAppointmentsResponse>> joinGroup(
-            @RequestAttribute Long memberId
-    ){return null;}
+    public ResponseEntity<SuccessResponse<GroupJoinResponse>> joinGroup(
+            @RequestAttribute Long memberId,
+            @RequestBody GroupJoinRequest request
+            ){
+        String groupInviteCode = request.getGroupInviteCode();
+        GroupJoinResponse response = groupService.joinGroup(memberId, groupInviteCode);
+        return ResponseEntity.ok(SuccessResponse.of(GROUP_JOINED,response));
+    }
 }
