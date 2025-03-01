@@ -1,7 +1,9 @@
 package org.noostak.member.common.exception;
 
-public class MemberException extends RuntimeException {
+import org.noostak.global.error.core.BaseException;
+
+public class MemberException extends BaseException {
     public MemberException(MemberErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
     }
 }
