@@ -13,20 +13,22 @@ import org.springframework.stereotype.Component;
 @ToString
 public class KakaoTokenRequestFactory {
 
-    @Value("${oauth-property.kakao.client_id}")
     private final String clientId;
 
-    @Value("${oauth-property.kakao.redirect_uri}")
+
     private final String redirectUri;
 
-    @Value("${oauth-property.kakao.client_secret}")
+
     private final String clientSecret;
 
-    @Value("${oauth-property.kakao.logout_redirect_uri}")
+
     private final String logoutRedirectUri;
 
 
-    public KakaoTokenRequestFactory(String clientId, String redirectUri, String clientSecret, String logoutRedirectUri) {
+    public KakaoTokenRequestFactory(@Value("${oauth-property.kakao.client_id}") String clientId,
+                                    @Value("${oauth-property.kakao.redirect_uri}") String redirectUri,
+                                    @Value("${oauth-property.kakao.client_secret}") String clientSecret,
+                                    @Value("${oauth-property.kakao.logout_redirect_uri}") String logoutRedirectUri) {
         this.clientId = clientId;
         this.redirectUri = redirectUri;
         this.clientSecret = clientSecret;
