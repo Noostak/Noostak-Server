@@ -1,13 +1,16 @@
 package org.noostak.auth.application;
 
+import lombok.ToString;
 import org.noostak.auth.dto.KakaoAccessTokenRequest;
 import org.noostak.auth.dto.KakaoLogoutRequest;
 import org.noostak.auth.dto.KakaoTokenRequest;
+import org.noostak.global.utils.GlobalLogger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
 @Component
+@ToString
 public class KakaoTokenRequestFactory {
 
     @Value("${oauth-property.kakao.client_id}")
@@ -28,6 +31,8 @@ public class KakaoTokenRequestFactory {
         this.redirectUri = redirectUri;
         this.clientSecret = clientSecret;
         this.logoutRedirectUri = logoutRedirectUri;
+
+        GlobalLogger.info("RequestFactory :",this);
     }
 
     public KakaoLogoutRequest createLogoutRequest(){
@@ -35,7 +40,7 @@ public class KakaoTokenRequestFactory {
     }
 
     public KakaoTokenRequest createRequest(String code) {
-        return KakaoTokenRequest.of(clientId, redirectUri, code,clientSecret);
+        return KakaoTokenRequest.of(clientId, redirectUri, code, clientSecret);
     }
 
     public KakaoAccessTokenRequest createAccessTokenRequest(String refreshToken) {
