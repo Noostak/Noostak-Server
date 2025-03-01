@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.noostak.auth.common.exception.KakaoApiErrorCode;
 import org.noostak.auth.common.exception.KakaoApiException;
 
 @Getter
 @AllArgsConstructor
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoTokenResponse {
     private String tokenType;

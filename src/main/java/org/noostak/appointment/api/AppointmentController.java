@@ -20,20 +20,19 @@ public class AppointmentController {
     // TODO : GROUP 으로 이동
     @PostMapping("/groups/{groupId}/appointments")
     public ResponseEntity<SuccessResponse> createAppointment(
-            // @AuthenticationPrincipal Long memberId,
+            @RequestAttribute Long memberId,
             @PathVariable(name = "groupId") Long groupId,
             @RequestBody AppointmentCreateRequest request
     ) {
-        Long memberId = 1L;
         appointmentService.createAppointment(memberId, groupId, request);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CREATED));
     }
 
     @GetMapping("/appointments/{appointmentId}/recommended-options")
     public ResponseEntity<SuccessResponse<AppointmentRecommendedOptionsResponse>> getRecommendedAppointmentOptions(
+            @RequestAttribute Long memberId,
             @PathVariable(name = "appointmentId") Long appointmentId
     ) {
-        Long memberId = 1L;
         AppointmentRecommendedOptionsResponse response = appointmentService.getRecommendedAppointmentOptions(memberId, appointmentId);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CREATED, response));
     }

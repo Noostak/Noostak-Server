@@ -16,7 +16,10 @@ public enum GroupSuccessCode implements SuccessCode {
 
     GROUP_ONGOING_APPOINTMENTS_LOADED(HttpStatus.OK, "그룹의 진행중인 약속이 성공적으로 조회되었습니다."),
 
+    GROUP_JOINED(HttpStatus.OK, "그룹 참여에 성공했습니다."),
+
     GROUP_CONFIRMED_APPOINTMENTS_LOADED(HttpStatus.OK, "그룹의 확정된 약속들이 성공적으로 조회되었습니다."),
+
     ;
 
     private final HttpStatus status;

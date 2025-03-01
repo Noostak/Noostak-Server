@@ -23,21 +23,19 @@ public class AppointmentMemberController {
 
     @PostMapping("/{appointmentId}/timetable")
     public ResponseEntity<SuccessResponse> saveAvailableTimes(
-            // @AuthenticationPrincipal Long memberId
+            @RequestAttribute Long memberId,
             @PathVariable(name = "appointmentId") Long appointmentId,
             @RequestBody AppointmentMemberAvailableTimesRequest request
     ) {
-        Long memberId = 2L;
         appointmentMemberSaveAvailableTimesService.saveAvailableTimes(memberId, appointmentId, request);
         return ResponseEntity.ok(SuccessResponse.of(SUCCESS_SAVE_AVAILABLE_TIMES));
     }
 
     @GetMapping("/{appointmentId}/timetable")
     public ResponseEntity<SuccessResponse<AppointmentMembersAvailableTimesResponse>> retrieveAvailableTimes(
-            // @AuthenticationPrincipal Long memberId
+            @RequestAttribute Long memberId,
             @PathVariable(name = "appointmentId") Long appointmentId
     ) {
-        Long memberId = 3L;
         AppointmentMembersAvailableTimesResponse response = appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(memberId, appointmentId);
         return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_MEMBER_AVAILABLE_TIMES_RETRIEVED, response));
     }

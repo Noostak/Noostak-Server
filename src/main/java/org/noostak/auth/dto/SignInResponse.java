@@ -2,8 +2,10 @@ package org.noostak.auth.dto;
 
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class SignInResponse {
     private String accessToken;
     private String refreshToken;

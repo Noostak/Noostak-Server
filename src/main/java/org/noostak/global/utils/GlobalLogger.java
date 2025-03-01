@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 public class GlobalLogger {
-    private static String BLOCK = "{}";
+    private static String BLOCK = "{} ";
 
     private static String format(int length){
         StringBuilder format = new StringBuilder();
