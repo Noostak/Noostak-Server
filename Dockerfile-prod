@@ -14,4 +14,4 @@ ENV TZ=Asia/Seoul
 EXPOSE 8080
 
 # Run the application
-CMD ["java", "-Duser.timezone=$TZ", "-jar", "-Dspring.profiles.active=$SPRING_PROFILES_ACTIVE", "noostak.jar"]
+CMD ["java", "-Duser.timezone=$TZ", "-jar", "noostak.jar"]
