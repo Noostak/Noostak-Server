@@ -18,7 +18,7 @@ public class LikeController {
 
     @PostMapping("/{appointmentId}/appointment-options/{appointmentOptionId}/like")
     public ResponseEntity<?> increase(
-            @RequestAttribute("memberId") Long memberId,
+            @RequestAttribute Long memberId,
             @PathVariable long appointmentId,
             @PathVariable long appointmentOptionId) {
 
@@ -29,7 +29,7 @@ public class LikeController {
 
     @DeleteMapping("/{appointmentId}/appointment-options/{appointmentOptionId}/like")
     public ResponseEntity<?> decrease(
-            @RequestAttribute("memberId") Long memberId,
+            @RequestAttribute Long memberId,
             @PathVariable long appointmentId,
             @PathVariable long appointmentOptionId) {
 
