@@ -3,9 +3,11 @@ package org.noostak.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@ToString
 public class SignUpResponse {
     private String accessToken;
     private String refreshToken;

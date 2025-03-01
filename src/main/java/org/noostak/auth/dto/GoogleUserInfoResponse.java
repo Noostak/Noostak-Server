@@ -7,12 +7,14 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.noostak.auth.common.exception.GoogleApiErrorCode;
 import org.noostak.auth.common.exception.GoogleApiException;
 
 
 @Getter
 @AllArgsConstructor
+@ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleUserInfoResponse {
 

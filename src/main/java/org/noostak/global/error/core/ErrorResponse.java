@@ -7,14 +7,14 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public class ErrorResponse {
-    private final HttpStatus status;
+    private final int status;
     private final String message;
 
     public static ErrorResponse of(ErrorCode errorCode) {
-        return new ErrorResponse(errorCode.getStatus(), errorCode.getMessage());
+        return new ErrorResponse(errorCode.getStatus().value(), errorCode.getMessage());
     }
 
     public static ErrorResponse of(ErrorCode errorCode, String message) {
-        return new ErrorResponse(errorCode.getStatus(), message);
+        return new ErrorResponse(errorCode.getStatus().value(), message);
     }
 }

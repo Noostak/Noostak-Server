@@ -18,6 +18,7 @@ public class MonthAppointment implements Comparable<MonthAppointment>{
     LocalDateTime startTime;
     LocalDateTime endTime;
     long duration;
+    String category;
 
 
     public static MonthAppointment from(Appointment appointment, AppointmentOption appointmentOption){
@@ -32,7 +33,9 @@ public class MonthAppointment implements Comparable<MonthAppointment>{
                 appointmentOption.getDate(),
                 appointmentOption.getStartTime(),
                 appointmentOption.getEndTime(),
-                appointment.getDuration().value());
+                appointment.getDuration().value(),
+                appointment.getCategory().getMessage()
+        );
     }
 
     @Override

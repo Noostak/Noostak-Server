@@ -2,10 +2,12 @@ package org.noostak.auth.dto;
 
 
 import lombok.Getter;
+import lombok.ToString;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.domain.vo.AuthId;
 
 @Getter
+@ToString
 public class AuthorizeResponse {
 
     private boolean isMember;
