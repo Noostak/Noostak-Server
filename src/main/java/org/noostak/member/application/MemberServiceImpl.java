@@ -25,8 +25,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final S3Service s3Service;
 
-    public MemberServiceImpl(MemberRepository memberRepository,
-                             @Qualifier("dev") S3Service s3Service) {
+    public MemberServiceImpl(MemberRepository memberRepository, S3Service s3Service) {
         this.memberRepository = memberRepository;
         this.s3Service = s3Service;
     }
