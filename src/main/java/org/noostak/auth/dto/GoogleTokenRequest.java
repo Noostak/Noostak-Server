@@ -2,12 +2,14 @@ package org.noostak.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 
 @Getter
+@ToString
 public class GoogleTokenRequest {
     private String code;
     private String clientId;
