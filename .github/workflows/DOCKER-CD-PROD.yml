@@ -40,8 +40,15 @@ jobs:
         run: |
           mkdir -p ./src/main/resources && cd $_
           touch ./application.yml
-          echo "${{ secrets.PROD_YML }}" > ./application.yml
+          echo "${{ secrets.YML }}" > ./application.yml
           cat ./application.yml
+        working-directory: ${{ env.working-directory }}
+
+      - name: aws-config.yml 생성
+        run: |
+          cd ./src/main/resources
+          touch ./application-prod.yml
+          echo "${{ secrets.PROD_YML }}" > ./application-prod.yml
         working-directory: ${{ env.working-directory }}
 
       - name: aws-config.yml 생성
