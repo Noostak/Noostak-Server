@@ -83,8 +83,8 @@ jobs:
 
       - name: docker image 빌드 및 푸시
         run: |
-          docker build -f Dockerfile-prod --platform linux/amd64 -t noostak/prod_server .
-          docker push noostak/prod_server
+          docker build -f Dockerfile-prod --platform linux/amd64 -t noostak/prod .
+          docker push noostak/prod
         working-directory: ${{ env.working-directory }}
 
   cd:
