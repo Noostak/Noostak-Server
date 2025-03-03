@@ -73,10 +73,9 @@ public class GroupController {
 
     @GetMapping("/{groupId}/appointments/confirmed")
     public ResponseEntity<SuccessResponse<GroupConfirmedAppointmentsResponse>> getGroupConfirmedAppointments(
-            // @AuthenticationPrincipal Long memberId,
+            @RequestAttribute Long memberId,
             @PathVariable Long groupId
     ) {
-        Long memberId = 1L;
         GroupConfirmedAppointmentsResponse groupConfirmedAppointments = groupService.getGroupConfirmedAppointments(memberId, groupId);
         return ResponseEntity.ok(SuccessResponse.of(GROUP_CONFIRMED_APPOINTMENTS_LOADED, groupConfirmedAppointments));
     }
