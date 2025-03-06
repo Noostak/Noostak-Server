@@ -25,6 +25,10 @@ public class S3ServiceImpl implements S3Service {
     @Override
     public KeyAndUrl uploadImage(S3DirectoryPath dirPath, MultipartFile image) {
         try {
+            if (image ==null || image.isEmpty()){
+                return null;
+            }
+
             return s3Storage.upload(dirPath, image);
         } catch (Exception e) {
             throw new S3UploadException(S3UploadErrorCode.IMAGE_UPLOAD_FAILED,e.getMessage());
