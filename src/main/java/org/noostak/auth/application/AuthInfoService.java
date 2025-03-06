@@ -17,9 +17,5 @@ public interface AuthInfoService {
 
     AuthInfo updateRefreshToken(AuthId authId, String refreshToken);
 
-    AuthorizeResponse authorize(String authType, AuthId authId, JwtToken refreshToken);
-
-    JwtToken findTempSavedTokenByAuthId(String authId);
-
     boolean hasAuthInfo(AuthId authId);
 }
