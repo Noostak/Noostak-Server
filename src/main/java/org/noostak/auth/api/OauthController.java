@@ -18,6 +18,7 @@ import org.noostak.auth.dto.*;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.auth.application.AuthInfoService;
 import org.noostak.global.utils.GlobalLogger;
+import org.noostak.infra.S3Service;
 import org.noostak.member.application.MemberService;
 import org.noostak.member.domain.Member;
 import org.springframework.http.ResponseEntity;
@@ -31,24 +32,6 @@ public class OauthController {
     private final OauthServiceFactory oauthServiceFactory;
     private final AuthInfoService authInfoService;
     private final MemberService memberService;
-
-    @PostMapping("/authorize")
-    public ResponseEntity<?> authorize(@RequestBody AuthorizeRequest requestDto){
-        String authType = requestDto.getAuthType();
-        String code = requestDto.getCode();
-
-        OauthService oauthService = oauthServiceFactory.getService(authType);
-
-        JwtToken jwtToken = oauthService.requestToken(code);
-        String accessToken = jwtToken.getAccessToken();
-
-        AuthId authId = oauthService.verify(accessToken);
-
-        AuthorizeResponse response = authInfoService.authorize(authType, authId, jwtToken);
-
-        return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.AUTHORIZE_COMPLETED,response)));
-    }
-
 
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(HttpServletRequest request, @RequestBody SignInRequest requestDto){
@@ -69,18 +52,20 @@ public class OauthController {
 
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> signUp(@ModelAttribute SignUpRequest requestDto){
+    public ResponseEntity<?> signUp(HttpServletRequest request, @ModelAttribute SignUpRequest requestDto){
         // 서버 메모리에 저장된 AccessToken 및 RefreshToken 가져오기
-        String givenAuthId = requestDto.getAuthId();
-        JwtToken jwtToken = authInfoService.findTempSavedTokenByAuthId(givenAuthId);
-        String accessToken = jwtToken.getAccessToken();
+        String givenRefreshToken = request.getHeader("Authorization");
+        givenRefreshToken = JwtToken.extractToken(givenRefreshToken);
 
         // authType 을 기준으로 OauthService 선택하기
         String authType = requestDto.getAuthType();
         OauthService oauthService = oauthServiceFactory.getService(authType);
 
+        // 리프레시 토큰으로 액세스 토큰 발급하기
+        JwtToken jwtToken = oauthService.requestAccessToken(givenRefreshToken);
+
         // 소셜 서비스 로그인 진행하기(유저 정보 불러오기)
-        AuthId verifiedAuthId = oauthService.verify(accessToken);
+        AuthId verifiedAuthId = oauthService.verify(jwtToken.getAccessToken());
 
         // 동일 소셜 계정으로 가입이 되어있는지 확인하기
         if(authInfoService.hasAuthInfo(verifiedAuthId)){
