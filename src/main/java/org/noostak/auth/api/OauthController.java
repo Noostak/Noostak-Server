@@ -18,7 +18,6 @@ import org.noostak.auth.dto.*;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.auth.application.AuthInfoService;
 import org.noostak.global.utils.GlobalLogger;
-import org.noostak.infra.S3Service;
 import org.noostak.member.application.MemberService;
 import org.noostak.member.domain.Member;
 import org.springframework.http.ResponseEntity;
