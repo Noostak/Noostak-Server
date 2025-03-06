@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthInfoServiceImpl implements AuthInfoService {
 
     private final AuthInfoRepository authInfoRepository;
-    private final AuthTokenResolver authTokenResolver;
 
     @Override
     @Transactional
@@ -78,23 +77,7 @@ public class AuthInfoServiceImpl implements AuthInfoService {
         );
     }
 
-    @Override
-    public AuthorizeResponse authorize(String authType, AuthId authId, JwtToken jwtToken) {
-        boolean isMember = hasAuthInfo(authId);
 
-        if (isMember) {
-            updateRefreshToken(authId, jwtToken.getRefreshToken());
-        }else{
-            // 멤버가 아닐 경우 인증 정보를 일시적으로 유지
-            authTokenResolver.put(authId, jwtToken);
-        }
-
-        return AuthorizeResponse.of(isMember, authId, authType, jwtToken);
-    }
-
-    public JwtToken findTempSavedTokenByAuthId(String authId){
-        return authTokenResolver.get(AuthId.from(authId));
-    }
 
     private AuthInfo saveAuthInfo(AuthInfo authInfo) {
         return authInfoRepository.save(authInfo);
