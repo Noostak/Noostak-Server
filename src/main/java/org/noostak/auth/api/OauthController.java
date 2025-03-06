@@ -61,8 +61,12 @@ public class OauthController {
         String authType = requestDto.getAuthType();
         OauthService oauthService = oauthServiceFactory.getService(authType);
 
-        // 리프레시 토큰으로 액세스 토큰 발급하기
         JwtToken jwtToken = oauthService.requestAccessToken(givenRefreshToken);
+
+        // 만약, 응답으로 리프레시 토큰이 주어지지 않을 경우, 기존 리프레시 토큰을 유지
+        if(!jwtToken.refreshTokenIsExists()){
+            jwtToken.setRefreshToken(givenRefreshToken);
+        }
 
         // 소셜 서비스 로그인 진행하기(유저 정보 불러오기)
         AuthId verifiedAuthId = oauthService.verify(jwtToken.getAccessToken());
