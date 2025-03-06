@@ -68,19 +68,4 @@ public class FakeAuthInfoService implements AuthInfoService {
         return authInfoRepository.hasAuthInfoByAuthId(authId);
     }
 
-    @Override
-    public AuthorizeResponse authorize(String authType, AuthId authId, JwtToken jwtToken) {
-        boolean isMember = authInfoRepository.hasAuthInfoByAuthId(authId);
-
-        if (isMember) {
-            updateRefreshToken(authId, jwtToken.getRefreshToken());
-        }
-
-        return AuthorizeResponse.of(isMember, authId, authType, jwtToken);
-    }
-
-    @Override
-    public JwtToken findTempSavedTokenByAuthId(String authId) {
-        return null;
-    }
 }

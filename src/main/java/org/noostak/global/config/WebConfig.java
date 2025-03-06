@@ -14,7 +14,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/v1/auth/**");
+                .excludePathPatterns(
+                        "/api/v1/auth/sign-in",       // 로그인 제외
+                        "/api/v1/auth/sign-up",       // 회원가입 제외
+                        "/api/v1/auth/token-reissue", // 토큰 재발급 제외
+                        "/api/v1/auth/logout"         // 로그아웃 제외
+                );
     }
 }
 
