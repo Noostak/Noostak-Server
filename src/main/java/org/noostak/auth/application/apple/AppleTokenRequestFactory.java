@@ -1,4 +1,4 @@
-package org.noostak.auth.application;
+package org.noostak.auth.application.apple;
 
 import org.noostak.auth.dto.apple.AppleAccessTokenRequest;
 import org.noostak.auth.dto.apple.AppleTokenRequest;

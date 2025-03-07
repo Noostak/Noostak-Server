@@ -1,7 +1,8 @@
-package org.noostak.auth.application;
+package org.noostak.auth.application.apple;
 
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.auth.application.RestClient;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
@@ -17,14 +18,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AppleServiceImpl implements KakaoService {
+public class AppleServiceImpl implements AppleService {
 
     private final AppleTokenRequestFactory tokenRequestFactory;
     private final RestClient restClient;
 
     @Override
     public JwtToken requestAccessToken(String givenRefreshToken) throws ExternalApiException {
-        String url = KaKaoApi.TOKEN_REQUEST.getUrl();
+        String url = AppleApi.TOKEN_REQUEST.getUrl();
 
         AppleAccessTokenRequest request =
                 tokenRequestFactory.createAccessTokenRequest(givenRefreshToken);
@@ -42,7 +43,7 @@ public class AppleServiceImpl implements KakaoService {
 
     @Override
     public JwtToken requestToken(String code) {
-        String url = KaKaoApi.TOKEN_REQUEST.getUrl();
+        String url = AppleApi.TOKEN_REQUEST.getUrl();
 
         AppleTokenRequest request = tokenRequestFactory.createRequest(code);
 
@@ -70,17 +71,5 @@ public class AppleServiceImpl implements KakaoService {
     @Override
     public void unlink(String accessToken) {
         // 별도로 로직 처리하지 않음
-    }
-
-    public HttpHeaders makeAuthorizationBearerTokenHeader(String token) {
-        HttpHeaders headers = new HttpHeaders();
-
-        if (token == null || token.isEmpty() || token.isBlank()) {
-            throw new AuthException(AuthErrorCode.INVALID_TOKEN);
-        }
-
-        headers.set("Authorization", "Bearer " + token);
-
-        return headers;
     }
 }

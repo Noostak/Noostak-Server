@@ -2,6 +2,7 @@ package org.noostak.auth.application;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.noostak.auth.application.apple.AppleService;
 import org.noostak.auth.application.google.GoogleService;
 import org.noostak.auth.application.kakao.KakaoService;
 import org.noostak.auth.common.exception.AuthErrorCode;
