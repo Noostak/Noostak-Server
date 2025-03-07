@@ -8,6 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum AppleApi {
     TOKEN_REQUEST("https://appleid.apple.com/auth/token"),
+    PUBLIC_KEY("https://appleid.apple.com/auth/keys"),
+
     // USER_INFO는 토큰을 디코딩하는 형식
     // LOGOUT은 클라이언트가 토큰을 삭제하는 형식
     ;
