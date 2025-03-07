@@ -5,15 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.auth.application.RestClient;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
-import org.noostak.auth.common.exception.AuthErrorCode;
-import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.common.exception.ExternalApiException;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.dto.apple.AppleAccessTokenRequest;
 import org.noostak.auth.dto.apple.AppleAccessTokenResponse;
 import org.noostak.auth.dto.apple.AppleTokenRequest;
 import org.noostak.auth.dto.apple.AppleTokenResponse;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,8 +56,8 @@ public class AppleServiceImpl implements AppleService {
 
     @Override
     public AuthId verify(String idToken) {
-        // TODO: idToken을 디코딩하여 돌려주기 -> 상세내용 추후 적용
-        return null;
+        String authId = AppleTokenVerifier.verifyIdToken(idToken);
+        return AuthId.from(authId);
     }
 
     @Override
