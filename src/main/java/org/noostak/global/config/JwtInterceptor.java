@@ -33,7 +33,8 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = extractToken(request);
-        GlobalLogger.info("[Intercept] 요청된 경로:",request.getRequestURI());
+        GlobalLogger.info("[Intercept] 요청 호스트 정보:",request.getRemoteHost(),request.getRemotePort());
+        GlobalLogger.info("[Intercept] 요청 경로 정보:",request.getMethod(),request.getRequestURI());
 
         // TODO: 외부 API 호출 횟수를 줄이는 방법 탐구 (ex. 액세스 토큰 캐싱)
         for(AuthType authType : AuthType.values()){
