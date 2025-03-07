@@ -1,7 +1,7 @@
 package org.noostak.member.application;
 
 import org.noostak.member.domain.Member;
-import org.noostak.auth.dto.SignUpRequest;
+import org.noostak.auth.dto.common.SignUpRequest;
 import org.noostak.member.dto.GetProfileResponse;
 import org.springframework.web.multipart.MultipartFile;
 
