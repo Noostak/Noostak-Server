@@ -33,22 +33,21 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = extractToken(request);
+        GlobalLogger.info("[Intercept] 요청 호스트 정보:",request.getRemoteHost(),request.getRemotePort());
+        GlobalLogger.info("[Intercept] 요청 경로 정보:",request.getMethod(),request.getRequestURI());
 
-        if (token != null) {
+        // TODO: 외부 API 호출 횟수를 줄이는 방법 탐구 (ex. 액세스 토큰 캐싱)
+        for(AuthType authType : AuthType.values()){
+            OauthService oauthService = oauthServiceFactory.getService(authType);
 
-            // TODO: 외부 API 호출 횟수를 줄이는 방법 탐구 (ex. 액세스 토큰 캐싱)
-            for(AuthType authType : AuthType.values()){
-                OauthService oauthService = oauthServiceFactory.getService(authType);
+            try {
+                AuthId authId = oauthService.verify(token);
+                Long memberId = authInfoService.findByAuthId(authId).getMember().getId();
 
-                try {
-                    AuthId authId = oauthService.verify(token);
-                    Long memberId = authInfoService.findByAuthId(authId).getMember().getId();
-
-                    request.setAttribute("memberId", memberId);
-                    return true;
-                }catch (ExternalApiException | RestClientException e){
-                    GlobalLogger.warn(AuthErrorCode.INVALID_TOKEN.getMessage());
-                }
+                request.setAttribute("memberId", memberId);
+                return true;
+            }catch (ExternalApiException | RestClientException e){
+                GlobalLogger.warn(AuthErrorCode.INVALID_TOKEN.getMessage());
             }
         }
 
@@ -60,6 +59,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        return null;
+
+        throw new AuthException(AuthErrorCode.INVALID_TOKEN);
     }
 }

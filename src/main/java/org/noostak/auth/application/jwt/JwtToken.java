@@ -1,16 +1,17 @@
 package org.noostak.auth.application.jwt;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.noostak.auth.common.exception.AuthErrorCode;
+import org.noostak.auth.common.exception.AuthException;
 import org.noostak.global.utils.GlobalLogger;
 import org.springframework.util.StringUtils;
 
 @Getter
 @ToString
 public class JwtToken {
-    private String tokenType;
-    private String accessToken;
+    private final String tokenType;
+    private final String accessToken;
     private String refreshToken;
 
     public JwtToken(String accessToken, String refreshToken) {
@@ -24,7 +25,7 @@ public class JwtToken {
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        return null;
+        throw new AuthException(AuthErrorCode.INVALID_TOKEN);
     }
 
     public static JwtToken of(String accessToken, String refreshToken){
