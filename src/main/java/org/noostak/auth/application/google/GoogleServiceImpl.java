@@ -1,7 +1,8 @@
-package org.noostak.auth.application;
+package org.noostak.auth.application.google;
 
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.auth.application.RestClient;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;

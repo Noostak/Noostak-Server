@@ -1,4 +1,4 @@
-package org.noostak.auth.application;
+package org.noostak.auth.application.google;
 
 import org.noostak.auth.dto.google.GoogleAccessTokenRequest;
 import org.noostak.auth.dto.google.GoogleTokenRequest;
