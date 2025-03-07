@@ -2,6 +2,9 @@ package org.noostak.auth.application;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.noostak.auth.application.apple.AppleService;
+import org.noostak.auth.application.google.GoogleService;
+import org.noostak.auth.application.kakao.KakaoService;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthType;
@@ -16,11 +19,13 @@ public class OauthServiceFactory {
     private final Map<String, OauthService> serviceMap = new HashMap<>();
     private final KakaoService kakaoService;
     private final GoogleService googleService;
+    private final AppleService appleService;
 
     @PostConstruct
     public void init() {
         serviceMap.put(AuthType.KAKAO.getName(), kakaoService);
         serviceMap.put(AuthType.GOOGLE.getName(), googleService);
+        serviceMap.put(AuthType.APPLE.getName(), appleService);
     }
 
     public OauthService getService(String authType) {
