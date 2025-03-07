@@ -1,4 +1,4 @@
-package org.noostak.auth.application;
+package org.noostak.auth.application.kakao;
 
 
 import lombok.AllArgsConstructor;

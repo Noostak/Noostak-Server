@@ -1,4 +1,4 @@
-package org.noostak.auth.application;
+package org.noostak.auth.application.kakao;
 
 import org.noostak.auth.dto.kakao.KakaoAccessTokenRequest;
 import org.noostak.auth.dto.kakao.KakaoLogoutRequest;
