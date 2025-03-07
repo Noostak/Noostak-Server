@@ -8,9 +8,8 @@ import org.noostak.auth.domain.FakeAuthInfoRepository;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
-import org.noostak.auth.dto.common.AuthorizeResponse;
+import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
-import org.noostak.auth.dto.common.SignUpResponse;
 import org.noostak.member.domain.Member;
 
 public class FakeAuthInfoService implements AuthInfoService {

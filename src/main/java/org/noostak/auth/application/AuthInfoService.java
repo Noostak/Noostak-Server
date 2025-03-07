@@ -3,9 +3,8 @@ package org.noostak.auth.application;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.domain.AuthInfo;
 import org.noostak.auth.domain.vo.AuthId;
-import org.noostak.auth.dto.common.AuthorizeResponse;
+import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
-import org.noostak.auth.dto.common.SignUpResponse;
 import org.noostak.member.domain.Member;
 
 public interface AuthInfoService {
