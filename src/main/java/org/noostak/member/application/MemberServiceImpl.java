@@ -3,13 +3,14 @@ package org.noostak.member.application;
 import org.noostak.infra.KeyAndUrl;
 import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
+import org.noostak.member.common.exception.MemberErrorCode;
+import org.noostak.member.common.exception.MemberException;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.auth.dto.common.SignUpRequest;
 import org.noostak.member.dto.GetProfileResponse;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,8 +24,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final S3Service s3Service;
 
-    public MemberServiceImpl(MemberRepository memberRepository,
-                             @Qualifier("dev") S3Service s3Service) {
+    public MemberServiceImpl(MemberRepository memberRepository, S3Service s3Service) {
         this.memberRepository = memberRepository;
         this.s3Service = s3Service;
     }

@@ -35,6 +35,14 @@ public class Member extends BaseTimeEntity {
         this.key = key;
     }
 
+    public MemberProfileImageKey getKey() {
+        if(key == null){
+            return MemberProfileImageKey.from(null);
+        }
+
+        return key;
+    }
+
     private Member(final MemberName name, final MemberProfileImageKey key) {
         this.name = name;
         this.key = key;

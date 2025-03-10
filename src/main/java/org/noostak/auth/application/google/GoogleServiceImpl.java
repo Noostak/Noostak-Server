@@ -16,44 +16,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GoogleServiceImpl implements GoogleService{
 
-    private final GoogleTokenRequestFactory googleTokenRequestFactory;
     private final RestClient restClient;
 
     @Override
-    public JwtToken requestAccessToken(String givenRefreshToken) {
-        String url = GoogleApi.TOKEN_REQUEST.getUrl();
-
-        GoogleAccessTokenRequest request =
-                googleTokenRequestFactory.createAccessTokenRequest(givenRefreshToken);
-
-        GoogleAccessTokenResponse response =
-                restClient.postRequest(url,
-                        request.getUrlEncodedParams(),
-                        GoogleAccessTokenResponse.class);
-
-        response.validate();
-
-        return JwtTokenProvider.createToken(response.getAccessToken(), response.getRefreshToken());
-    }
-
-    @Override
-    public JwtToken requestToken(String code) {
-        String url = GoogleApi.TOKEN_REQUEST.getUrl();
-
-        GoogleTokenRequest request = googleTokenRequestFactory.createRequest(code);
-
-        GoogleTokenResponse response =
-                restClient.postRequest(url,
-                        request.getUrlEncodedParams(),
-                        GoogleTokenResponse.class);
-
-        response.validate();
-
-        return JwtTokenProvider.createToken(response.getAccessToken(),response.getRefreshToken());
-    }
-
-    @Override
-    public AuthId verify(String accessToken) {
+    public AuthId verifyByAuthAccessToken(String accessToken) {
         String url = GoogleApi.USER_INFO.getUrl();
 
         HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
@@ -73,14 +39,7 @@ public class GoogleServiceImpl implements GoogleService{
 
     @Override
     public void unlink(String accessToken) {
-        String url = GoogleApi.UNLINK.getUrl();
-
-        HttpHeaders headers = makeAuthorizationBearerTokenHeader(accessToken);
-
-        GoogleUnlinkResponse response =
-                restClient.postRequest(url, headers, GoogleUnlinkResponse.class);
-
-        response.validate();
+        // 별도로 처리 해줄 로직 없음
     }
 
     public HttpHeaders makeAuthorizationBearerTokenHeader(String token){

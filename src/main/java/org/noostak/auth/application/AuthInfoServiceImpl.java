@@ -2,14 +2,17 @@ package org.noostak.auth.application;
 
 import lombok.RequiredArgsConstructor;
 import org.noostak.auth.application.jwt.JwtToken;
+import org.noostak.auth.application.jwt.JwtTokenProvider;
+import org.noostak.auth.common.exception.AuthErrorCode;
+import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.AuthInfo;
 import org.noostak.auth.domain.AuthInfoRepository;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
-import org.noostak.auth.dto.common.AuthorizeResponse;
+import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
-import org.noostak.auth.dto.common.SignUpResponse;
+import org.noostak.auth.dto.common.TokenResponse;
 import org.noostak.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthInfoServiceImpl implements AuthInfoService {
 
     private final AuthInfoRepository authInfoRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     @Transactional
-    public SignUpResponse createAuthInfo(String authType, AuthId authId, JwtToken jwtToken, Member member) {
+    public SignUpResponse createAuthInfo(String authType, AuthId authId, Member member) {
+        // JWT 토큰 생성하기
+        JwtToken jwtToken = createToken(authId);
+
         AuthInfo newAuthInfo = createAuthInfo(
                 AuthType.from(authType),
                 authId,
@@ -42,16 +49,70 @@ public class AuthInfoServiceImpl implements AuthInfoService {
         );
     }
 
+    @Override
+    @Transactional
+    public void deleteAuthInfo(AuthInfo authInfo) {
+        authInfoRepository.delete(authInfo);
+    }
 
     @Override
-    public SignInResponse fetchByAuthId(AuthId authId, String accessToken) {
+    @Transactional
+    public SignInResponse fetchByAuthId(AuthId authId) throws AuthException {
+        // 주어진 authId에 대한 authInfo가 존재하는지 확인
         AuthInfo authInfo = authInfoRepository.getAuthInfoByAuthId(authId);
 
+        // 액세스, 리프레시 토큰 갱신
+        JwtToken token = getJwtToken(authInfo);
+
         return SignInResponse.of(
-                accessToken,
-                authInfo.getRefreshToken().value(),
+                token.getAccessToken(),
+                token.getRefreshToken(),
                 authInfo.getMember().getId(),
                 authInfo.getAuthType().getName());
+    }
+
+    @Override
+    public AuthInfo verify(String accessToken) {
+        // 액세스 토큰을 인증하고 authId 가져오기
+        String authId = jwtTokenProvider.getAuthId(accessToken);
+
+        return findByAuthId(AuthId.from(authId));
+    }
+
+
+    @Override
+    public TokenResponse reIssueAccessToken(String givenRefreshToken) {
+        // 액세스 토큰 새로 생성하여 갱신하기
+        AuthInfo authInfo = authInfoRepository.getAuthInfoByRefreshToken(givenRefreshToken);
+
+        String refreshToken = authInfo.getRefreshToken().value();
+        String accessToken = jwtTokenProvider.createAccessTokenIfValid(refreshToken);
+
+        // 주어진 액세스 토큰으로 authId 확인
+        String authId = jwtTokenProvider.getAuthId(accessToken);
+
+        // authId 유효성 확인
+        validateAuthId(authId);
+
+        return TokenResponse.of(accessToken, refreshToken, authId);
+    }
+
+    @Override
+    public JwtToken createToken(AuthId authId) {
+        return jwtTokenProvider.createToken(authId.value());
+    }
+
+
+    private JwtToken getJwtToken(AuthInfo authInfo) {
+        AuthId authId = authInfo.getAuthId();
+
+        // 액세스, 리프레시 토큰 갱신
+        JwtToken newToken = jwtTokenProvider.createToken(authId.value());
+
+        // 리프레시 토큰 업데이트
+        updateRefreshToken(authId, newToken.getRefreshToken());
+
+        return newToken;
     }
 
     @Override
@@ -78,9 +139,15 @@ public class AuthInfoServiceImpl implements AuthInfoService {
     }
 
 
-
     private AuthInfo saveAuthInfo(AuthInfo authInfo) {
         return authInfoRepository.save(authInfo);
+    }
+
+    private void validateAuthId(String authId){
+        // 주어진 authId가 잘못 되었다면 예외 발생
+        if (!hasAuthInfo(AuthId.from(authId))) {
+            throw new AuthException(AuthErrorCode.AUTH_ID_NOT_EXISTS, authId);
+        }
     }
 
     @Override

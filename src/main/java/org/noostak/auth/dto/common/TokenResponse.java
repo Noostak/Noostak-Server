@@ -6,17 +6,17 @@ import lombok.ToString;
 @Getter
 @ToString
 public class TokenResponse {
-    private String accessToken;
-    private String refreshToken;
-    private String authType;
+    private final String accessToken;
+    private final String refreshToken;
+    private final String authId;
 
-    private TokenResponse(String accessToken, String refreshToken, String authType) {
+    private TokenResponse(String accessToken, String refreshToken, String authId) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.authType = authType;
+        this.authId = authId;
     }
 
-    public static TokenResponse of(String accessToken, String refreshToken, String authType) {
-        return new TokenResponse(accessToken,refreshToken,authType);
+    public static TokenResponse of(String accessToken, String refreshToken, String authId) {
+        return new TokenResponse(accessToken,refreshToken,authId);
     }
 }

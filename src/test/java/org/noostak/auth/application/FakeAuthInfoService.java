@@ -8,9 +8,9 @@ import org.noostak.auth.domain.FakeAuthInfoRepository;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
-import org.noostak.auth.dto.common.AuthorizeResponse;
+import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
-import org.noostak.auth.dto.common.SignUpResponse;
+import org.noostak.auth.dto.common.TokenResponse;
 import org.noostak.member.domain.Member;
 
 public class FakeAuthInfoService implements AuthInfoService {
@@ -18,10 +18,12 @@ public class FakeAuthInfoService implements AuthInfoService {
     private final FakeAuthInfoRepository authInfoRepository = new FakeAuthInfoRepository();
 
     @Override
-    public SignUpResponse createAuthInfo(String authType, AuthId authId, JwtToken jwtToken, Member member) {
+    public SignUpResponse createAuthInfo(String authType, AuthId authId, Member member) {
         if (authInfoRepository.hasAuthInfoByAuthId(authId)) {
             throw new AuthException(AuthErrorCode.AUTHID_ALREADY_EXISTS,authId.value());
         }
+
+        JwtToken jwtToken = JwtToken.of("accessToken","refreshToken");
 
         AuthInfo newAuthInfo = AuthInfo.of(
                 AuthType.from(authType),
@@ -41,19 +43,39 @@ public class FakeAuthInfoService implements AuthInfoService {
     }
 
     @Override
-    public SignInResponse fetchByAuthId(AuthId authId, String accessToken) {
+    public void deleteAuthInfo(AuthInfo authInfo) {
+
+    }
+
+    @Override
+    public SignInResponse fetchByAuthId(AuthId authId) {
         AuthInfo authInfo = authInfoRepository.getAuthInfoByAuthId(authId);
 
         return SignInResponse.of(
-                accessToken,
+                "AccessToken",
                 authInfo.getRefreshToken().value(),
                 authInfo.getMember().getId(),
                 authInfo.getAuthType().getName());
     }
 
     @Override
+    public AuthInfo verify(String accessToken) {
+        return null;
+    }
+
+    @Override
     public AuthInfo findByAuthId(AuthId authId) {
         return authInfoRepository.getAuthInfoByAuthId(authId);
+    }
+
+    @Override
+    public TokenResponse reIssueAccessToken(String refreshToken) {
+        return null;
+    }
+
+    @Override
+    public JwtToken createToken(AuthId authId) {
+        return null;
     }
 
     @Override
