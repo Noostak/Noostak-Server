@@ -30,6 +30,11 @@ public class FakeAuthInfoRepository implements AuthInfoRepository {
     }
 
     @Override
+    public AuthInfo getAuthInfoByRefreshToken(String refreshToken) {
+        return AuthInfoRepository.super.getAuthInfoByRefreshToken(refreshToken);
+    }
+
+    @Override
     public Optional<AuthInfo> findByAuthId(AuthId authid) {
         return Optional.empty();
     }
@@ -37,6 +42,11 @@ public class FakeAuthInfoRepository implements AuthInfoRepository {
     @Override
     public boolean existsAuthInfoByAuthId(AuthId code) {
         return false;
+    }
+
+    @Override
+    public Optional<AuthInfo> findByRefreshToken(RefreshToken refreshToken) {
+        return Optional.empty();
     }
 
     @Override

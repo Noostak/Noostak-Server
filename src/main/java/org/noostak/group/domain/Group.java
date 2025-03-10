@@ -39,6 +39,14 @@ public class Group extends BaseTimeEntity {
     @Column(name = "group_host_id")
     private Long groupHostId;
 
+    public GroupProfileImageKey getKey() {
+        if(key == null){
+            return GroupProfileImageKey.from(null);
+        }
+
+        return key;
+    }
+
     private Group(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
         this.groupHostId = groupHostId;
         this.name = name;
