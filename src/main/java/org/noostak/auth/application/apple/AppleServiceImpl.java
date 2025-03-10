@@ -17,45 +17,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AppleServiceImpl implements AppleService {
 
-    private final AppleTokenRequestFactory tokenRequestFactory;
     private final RestClient restClient;
 
     @Override
-    public JwtToken requestAccessToken(String givenRefreshToken) throws ExternalApiException {
-        String url = AppleApi.TOKEN_REQUEST.getUrl();
-
-        AppleAccessTokenRequest request =
-                tokenRequestFactory.createAccessTokenRequest(givenRefreshToken);
-
-        AppleAccessTokenResponse response =
-                restClient.postRequest(url,
-                        request.getUrlEncodedParams(),
-                        AppleAccessTokenResponse.class);
-
-        response.validate();
-
-        return JwtTokenProvider.createToken(response.getAccessToken(), response.getRefreshToken());
-    }
-
-
-    @Override
-    public JwtToken requestToken(String code) {
-        String url = AppleApi.TOKEN_REQUEST.getUrl();
-
-        AppleTokenRequest request = tokenRequestFactory.createRequest(code);
-
-        AppleTokenResponse response =
-                restClient.postRequest(url,
-                        request.getUrlEncodedParams(),
-                        AppleTokenResponse.class);
-
-        response.validate();
-
-        return JwtTokenProvider.createToken(response.getIdToken(), response.getRefreshToken());
-    }
-
-    @Override
-    public AuthId verify(String idToken) {
+    public AuthId verifyByAuthAccessToken(String idToken) {
         String authId = AppleTokenVerifier.verifyIdToken(idToken);
         return AuthId.from(authId);
     }
