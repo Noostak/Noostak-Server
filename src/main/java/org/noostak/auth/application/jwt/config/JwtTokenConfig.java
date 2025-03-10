@@ -11,8 +11,14 @@ public class JwtTokenConfig {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    @Value("${jwt.access-token-expired}")
+    private Long accessTokenExpired;
+
+    @Value("${jwt.refresh-token-expired}")
+    private Long refreshTokenExpired;
+
     @Bean
-    public JwtTokenProvider jwtTokenProvider(String secretKey) {
-        return new JwtTokenProvider(secretKey);
+    public JwtTokenProvider jwtTokenProvider() {
+        return new JwtTokenProvider(secretKey,accessTokenExpired,refreshTokenExpired);
     }
 }
