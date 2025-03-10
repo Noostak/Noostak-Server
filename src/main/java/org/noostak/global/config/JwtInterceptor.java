@@ -4,14 +4,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.noostak.auth.application.AuthInfoService;
-import org.noostak.auth.application.OauthService;
-import org.noostak.auth.application.OauthServiceFactory;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
-import org.noostak.auth.common.exception.ExternalApiException;
-import org.noostak.auth.common.exception.RestClientException;
-import org.noostak.auth.domain.vo.AuthId;
-import org.noostak.auth.domain.vo.AuthType;
+import org.noostak.auth.domain.AuthInfo;
 import org.noostak.global.utils.GlobalLogger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -20,31 +15,23 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 @RequiredArgsConstructor
 public class JwtInterceptor implements HandlerInterceptor {
-    private final OauthServiceFactory oauthServiceFactory;
     private final AuthInfoService authInfoService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String token = extractToken(request);
+        String accessToken = extractToken(request);
         GlobalLogger.info("[Intercept] 요청 호스트 정보:",request.getRemoteHost(),request.getRemotePort());
         GlobalLogger.info("[Intercept] 요청 경로 정보:",request.getMethod(),request.getRequestURI());
 
-        // TODO: 외부 API 호출 횟수를 줄이는 방법 탐구 (ex. 액세스 토큰 캐싱)
-        for(AuthType authType : AuthType.values()){
-            OauthService oauthService = oauthServiceFactory.getService(authType);
+        AuthInfo authInfo = authInfoService.verify(accessToken);
+        Long memberId = authInfo.getMember().getId();
 
-            try {
-                AuthId authId = oauthService.verify(token);
-                Long memberId = authInfoService.findByAuthId(authId).getMember().getId();
+        request.setAttribute("memberId", memberId);
 
-                request.setAttribute("memberId", memberId);
-                return true;
-            }catch (ExternalApiException | RestClientException e){
-                GlobalLogger.warn(AuthErrorCode.INVALID_TOKEN.getMessage());
-            }
-        }
+        GlobalLogger.info("[Intercept] authId: ",authInfo.getAuthId().value());
+        GlobalLogger.info("[Intercept] memberId: ",memberId);
 
-        throw new AuthException(AuthErrorCode.INVALID_TOKEN);
+        return true;
     }
 
     private String extractToken(HttpServletRequest request) {
