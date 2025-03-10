@@ -95,8 +95,8 @@ public class OauthController {
         AuthInfo authInfo = authInfoService.verify(accessToken);
 
         // 멤버 및 소셜 정보 삭제
-        memberService.deleteMember(memberId);
         authInfoService.deleteAuthInfo(authInfo);
+        memberService.deleteMember(memberId);
 
         return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.UNLINK_COMPLETED)));
     }
