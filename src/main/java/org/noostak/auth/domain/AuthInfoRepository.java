@@ -3,6 +3,7 @@ package org.noostak.auth.domain;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthId;
+import org.noostak.auth.domain.vo.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,12 +15,19 @@ public interface AuthInfoRepository extends JpaRepository<AuthInfo, Long> {
     Optional<AuthInfo> findByAuthId(AuthId authid);
     boolean existsAuthInfoByAuthId(AuthId code);
 
+    Optional<AuthInfo> findByRefreshToken(RefreshToken refreshToken);
+
     default boolean hasAuthInfoByAuthId(AuthId authid){
         return this.existsAuthInfoByAuthId(authid);
     }
 
     default AuthInfo getAuthInfoByAuthId(AuthId authid){
         return this.findByAuthId(authid)
-                .orElseThrow(()->new AuthException(AuthErrorCode.AUTH_ID_NOT_EXISTS, authid));
+                .orElseThrow(()->new AuthException(AuthErrorCode.AUTH_ID_NOT_EXISTS, authid.value()));
+    }
+
+    default AuthInfo getAuthInfoByRefreshToken(String refreshToken){
+        return this.findByRefreshToken(RefreshToken.from(refreshToken))
+                .orElseThrow(()-> new AuthException(AuthErrorCode.INVALID_TOKEN));
     }
 }
