@@ -3,11 +3,10 @@ package org.noostak.auth.application;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
 import org.noostak.auth.domain.vo.AuthId;
-import org.noostak.auth.dto.common.SignUpResponse;
+import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.member.MemberRepositoryTest;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.vo.MemberName;
@@ -36,11 +35,10 @@ class AuthInfoServiceImplTest {
         void createAuthInfo_Success() {
             // given
             AuthId authId = AuthId.from("test-auth-id");
-            JwtToken jwtToken = new JwtToken("access-token", "refresh-token");
             Member member = memberRepositoryTest.save(Member.of(MemberName.from("name"), MemberProfileImageKey.from("KEY")));
 
             // when
-            SignUpResponse response = authInfoService.createAuthInfo("GOOGLE", authId, jwtToken, member);
+            SignUpResponse response = authInfoService.createAuthInfo("GOOGLE", authId, member);
 
             // then
             assertNotNull(response);
@@ -59,13 +57,12 @@ class AuthInfoServiceImplTest {
         void createAuthInfo_Failure_DuplicateAuthId() {
             // given
             AuthId authId = AuthId.from("test-auth-id");
-            JwtToken jwtToken = new JwtToken("access-token", "refresh-token");
             Member member = memberRepositoryTest.save(Member.of(MemberName.from("name"), MemberProfileImageKey.from("KEY")));
 
-            authInfoService.createAuthInfo("GOOGLE", authId, jwtToken, member);
+            authInfoService.createAuthInfo("GOOGLE", authId, member);
 
             // when & then
-            assertThatThrownBy(()->authInfoService.createAuthInfo("GOOGLE", authId, jwtToken, member))
+            assertThatThrownBy(()->authInfoService.createAuthInfo("GOOGLE", authId, member))
                     .isInstanceOf(AuthException.class)
                     .hasMessageContaining(AuthErrorCode.AUTHID_ALREADY_EXISTS.getMessage(authId.value()));
         }
