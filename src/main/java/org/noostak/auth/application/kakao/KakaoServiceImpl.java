@@ -2,6 +2,7 @@ package org.noostak.auth.application.kakao;
 
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.auth.application.KakaoTokenRequestFactory;
 import org.noostak.auth.application.RestClient;
 import org.noostak.auth.common.exception.AuthErrorCode;
 import org.noostak.auth.common.exception.AuthException;
