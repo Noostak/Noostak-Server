@@ -26,7 +26,7 @@ public class S3ServiceImpl implements S3Service {
     public KeyAndUrl uploadImage(S3DirectoryPath dirPath, MultipartFile image) {
         try {
             if (image ==null || image.isEmpty()){
-                return null;
+                return KeyAndUrl.of(null,null);
             }
 
             return s3Storage.upload(dirPath, image);
@@ -37,6 +37,10 @@ public class S3ServiceImpl implements S3Service {
 
     @Override
     public String getImageUrl(String key) {
+        if (key ==null || key.isEmpty()){
+            return null;
+        }
+
         return s3Storage.findPublicUrlByKey(key);
     }
 
