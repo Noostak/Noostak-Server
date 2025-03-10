@@ -1,44 +1,84 @@
 package org.noostak.auth.application.jwt;
 
 
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.noostak.auth.common.exception.AuthErrorCode;
+import org.noostak.auth.common.exception.AuthException;
+import org.noostak.global.utils.GlobalLogger;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
     private final SecretKey secretKey;
+    private final long REFRESH_TOKEN_EXPIRED;
+    private final long ACCESS_TOKEN_EXPIRED;
 
-    public JwtTokenProvider(String secretKey) {
-        this.secretKey = Jwts.SIG.HS256.key().build();
+    public JwtTokenProvider(String secretKey, long refreshTokenExpired, long accessTokenExpired) {
+        this.REFRESH_TOKEN_EXPIRED = refreshTokenExpired;
+        this.ACCESS_TOKEN_EXPIRED = accessTokenExpired;
+        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static JwtToken createToken(String accessToken, String refreshToken){
+    public JwtToken createToken(String authId){
+        // 리프레시 토큰과 액세스 토큰을 생성
+        String refreshToken = createRefreshToken(authId);
+        String accessToken = createAccessToken(authId);
+
         return JwtToken.of(accessToken,refreshToken);
     }
 
-    public boolean validateToken(String token) {
+
+    public String createRefreshToken(String authId){
+        return generateToken(authId, REFRESH_TOKEN_EXPIRED);
+    }
+
+    public String createAccessToken(String authId){
+        return generateToken(authId, ACCESS_TOKEN_EXPIRED);
+    }
+
+    public String createAccessTokenIfValid(String refreshToken){
+        String authId = getAuthId(refreshToken);
+        return createAccessToken(authId);
+    }
+
+    private String generateToken(String authId, long expireMills){
+        Date issuedAt = new Date(System.currentTimeMillis());
+        Date expiredAt = new Date(System.currentTimeMillis() + expireMills);
+
+        Map<String, Object> claims = new HashMap<>();
+
+        claims.put("authId",authId);
+
+        // 액세스 토큰 생성
+        return Jwts.builder()
+                .claims(claims)
+                .issuedAt(issuedAt)
+                .expiration(expiredAt)
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String getAuthId(String token) {
         try {
-            Jwts.parser()
+            Jws<Claims> claims = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
+
+            return (String) claims.getPayload().get("authId");
+        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |IllegalArgumentException e) {
+            GlobalLogger.error(e.getMessage());
+            throw new AuthException(AuthErrorCode.INVALID_TOKEN);
+        } catch (JwtException e){
+            GlobalLogger.error(e.getMessage());
+            throw new AuthException(AuthErrorCode.INVALID_TOKEN);
         }
-    }
-
-
-    public String getAuthId(String token) {
-
-        // TODO: 카카오, 구글 별로 액세스 토큰에서 AuthId 추출하기
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
     }
 }
