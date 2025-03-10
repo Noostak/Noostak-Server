@@ -47,6 +47,9 @@ public class S3ServiceImpl implements S3Service {
     @Override
     public void deleteImage(String key) {
         try {
+            if(key == null){
+                return;
+            }
             s3Storage.delete(key);
         } catch (Exception e) {
             throw new S3DeleteException(S3DeleteErrorCode.IMAGE_DELETE_FAILED,e.getMessage());
