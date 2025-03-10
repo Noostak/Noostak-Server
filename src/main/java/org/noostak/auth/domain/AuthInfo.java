@@ -30,7 +30,7 @@ public class AuthInfo {
     @AttributeOverride(name = "token", column = @Column(name = "refresh_token"))
     private RefreshToken refreshToken;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
