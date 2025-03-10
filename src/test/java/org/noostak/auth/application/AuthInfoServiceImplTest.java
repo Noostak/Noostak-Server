@@ -42,8 +42,8 @@ class AuthInfoServiceImplTest {
 
             // then
             assertNotNull(response);
-            assertEquals("access-token", response.getAccessToken());
-            assertEquals("refresh-token", response.getRefreshToken());
+            assertEquals("accessToken", response.getAccessToken());
+            assertEquals("refreshToken", response.getRefreshToken());
             assertEquals(1L, response.getMemberId());
         }
     }
