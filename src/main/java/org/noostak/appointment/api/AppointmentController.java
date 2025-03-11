@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.AppointmentService;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
 import org.noostak.appointment.dto.response.recommendation.AppointmentRecommendedOptionsResponse;
+import org.noostak.global.config.swagger.AppointmentSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,7 @@ import static org.noostak.appointment.common.success.AppointmentSuccessCode.APPO
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class AppointmentController {
+public class AppointmentController implements AppointmentSwagger {
 
     private final AppointmentService appointmentService;
 

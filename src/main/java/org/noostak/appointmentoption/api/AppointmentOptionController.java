@@ -1,8 +1,8 @@
 package org.noostak.appointmentoption.api;
 
 import lombok.RequiredArgsConstructor;
-import org.noostak.appointmentoption.dto.response.confirmed.AppointmentConfirmedOptionResponse;
 import org.noostak.appointmentoption.application.AppointmentOptionService;
+import org.noostak.global.config.AppointmentOptionSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import static org.noostak.appointment.common.success.AppointmentSuccessCode.APPO
 @RestController
 @RequestMapping("/api/v1/appointment-options")
 @RequiredArgsConstructor
-public class AppointmentOptionController {
+public class AppointmentOptionController implements AppointmentOptionSwagger {
 
     private final AppointmentOptionService appointmentService;
 
