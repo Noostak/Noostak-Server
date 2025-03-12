@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.CalendarService;
 import org.noostak.appointment.common.success.CalendarSuccessCode;
 import org.noostak.appointment.dto.calendar.CalendarResponse;
+import org.noostak.global.config.swagger.CalendarSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class CalendarController {
+public class CalendarController implements CalendarSwagger {
 
     private final CalendarService calendarService;
     @GetMapping("/api/v1/groups/{groupId}/appointments/calendar")
