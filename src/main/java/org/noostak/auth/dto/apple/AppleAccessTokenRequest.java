@@ -20,17 +20,15 @@ public class AppleAccessTokenRequest {
 
     private String refreshToken;
 
-    private String clientSecret;
 
-    private AppleAccessTokenRequest(String clientId, String refreshToken, String clientSecret) {
+    private AppleAccessTokenRequest(String clientId, String refreshToken) {
         this.grantType = "refresh_token";
         this.clientId = clientId;
         this.refreshToken = refreshToken;
-        this.clientSecret = clientSecret;
     }
 
     public static AppleAccessTokenRequest of(String clientId, String refreshToken, String clientSecret){
-        return new AppleAccessTokenRequest(clientId,refreshToken,clientSecret);
+        return new AppleAccessTokenRequest(clientId,refreshToken);
     }
 
     public String getUrlEncodedParams() {
@@ -39,7 +37,6 @@ public class AppleAccessTokenRequest {
         params.append("grant_type=").append(URLEncoder.encode(grantType, StandardCharsets.UTF_8));
         params.append("&client_id=").append(URLEncoder.encode(clientId, StandardCharsets.UTF_8));
         params.append("&refresh_token=").append(URLEncoder.encode(refreshToken, StandardCharsets.UTF_8));
-        params.append("&client_secret=").append(URLEncoder.encode(clientSecret, StandardCharsets.UTF_8));
 
         return params.toString();
     }
