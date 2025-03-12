@@ -30,6 +30,7 @@ public class GroupOngoingAppointmentServiceImpl implements GroupOngoingAppointme
     private final S3Service s3Service;
 
     @Override
+    @Transactional
     public GroupOngoingAppointmentsResponse getGroupOngoingAppointments(Long memberId, Long groupId) {
         Group group = findGroupById(groupId);
         List<Appointment> appointments = findAllAppointmentsByGroupId(groupId);
