@@ -69,7 +69,7 @@ public class LikeServiceImpl implements LikeService {
             throw new LikesException(LikesErrorCode.OVER_MAX_LIKES, MAX_LIKES);
         }
 
-        AppointmentOption appointmentOption = optionRepository.getByAppointmentOptionId(appointmentId);
+        AppointmentOption appointmentOption = optionRepository.getByAppointmentOptionId(appointmentOptionId);
 
         AppointmentMember appointmentMember =
                 appointmentMemberRepository.getByMemberIdAndAppointmentId(memberId, appointmentId);
