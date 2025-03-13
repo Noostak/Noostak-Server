@@ -2,8 +2,6 @@ package org.noostak.likes.application;
 
 
 import lombok.RequiredArgsConstructor;
-import org.noostak.appointment.common.exception.AppointmentErrorCode;
-import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.appointmentoption.domain.AppointmentOption;
@@ -20,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LikeServiceImpl implements LikeService{
+public class LikeServiceImpl implements LikeService {
 
     private final static int MAX_LIKES = 50;
     private final AppointmentOptionRepository optionRepository;
@@ -30,18 +28,14 @@ public class LikeServiceImpl implements LikeService{
     @Override
     @Transactional
     public IncreaseResponse increase(Long memberId, Long appointmentId, Long appointmentOptionId) {
-        createLike(memberId, appointmentId, appointmentOptionId);
-
-        long likes = getLikeCountByOptionId(appointmentOptionId);
+        long likes = createLike(memberId, appointmentId, appointmentOptionId);
         return IncreaseResponse.of(likes);
     }
 
     @Override
     @Transactional
     public DecreaseResponse decrease(Long memberId, Long appointmentId, Long appointmentOptionId) {
-        deleteLike(memberId, appointmentId, appointmentOptionId);
-
-        long likes = getLikeCountByOptionId(appointmentOptionId);
+        long likes = deleteLike(memberId, appointmentId, appointmentOptionId);
         return DecreaseResponse.of(likes);
     }
 
@@ -51,40 +45,39 @@ public class LikeServiceImpl implements LikeService{
     }
 
 
-    private void deleteLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+    private long deleteLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+        long currentCount = getLikeCountByOptionId(appointmentOptionId);
 
-        long count = getLikeCountByOptionId(appointmentOptionId);
-
-        if(count == 0){
+        if (currentCount == 0) {
             throw new LikesException(LikesErrorCode.LIKES_NOT_NEGATIVE);
         }
 
         AppointmentMember appointmentMember =
-                appointmentMemberRepository
-                        .findByMemberIdAndAppointmentId(memberId, appointmentId)
-                        .orElseThrow(()->new AppointmentMemberException(AppointmentErrorCode.APPOINTMENT_NOT_FOUND));
+                appointmentMemberRepository.getByMemberIdAndAppointmentId(memberId, appointmentId);
 
         Long appointmentMemberId = appointmentMember.getId();
 
-        likeRepository.deleteLikeByAppointmentMemberIdAndOptionId(appointmentMemberId,appointmentOptionId);
+        likeRepository.deleteLikeByAppointmentMemberIdAndOptionId(appointmentMemberId, appointmentOptionId);
+
+        return currentCount - 1;
     }
 
-    private void createLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+    private long createLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+        long currentCount = getLikeCountByOptionId(appointmentOptionId);
 
-        long count = getLikeCountByOptionId(appointmentOptionId);
-
-        if(count == MAX_LIKES){
-            throw new LikesException(LikesErrorCode.OVER_MAX_LIKES,MAX_LIKES);
+        if (currentCount == MAX_LIKES) {
+            throw new LikesException(LikesErrorCode.OVER_MAX_LIKES, MAX_LIKES);
         }
 
-        AppointmentOption appointmentOption = optionRepository.findById(appointmentId).orElseThrow(() -> new LikesException(LikesErrorCode.OPTION_NOT_FOUND));
+        AppointmentOption appointmentOption = optionRepository.getByAppointmentOptionId(appointmentId);
+
         AppointmentMember appointmentMember =
-                appointmentMemberRepository
-                        .findByMemberIdAndAppointmentId(memberId, appointmentId)
-                        .orElseThrow(()->new AppointmentMemberException(AppointmentErrorCode.APPOINTMENT_NOT_FOUND));
+                appointmentMemberRepository.getByMemberIdAndAppointmentId(memberId, appointmentId);
 
         Like newLike = Like.of(appointmentMember, appointmentOption);
 
         likeRepository.save(newLike);
+
+        return currentCount + 1;
     }
 }
