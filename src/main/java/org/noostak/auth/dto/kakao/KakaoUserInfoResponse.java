@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.noostak.auth.common.exception.KakaoApiErrorCode;
 import org.noostak.auth.common.exception.KakaoApiException;
@@ -12,6 +13,7 @@ import org.noostak.auth.common.exception.KakaoApiException;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class KakaoUserInfoResponse {
@@ -34,6 +36,7 @@ public class KakaoUserInfoResponse {
     }
 
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Properties {
@@ -42,6 +45,7 @@ public class KakaoUserInfoResponse {
 
 
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class KakaoAccount {
@@ -50,6 +54,7 @@ public class KakaoUserInfoResponse {
         private Profile profile;
 
         @Getter
+        @NoArgsConstructor
         @AllArgsConstructor
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class Profile {

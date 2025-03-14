@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.noostak.auth.common.exception.GoogleApiErrorCode;
 import org.noostak.auth.common.exception.GoogleApiException;
@@ -14,6 +15,7 @@ import org.noostak.auth.common.exception.GoogleApiException;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class GoogleUserInfoResponse {
@@ -33,6 +35,7 @@ public class GoogleUserInfoResponse {
 
 
     @AllArgsConstructor
+    @NoArgsConstructor
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Error {
