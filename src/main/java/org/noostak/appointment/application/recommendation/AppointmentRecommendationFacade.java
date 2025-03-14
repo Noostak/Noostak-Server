@@ -17,7 +17,6 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class AppointmentRecommendationFacade {
 
     private final AppointmentHostSelectedTimeQueryService appointmentHostSelectedTimeQueryService;
@@ -26,6 +25,8 @@ public class AppointmentRecommendationFacade {
     private final AppointmentParticipantQueryService appointmentParticipantQueryService;
     private final AppointmentOptionPriorityService optionPriorityService;
 
+
+    @Transactional
     public List<AppointmentPriorityGroupResponse> getRecommendedOptions(Long memberId, Long appointmentId, Appointment appointment) {
         List<TimeSlot> timeSlots = appointmentHostSelectedTimeQueryService.splitHostSelectedTimeSlots(appointmentId, 60L);
 
