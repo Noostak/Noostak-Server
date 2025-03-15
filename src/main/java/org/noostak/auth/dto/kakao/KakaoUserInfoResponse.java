@@ -38,6 +38,7 @@ public class KakaoUserInfoResponse {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class Properties {
         private String nickname;
@@ -47,6 +48,7 @@ public class KakaoUserInfoResponse {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @NoArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class KakaoAccount {
         private boolean profileNicknameNeedsAgreement;
@@ -56,6 +58,7 @@ public class KakaoUserInfoResponse {
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
+        @NoArgsConstructor
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
         public static class Profile {
             private String nickname;
