@@ -20,8 +20,24 @@ public class AppointmentOptionCommandServiceImpl implements AppointmentOptionCom
     @Transactional
     public List<AppointmentOption> saveOptions(Appointment appointment, List<AppointmentOptionAvailabilityResponse> options) {
         return options.stream()
-                .map(dto -> appointmentOptionRepository.save(
-                        AppointmentOption.of(appointment, dto.date(), dto.startTime(), dto.endTime())))
+                .map(dto -> createAppointmentOption(appointment, dto))
                 .toList();
+    }
+
+    private AppointmentOption createAppointmentOption(Appointment appointment, AppointmentOptionAvailabilityResponse dto) {
+        AppointmentOption newOption =
+                AppointmentOption.of(appointment, dto.date(), dto.startTime(), dto.endTime());
+
+        AppointmentOption fetchedOption = getOptionByTimes(appointment,newOption);
+
+        if(fetchedOption != null){
+            return fetchedOption;
+        }
+
+        return appointmentOptionRepository.save(newOption);
+    }
+
+    private AppointmentOption getOptionByTimes(Appointment appointment, AppointmentOption appointmentOption){
+        return appointmentOptionRepository.getByAppointmentAndTimes(appointment,appointmentOption);
     }
 }
