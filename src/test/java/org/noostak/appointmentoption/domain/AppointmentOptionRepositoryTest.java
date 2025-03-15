@@ -1,9 +1,11 @@
 package org.noostak.appointmentoption.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
@@ -204,5 +206,11 @@ public class AppointmentOptionRepositoryTest implements AppointmentOptionReposit
     @Override
     public Page<AppointmentOption> findAll(Pageable pageable) {
         return null;
+    }
+
+    @Override
+    // TODO: 해당 코드를 활용한 테스트 코드로 수정할 것
+    public Optional<AppointmentOption> findFirstByAppointmentAndStartTimeAndEndTime(Appointment appointment, LocalDateTime startTime, LocalDateTime endTime) {
+        return Optional.empty();
     }
 }
