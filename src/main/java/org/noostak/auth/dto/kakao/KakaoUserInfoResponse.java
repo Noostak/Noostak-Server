@@ -36,7 +36,6 @@ public class KakaoUserInfoResponse {
     }
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     @NoArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -46,7 +45,6 @@ public class KakaoUserInfoResponse {
 
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     @NoArgsConstructor
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
@@ -56,7 +54,6 @@ public class KakaoUserInfoResponse {
         private Profile profile;
 
         @Getter
-        @NoArgsConstructor
         @AllArgsConstructor
         @NoArgsConstructor
         @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
