@@ -1,7 +1,9 @@
 package org.noostak.group.common.exception;
 
-public class GroupException extends RuntimeException {
+import org.noostak.global.error.core.BaseException;
+
+public class GroupException extends BaseException {
     public GroupException(GroupErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode);
     }
 }
