@@ -12,6 +12,7 @@ import org.noostak.group.dto.response.create.GroupCreateResponse;
 import org.noostak.group.dto.response.info.GroupInfoResponse;
 import org.noostak.group.dto.response.ongoing.GroupOngoingAppointmentsResponse;
 import org.noostak.group.dto.response.retrieve.GroupsRetrieveResponse;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ import java.io.IOException;
 public interface GroupSwagger {
 
     @Operation(summary = "그룹 생성", description = "새로운 그룹을 생성하는 API")
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<SuccessResponse<GroupCreateResponse>> createGroup(
             @Parameter(description = "멤버 ID", example = "1")
             @RequestAttribute Long memberId,
@@ -30,10 +31,10 @@ public interface GroupSwagger {
             @ModelAttribute GroupCreateRequest request
     ) throws IOException;
 
-    @Operation(summary = "가입한 그룹 목록 조회", description = "가입된 그룹 목록을 조회하는 API")
+    @Operation(summary = "그룹 조회", description = "그룹 조회 API")
     @GetMapping
     ResponseEntity<SuccessResponse<GroupsRetrieveResponse>> getGroups(
-            @Parameter(description = "멤버 ID", example = "1")
+            @Parameter(description = "멤버 ID")
             @RequestAttribute Long memberId
     );
 
