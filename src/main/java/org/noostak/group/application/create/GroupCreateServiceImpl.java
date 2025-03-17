@@ -34,7 +34,7 @@ public class GroupCreateServiceImpl implements GroupCreateService {
     @Transactional
     public GroupCreateInternalResponse createGroup(Long memberId, GroupCreateRequest request) {
         Member groupHost = findGroupHost(memberId);
-        KeyAndUrl response = uploadGroupProfileImageSafely(request.file());
+        KeyAndUrl response = uploadGroupProfileImageSafely(request.groupProfileImage());
 
         Group group = createGroup(groupHost, request.groupName(), response.getKey());
 
