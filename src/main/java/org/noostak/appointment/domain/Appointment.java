@@ -74,6 +74,10 @@ public class Appointment extends BaseTimeEntity {
                 appointmentStatus
         );
     }
+
+    public boolean inProgress(){
+        return this.appointmentStatus.equals(AppointmentStatus.PROGRESS);
+    }
 }
 
 
