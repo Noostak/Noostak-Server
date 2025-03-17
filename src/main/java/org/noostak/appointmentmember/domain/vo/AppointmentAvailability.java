@@ -8,7 +8,9 @@ import lombok.Getter;
 public enum AppointmentAvailability {
 
     AVAILABLE("약속 가능"),
-    UNAVAILABLE("약속 불가능");
+    UNAVAILABLE("약속 불가능"),
+    NOT_SELECTED("미정")
+    ;
 
     private final String message;
 }

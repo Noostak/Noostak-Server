@@ -9,6 +9,7 @@ import org.noostak.appointment.domain.AppointmentHostSelectionTimeRepository;
 import org.noostak.appointment.domain.AppointmentRepository;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
+import org.noostak.appointmentmember.application.AppointmentMemberSaveService;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.membergroup.domain.MemberGroupRepository;
@@ -26,6 +27,7 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
     private final GroupRepository groupRepository;
     private final AppointmentRepository appointmentRepository;
     private final AppointmentHostSelectionTimeRepository appointmentHostSelectionTimeRepository;
+    private final AppointmentMemberSaveService appointmentMemberSaveService;
 
     @Override
     @Transactional
@@ -35,6 +37,9 @@ public class AppointmentCreateServiceImpl implements AppointmentCreateService {
         Appointment appointment = createAppointment(group, memberId, request);
         saveAppointment(appointment);
         saveAppointmentHostSelectionTimes(appointment, request);
+
+        // 모든 그룹원들에 대한 약속 생성
+        appointmentMemberSaveService.saveAppointmentMemberByGroup(group,appointment);
     }
 
     private void verifyMemberIsInGroup(Long memberId, Long groupId) {

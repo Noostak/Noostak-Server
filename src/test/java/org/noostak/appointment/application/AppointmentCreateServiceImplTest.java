@@ -9,6 +9,10 @@ import org.noostak.appointment.domain.vo.AppointmentCategory;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.request.AppointmentCreateRequest;
 import org.noostak.appointment.dto.request.AppointmentHostSelectionTimeRequest;
+import org.noostak.appointmentmember.application.AppointmentMemberSaveService;
+import org.noostak.appointmentmember.application.AppointmentMemberSaveServiceImpl;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepositoryTest;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepository;
 import org.noostak.group.domain.GroupRepositoryTest;
@@ -39,6 +43,8 @@ public class AppointmentCreateServiceImplTest {
     private AppointmentRepository appointmentRepository;
     private AppointmentCreateServiceImpl appointmentCreateService;
     private AppointmentHostSelectionTimeRepository appointmentHostSelectionTimeRepository;
+    private AppointmentMemberSaveService appointmentMemberSaveService;
+    private AppointmentMemberRepository appointmentMemberRepository;
 
     private Long savedMemberId;
     private Long savedGroupId;
@@ -114,8 +120,11 @@ public class AppointmentCreateServiceImplTest {
         groupRepository = new GroupRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
         appointmentRepository = new AppointmentRepositoryTest();
+        appointmentMemberRepository = new AppointmentMemberRepositoryTest();
+
+        appointmentMemberSaveService = new AppointmentMemberSaveServiceImpl(memberGroupRepository,appointmentMemberRepository);
         appointmentHostSelectionTimeRepository = new AppointmentHostSelectionTimeRepositoryTest();
-        appointmentCreateService = new AppointmentCreateServiceImpl(memberGroupRepository, groupRepository, appointmentRepository, appointmentHostSelectionTimeRepository);
+        appointmentCreateService = new AppointmentCreateServiceImpl(memberGroupRepository, groupRepository, appointmentRepository, appointmentHostSelectionTimeRepository,appointmentMemberSaveService);
     }
 
     private void initializeTestData() {
