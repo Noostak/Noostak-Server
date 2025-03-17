@@ -2,7 +2,7 @@ name: DOCKER-CD-STAGING
 
 on:
   pull_request:
-    branches: [ "develop" ]
+    branches: [ "staging" ]
   workflow_dispatch:
 
 jobs:
