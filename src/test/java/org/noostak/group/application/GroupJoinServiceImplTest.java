@@ -5,6 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
+import org.noostak.appointment.domain.AppointmentRepository;
+import org.noostak.appointment.domain.AppointmentRepositoryTest;
+import org.noostak.appointmentmember.application.AppointmentMemberSaveService;
+import org.noostak.appointmentmember.application.AppointmentMemberSaveServiceImpl;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepositoryTest;
 import org.noostak.group.common.exception.GroupErrorCode;
 import org.noostak.group.common.exception.GroupException;
 import org.noostak.group.domain.Group;
@@ -35,10 +41,16 @@ class GroupJoinServiceImplTest {
     private MemberGroupRepository memberGroupRepository;
     private GroupJoinServiceImpl groupJoinService;
 
+    private AppointmentRepository appointmentRepository;
+    private AppointmentMemberSaveService appointmentMemberSaveService;
+    private AppointmentMemberRepository appointmentMemberRepository;
+
+
     private Long savedMemberId;
     private Long savedGroupId;
 
     private GroupInvitationCode savedGroupInvitationCode;
+
 
     @BeforeEach
     void setUp() throws IOException {
@@ -47,8 +59,12 @@ class GroupJoinServiceImplTest {
         groupRepository = new GroupRepositoryTest();
         memberRepository = new MemberRepositoryTest();
         memberGroupRepository = new MemberGroupRepositoryTest();
+        appointmentRepository = new AppointmentRepositoryTest();
+        appointmentMemberRepository = new AppointmentMemberRepositoryTest();
 
-        groupJoinService = new GroupJoinServiceImpl(groupRepository, memberGroupRepository,memberRepository);
+        appointmentMemberSaveService = new AppointmentMemberSaveServiceImpl(memberGroupRepository,appointmentMemberRepository);
+
+        groupJoinService = new GroupJoinServiceImpl(groupRepository, memberGroupRepository,memberRepository,appointmentRepository,appointmentMemberSaveService);
 
         groupRepository.deleteAll();
         memberRepository.deleteAll();

@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         servers = {
                 @Server(url = "https://www.noostak-official.kro.kr", description = "prod server url"),
-                @Server(url = "http://52.79.61.243", description = "staging server url"),
+                @Server(url = "http://43.200.24.190", description = "staging server url"),
                 @Server(url = "http://localhost:8080", description = "local server url")
         }
 )
