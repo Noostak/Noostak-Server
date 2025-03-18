@@ -20,10 +20,13 @@ public enum GroupErrorCode implements ErrorCode {
     MEMBER_COUNT_NEGATIVE(HttpStatus.BAD_REQUEST, "그룹 멤버 수는 음수가 될 수 없습니다."),
     MEMBER_COUNT_EXCEEDS_MAX_LIMIT(HttpStatus.BAD_REQUEST, "그룹 멤버 수는 최대 50명을 초과할 수 없습니다."),
 
+    GROUP_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "그룹 내 멤버가 이미 존재합니다."),
+
     HOST_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "호스트 멤버를 찾을 수 없습니다."),
     GROUP_PROFILE_IMAGE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "그룹 프로필 이미지 업로드에 실패했습니다."),
     GROUP_CREATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "그룹 생성에 실패했습니다."),
     GROUP_PROFILE_IMAGE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "그룹 프로필 이미지 삭제에 실패했습니다."),
+
 
     GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "그룹을 찾을 수 없습니다."),
     GROUP_NOT_FOUND_BY_CODE(HttpStatus.NOT_FOUND, "입력한 그룹 코드에 일치하는 그룹이 존재하지 않습니다."),
