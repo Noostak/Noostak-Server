@@ -28,7 +28,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     @Transactional
     public IncreaseResponse increase(Long memberId, Long appointmentId, Long appointmentOptionId) {
-        long likes = createLike(memberId, appointmentId, appointmentOptionId);
+        long likes = increaseLike(memberId, appointmentId, appointmentOptionId);
         return IncreaseResponse.of(likes);
     }
 
@@ -62,22 +62,38 @@ public class LikeServiceImpl implements LikeService {
         return currentCount - 1;
     }
 
-    private long createLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
+    private long increaseLike(Long memberId, Long appointmentId, Long appointmentOptionId) {
         long currentCount = getLikeCountByOptionId(appointmentOptionId);
 
         if (currentCount == MAX_LIKES) {
             throw new LikesException(LikesErrorCode.OVER_MAX_LIKES, MAX_LIKES);
         }
 
+        Like newLike = createLike(memberId,appointmentId,appointmentOptionId);
+
+        if(hasLike(newLike)){
+            return currentCount;
+        }
+
+        likeRepository.save(newLike);
+
+        return currentCount + 1;
+    }
+
+    private Like createLike(Long memberId, Long appointmentId, Long appointmentOptionId){
         AppointmentOption appointmentOption = optionRepository.getByAppointmentOptionId(appointmentOptionId);
 
         AppointmentMember appointmentMember =
                 appointmentMemberRepository.getByMemberIdAndAppointmentId(memberId, appointmentId);
 
-        Like newLike = Like.of(appointmentMember, appointmentOption);
+        return Like.of(appointmentMember, appointmentOption);
+    }
 
-        likeRepository.save(newLike);
+    private boolean hasLike(Like like){
+        AppointmentMember member = like.getAppointmentMember();
+        AppointmentOption option = like.getAppointmentOption();
 
-        return currentCount + 1;
+        return likeRepository.
+                getExistsByAppointmentOptionIdAndAppointmentMemberId(member.getId(), option.getId());
     }
 }
