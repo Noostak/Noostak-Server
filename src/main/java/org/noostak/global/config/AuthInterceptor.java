@@ -14,14 +14,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @RequiredArgsConstructor
-public class JwtInterceptor implements HandlerInterceptor {
+public class AuthInterceptor implements HandlerInterceptor {
     private final AuthInfoService authInfoService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String accessToken = extractToken(request);
-        GlobalLogger.info("[Intercept] 요청 호스트 정보:",request.getRemoteHost(),request.getRemotePort());
-        GlobalLogger.info("[Intercept] 요청 경로 정보:",request.getMethod(),request.getRequestURI());
 
         AuthInfo authInfo = authInfoService.verify(accessToken);
         Long memberId = authInfo.getMember().getId();
