@@ -25,6 +25,7 @@ public class ApiPathFilter extends OncePerRequestFilter {
 
         if (isApiRequest(requestUri) || isHealthCheck(requestUri)) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
