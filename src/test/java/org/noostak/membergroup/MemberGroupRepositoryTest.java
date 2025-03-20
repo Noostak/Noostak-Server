@@ -57,6 +57,11 @@ public class MemberGroupRepositoryTest implements MemberGroupRepository, MemberG
     }
 
     @Override
+    public boolean existsByGroupAndMember(Group group, Member member) {
+        return false;
+    }
+
+    @Override
     public List<Member> findMembersByGroupId(Long groupId) {
         return memberGroups.stream()
                 .filter(memberGroup -> memberGroup.getGroup().getId().equals(groupId))
