@@ -19,6 +19,6 @@ public class JwtTokenConfig {
 
     @Bean
     public JwtTokenProvider jwtTokenProvider() {
-        return new JwtTokenProvider(secretKey,accessTokenExpired,refreshTokenExpired);
+        return new JwtTokenProvider(secretKey,refreshTokenExpired,accessTokenExpired);
     }
 }

@@ -3,10 +3,7 @@ package org.noostak.auth.dto.apple;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.noostak.auth.common.exception.AppleApiErrorCode;
 import org.noostak.auth.common.exception.AppleApiException;
 import org.noostak.auth.common.exception.GoogleApiErrorCode;
@@ -16,6 +13,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AppleTokenResponse {
