@@ -24,18 +24,11 @@ public class GroupRetrieveServiceImpl implements GroupRetrieveService {
     @Override
     public GroupsRetrieveResponse findGroups(Long memberId) {
         List<Group> groups = getGroupsByMemberId(memberId);
-        validateGroups(groups);
         return convertToResponse(groups);
     }
 
     private List<Group> getGroupsByMemberId(Long memberId) {
         return memberGroupRepository.findGroupsByMemberId(memberId);
-    }
-
-    private void validateGroups(List<Group> groups) {
-        if (groups.isEmpty()) {
-            throw new GroupException(GroupErrorCode.GROUP_NOT_FOUND);
-        }
     }
 
     private GroupsRetrieveResponse convertToResponse(List<Group> groups) {
