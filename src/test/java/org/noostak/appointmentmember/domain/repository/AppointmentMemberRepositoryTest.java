@@ -2,6 +2,7 @@ package org.noostak.appointmentmember.domain.repository;
 
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
@@ -35,6 +36,11 @@ public class AppointmentMemberRepositoryTest implements AppointmentMemberReposit
         return appointmentMembers.stream()
                 .filter(member -> member.getAppointment().getId().equals(appointmentId))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<AppointmentMember> findByMemberIdAndAppointmentIdAndAppointmentAvailability(Long appointmentId, Long memberId, AppointmentAvailability appointmentAvailability) {
+        return Optional.empty();
     }
 
     @Override

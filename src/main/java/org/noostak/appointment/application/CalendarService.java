@@ -3,5 +3,5 @@ package org.noostak.appointment.application;
 import org.noostak.appointment.dto.calendar.CalendarResponse;
 
 public interface CalendarService{
-    CalendarResponse getCalendarViewByGroupId(Long groupId, int year, int month);
+    CalendarResponse getCalendarViewByGroupId(Long memberId, Long groupId, int year, int month);
 }

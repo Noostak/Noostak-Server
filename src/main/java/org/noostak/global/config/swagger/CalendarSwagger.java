@@ -15,6 +15,9 @@ public interface CalendarSwagger {
     @Operation(summary = "캘린더 조회", description = "특정 그룹의 캘린더 정보를 조회하는 API")
     @GetMapping("/api/v1/groups/{groupId}/appointments/calendar")
     ResponseEntity<SuccessResponse> getCalendar(
+            @Parameter(description = "멤버 ID", example = "1")
+            Long memberId,
+
             @Parameter(description = "그룹 ID", example = "10")
             @PathVariable Long groupId,
 

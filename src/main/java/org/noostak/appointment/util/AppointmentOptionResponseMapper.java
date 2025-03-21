@@ -81,7 +81,7 @@ public class AppointmentOptionResponseMapper {
 
     private static String findMemberName(Long memberId, Map<Long, String> memberNames) {
         if (!memberNames.containsKey(memberId)) {
-            throw new AppointmentException(AppointmentErrorCode.MEMBER_NOT_FOUND);
+            throw new AppointmentException(AppointmentErrorCode.MEMBER_NOT_CONTAINED);
         }
         return memberNames.get(memberId);
     }
