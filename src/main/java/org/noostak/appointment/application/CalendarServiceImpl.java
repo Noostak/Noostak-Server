@@ -31,6 +31,7 @@ public class CalendarServiceImpl implements CalendarService {
     @Override
     public CalendarResponse getCalendarViewByGroupId(Long groupId, int year, int month) {
 
+        // 그룹 내 확정된 약속들 모두 불러오기
         List<Appointment> appointmentList =
                 appointmentRepository.findAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId);
 
@@ -46,7 +47,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     private ArrayList<MonthAppointments> getPreviousMonthAppointments(List<Appointment> appointmentList, int year, int month) {
-        LocalDate firstDate = LocalDate.of(year, month, 1);
+        LocalDate firstDate = LocalDate.of(year, month, 1).minusDays(1);
         int weekNumber = firstDate.getDayOfWeek().getValue();
         LocalDate previousDate = firstDate.minusDays(weekNumber);
 
@@ -74,6 +75,11 @@ public class CalendarServiceImpl implements CalendarService {
         for (Appointment appointment : appointmentList) {
             AppointmentOption previousMonthAppointmentOption
                     = getAppointmentConfirmed(firstDate, previousDate, appointment);
+
+            // 만약, 이전 달의 약속이 존재하지 않다면 넘어간다.
+            if(previousMonthAppointmentOption == null){
+                continue;
+            }
 
             int day = previousMonthAppointmentOption.getDayOfMonth();
 
@@ -136,6 +142,6 @@ public class CalendarServiceImpl implements CalendarService {
     private AppointmentOption getAppointmentConfirmed(LocalDate firstDate, LocalDate previousDate, Appointment appointment) {
         return appointmentOptionRepository
                 .findByAppointmentConfirmedBetweenDate(appointment.getId(), previousDate, firstDate)
-                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
+                .orElse(null);
     }
 }
