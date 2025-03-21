@@ -8,8 +8,8 @@ import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.calendar.CalendarResponse;
 import org.noostak.appointment.dto.calendar.MonthAppointment;
 import org.noostak.appointment.dto.calendar.MonthAppointments;
-import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
-import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.domain.AppointmentOptionRepository;
 import org.springframework.stereotype.Service;
@@ -26,13 +26,17 @@ public class CalendarServiceImpl implements CalendarService {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentOptionRepository appointmentOptionRepository;
+    private final AppointmentMemberRepository appointmentMemberRepository;
 
 
     @Override
-    public CalendarResponse getCalendarViewByGroupId(Long groupId, int year, int month) {
+    public CalendarResponse getCalendarViewByGroupId(Long memberId, Long groupId, int year, int month) {
 
+        // 그룹 내 확정된 약속들 모두 불러오기, 자신이 Available 한 약속이자, 포함 되어있어야 함
         List<Appointment> appointmentList =
-                appointmentRepository.findAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId);
+                appointmentRepository.findAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId).stream()
+                        .filter(appointment -> hasAvailableAppointmentMember(appointment.getId(),memberId))
+                        .toList();
 
         // 이번 달의 캘린더 정보 목록 불러오기
         ArrayList<MonthAppointments> currentMonthAppointments =
@@ -46,7 +50,7 @@ public class CalendarServiceImpl implements CalendarService {
     }
 
     private ArrayList<MonthAppointments> getPreviousMonthAppointments(List<Appointment> appointmentList, int year, int month) {
-        LocalDate firstDate = LocalDate.of(year, month, 1);
+        LocalDate firstDate = LocalDate.of(year, month, 1).minusDays(1);
         int weekNumber = firstDate.getDayOfWeek().getValue();
         LocalDate previousDate = firstDate.minusDays(weekNumber);
 
@@ -75,6 +79,11 @@ public class CalendarServiceImpl implements CalendarService {
             AppointmentOption previousMonthAppointmentOption
                     = getAppointmentConfirmed(firstDate, previousDate, appointment);
 
+            // 만약, 이전 달의 약속이 존재하지 않다면 넘어간다.
+            if(previousMonthAppointmentOption == null){
+                continue;
+            }
+
             int day = previousMonthAppointmentOption.getDayOfMonth();
 
             ArrayList<MonthAppointment> dayOfOptions =
@@ -95,9 +104,13 @@ public class CalendarServiceImpl implements CalendarService {
         HashMap<Integer, ArrayList<MonthAppointment>> monthAppointmentMapper = new HashMap<>();
 
         for (Appointment appointment : appointmentList) {
-
             AppointmentOption appointmentOption =
                     getAppointmentConfirmed(appointment, year, month);
+
+            // 만약, 이전 달의 약속이 존재하지 않다면 넘어간다.
+            if(appointmentOption == null){
+                continue;
+            }
 
             int day = appointmentOption.getDayOfMonth();
 
@@ -130,12 +143,18 @@ public class CalendarServiceImpl implements CalendarService {
     private AppointmentOption getAppointmentConfirmed(Appointment appointment, int year, int month) {
         return appointmentOptionRepository
                 .findByAppointmentConfirmedYearAndMonth(appointment.getId(), year, month)
-                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
+                .orElse(null);
     }
 
     private AppointmentOption getAppointmentConfirmed(LocalDate firstDate, LocalDate previousDate, Appointment appointment) {
         return appointmentOptionRepository
                 .findByAppointmentConfirmedBetweenDate(appointment.getId(), previousDate, firstDate)
-                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
+                .orElse(null);
+    }
+
+    private boolean hasAvailableAppointmentMember(Long appointmentId, Long memberId){
+        return appointmentMemberRepository
+                .findByMemberIdAndAppointmentIdAndAppointmentAvailability
+                        (appointmentId,memberId, AppointmentAvailability.AVAILABLE).isPresent();
     }
 }

@@ -21,7 +21,7 @@ public class AppointmentMember extends BaseTimeEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "availability_availability")
+    @Column(name = "appointment_availability")
     private AppointmentAvailability appointmentAvailability;
 
     @ManyToOne(fetch = FetchType.LAZY)
