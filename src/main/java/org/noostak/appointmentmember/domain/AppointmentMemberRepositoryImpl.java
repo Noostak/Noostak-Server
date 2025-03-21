@@ -3,6 +3,7 @@ package org.noostak.appointmentmember.domain;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.domain.QAppointment;
+import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.member.domain.QMember;
 
 import java.util.List;
@@ -49,4 +50,22 @@ public class AppointmentMemberRepositoryImpl implements AppointmentMemberReposit
                 .where(appointmentMember.appointment.id.eq(appointmentId))
                 .fetch();
     }
+
+    @Override
+    public Optional<AppointmentMember> findByMemberIdAndAppointmentIdAndAppointmentAvailability
+            (Long appointmentId, Long memberId, AppointmentAvailability appointmentAvailability) {
+        return Optional.ofNullable(
+                queryFactory
+                        .selectFrom(appointmentMember)
+                        .join(appointmentMember.member, QMember.member).fetchJoin()
+                        .join(appointmentMember.appointment, QAppointment.appointment).fetchJoin()
+                        .where(
+                                appointmentMember.member.id.eq(memberId),
+                                appointmentMember.appointment.id.eq(appointmentId),
+                                appointmentMember.appointmentAvailability.eq(appointmentAvailability)
+                        )
+                        .fetchOne()
+        );
+    }
+
 }
