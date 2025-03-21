@@ -23,11 +23,7 @@ public class AppointmentMemberAvailabilityQueryServiceImpl implements Appointmen
     public Map<Long, List<AppointmentMemberAvailableTime>> findAvailableTimeSlotsByAppointmentId(Long appointmentId) {
         List<AppointmentMemberAvailableTime> availableTimes = availableTimesRepository.findByAppointmentMember_AppointmentId(appointmentId);
 
-        if (availableTimes.isEmpty()) {
-            throw new AppointmentException(AppointmentErrorCode.MEMBER_AVAILABILITY_NOT_FOUND);
-        }
-
         return availableTimes.stream()
-                .collect(Collectors.groupingBy(time -> time.getAppointmentMember().getId()));
+                .collect(Collectors.groupingBy(time -> time.getAppointmentMember().getMember().getId()));
     }
 }
