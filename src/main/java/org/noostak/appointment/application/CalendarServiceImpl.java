@@ -8,8 +8,8 @@ import org.noostak.appointment.domain.vo.AppointmentStatus;
 import org.noostak.appointment.dto.calendar.CalendarResponse;
 import org.noostak.appointment.dto.calendar.MonthAppointment;
 import org.noostak.appointment.dto.calendar.MonthAppointments;
-import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
-import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
+import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.domain.AppointmentOptionRepository;
 import org.springframework.stereotype.Service;
@@ -26,14 +26,17 @@ public class CalendarServiceImpl implements CalendarService {
 
     private final AppointmentRepository appointmentRepository;
     private final AppointmentOptionRepository appointmentOptionRepository;
+    private final AppointmentMemberRepository appointmentMemberRepository;
 
 
     @Override
-    public CalendarResponse getCalendarViewByGroupId(Long groupId, int year, int month) {
+    public CalendarResponse getCalendarViewByGroupId(Long memberId, Long groupId, int year, int month) {
 
-        // 그룹 내 확정된 약속들 모두 불러오기
+        // 그룹 내 확정된 약속들 모두 불러오기, 자신이 Available 한 약속이자, 포함 되어있어야 함
         List<Appointment> appointmentList =
-                appointmentRepository.findAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId);
+                appointmentRepository.findAllByGroupIdConfirmed(AppointmentStatus.CONFIRMED, groupId).stream()
+                        .filter(appointment -> hasAvailableAppointmentMember(appointment.getId(),memberId))
+                        .toList();
 
         // 이번 달의 캘린더 정보 목록 불러오기
         ArrayList<MonthAppointments> currentMonthAppointments =
@@ -147,5 +150,11 @@ public class CalendarServiceImpl implements CalendarService {
         return appointmentOptionRepository
                 .findByAppointmentConfirmedBetweenDate(appointment.getId(), previousDate, firstDate)
                 .orElse(null);
+    }
+
+    private boolean hasAvailableAppointmentMember(Long appointmentId, Long memberId){
+        return appointmentMemberRepository
+                .findByMemberIdAndAppointmentIdAndAppointmentAvailability
+                        (appointmentId,memberId, AppointmentAvailability.AVAILABLE).isPresent();
     }
 }
