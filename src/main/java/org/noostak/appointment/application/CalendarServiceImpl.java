@@ -101,9 +101,13 @@ public class CalendarServiceImpl implements CalendarService {
         HashMap<Integer, ArrayList<MonthAppointment>> monthAppointmentMapper = new HashMap<>();
 
         for (Appointment appointment : appointmentList) {
-
             AppointmentOption appointmentOption =
                     getAppointmentConfirmed(appointment, year, month);
+
+            // 만약, 이전 달의 약속이 존재하지 않다면 넘어간다.
+            if(appointmentOption == null){
+                continue;
+            }
 
             int day = appointmentOption.getDayOfMonth();
 
@@ -136,7 +140,7 @@ public class CalendarServiceImpl implements CalendarService {
     private AppointmentOption getAppointmentConfirmed(Appointment appointment, int year, int month) {
         return appointmentOptionRepository
                 .findByAppointmentConfirmedYearAndMonth(appointment.getId(), year, month)
-                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
+                .orElse(null);
     }
 
     private AppointmentOption getAppointmentConfirmed(LocalDate firstDate, LocalDate previousDate, Appointment appointment) {
