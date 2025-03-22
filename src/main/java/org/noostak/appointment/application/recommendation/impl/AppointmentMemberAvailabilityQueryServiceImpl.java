@@ -2,8 +2,6 @@ package org.noostak.appointment.application.recommendation.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.application.recommendation.AppointmentMemberAvailabilityQueryService;
-import org.noostak.appointment.common.exception.AppointmentErrorCode;
-import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,8 @@ public class AppointmentMemberAvailabilityQueryServiceImpl implements Appointmen
 
     @Override
     public Map<Long, List<AppointmentMemberAvailableTime>> findAvailableTimeSlotsByAppointmentId(Long appointmentId) {
-        List<AppointmentMemberAvailableTime> availableTimes = availableTimesRepository.findByAppointmentMember_AppointmentId(appointmentId);
+        List<AppointmentMemberAvailableTime> availableTimes =
+                availableTimesRepository.findByAppointmentMember_AppointmentId(appointmentId);
 
         return availableTimes.stream()
                 .collect(Collectors.groupingBy(time -> time.getAppointmentMember().getMember().getId()));
