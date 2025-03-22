@@ -86,7 +86,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
             // When
             List<AppointmentMemberAvailableTimeResponse> availableTimes = response.appointmentScheduleResponse()
                     .appointmentMemberInfoResponse().get(0)
-                    .appointmentMemberAvailableTimesResponse().appointmentMemberAvailableTimesResponseResponse();
+                    .appointmentMemberAvailableTimesResponse().appointmentMemberAvailableTimeResponses();
 
             // Then
             assertThat(availableTimes).hasSize(2);
@@ -119,7 +119,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
 
             // 각 멤버가 2개의 가능 시간을 갖고 있는지 확인
             for (AppointmentMemberInfoResponse memberInfo : membersInfo) {
-                assertThat(memberInfo.appointmentMemberAvailableTimesResponse().appointmentMemberAvailableTimesResponseResponse())
+                assertThat(memberInfo.appointmentMemberAvailableTimesResponse().appointmentMemberAvailableTimeResponses())
                         .hasSize(2);
             }
         }
