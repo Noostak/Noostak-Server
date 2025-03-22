@@ -75,6 +75,10 @@ public class Appointment extends BaseTimeEntity {
         );
     }
 
+    public void confirm() {
+        this.appointmentStatus = AppointmentStatus.CONFIRMED;
+    }
+
     public boolean inProgress(){
         return this.appointmentStatus.equals(AppointmentStatus.PROGRESS);
     }
