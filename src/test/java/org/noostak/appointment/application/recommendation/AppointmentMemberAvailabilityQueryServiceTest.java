@@ -84,9 +84,7 @@ class AppointmentMemberAvailabilityQueryServiceTest {
             availableTimesRepository.deleteAll();
 
             // When & Then
-            assertThatThrownBy(() -> queryService.findAvailableTimeSlotsByAppointmentId(savedAppointmentId))
-                    .isInstanceOf(AppointmentException.class)
-                    .hasMessage(AppointmentErrorCode.MEMBER_AVAILABILITY_NOT_FOUND.getMessage());
+            assertThat(queryService.findAvailableTimeSlotsByAppointmentId(savedAppointmentId)).isEmpty();
         }
     }
 
