@@ -6,13 +6,13 @@ public record OngoingAppointmentResponse(
         Long appointmentId,
         String appointmentName,
         Long availableGroupMemberCount,
-        List<AppointmentOngoingHostSelectionTimeResponse> hostSelectionTimes
+        AppointmentOngoingHostSelectionTimeResponse appointmentTime // TODO: appointmentTime 이와 관련된 클래스 명 모두 수정하기
 ) {
     public static OngoingAppointmentResponse of(
             Long appointmentId,
             String appointmentName,
             Long availableGroupMemberCount,
-            List<AppointmentOngoingHostSelectionTimeResponse> hostSelectionTimes
+            AppointmentOngoingHostSelectionTimeResponse hostSelectionTimes
     ) {
         return new OngoingAppointmentResponse(appointmentId, appointmentName, availableGroupMemberCount, hostSelectionTimes);
     }
