@@ -28,12 +28,12 @@ public class LikeRepositoryImpl implements LikeRepositoryCustom {
     }
 
     @Override
-    public boolean getExistsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId) {
+    public boolean getExistsByAppointmentOptionIdAndMemberId(Long appointmentOptionId, Long memberId) {
         Integer result = queryFactory
                 .selectOne()
                 .from(like)
                 .where(like.appointmentOption.id.eq(appointmentOptionId),
-                        like.appointmentMember.id.eq(appointmentMemberId))
+                        like.appointmentMember.member.id.eq(memberId))
                 .fetchFirst();
         return result != null;
     }
