@@ -3,13 +3,15 @@ package org.noostak.appointmentmember.dto.response;
 import java.util.List;
 
 public record AppointmentScheduleResponse(
-        AppointmentHostSelectionTimesResponse appointmentHostSelectionTimesResponse,
-        List<AppointmentMemberInfoResponse> appointmentMemberInfoResponse
+        List<AppointmentHostSelectionTimeResponse> appointmentHostSelectionTimes,
+        List<AppointmentMembersInfoResponse> appointmentMembersInfo
 ) {
     public static AppointmentScheduleResponse of(
             AppointmentHostSelectionTimesResponse appointmentHostSelectionTimesResponse,
-            List<AppointmentMemberInfoResponse> appointmentMemberInfoResponse
+            List<AppointmentMembersInfoResponse> appointmentMembersInfoResponse
     ) {
-        return new AppointmentScheduleResponse(appointmentHostSelectionTimesResponse, appointmentMemberInfoResponse);
+        return new AppointmentScheduleResponse(
+                appointmentHostSelectionTimesResponse.appointmentHostSelectionTimeResponses(),
+                appointmentMembersInfoResponse);
     }
 }

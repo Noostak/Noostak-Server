@@ -12,7 +12,7 @@ import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailabl
 import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepositoryTest;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentmember.dto.response.AppointmentMemberAvailableTimeResponse;
-import org.noostak.appointmentmember.dto.response.AppointmentMemberInfoResponse;
+import org.noostak.appointmentmember.dto.response.AppointmentMembersInfoResponse;
 import org.noostak.appointmentmember.dto.response.AppointmentMembersAvailableTimesResponse;
 import org.noostak.group.domain.Group;
 import org.noostak.group.domain.GroupRepositoryTest;
@@ -73,7 +73,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
                     appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, savedAppointmentId);
 
             assertThat(response).isNotNull();
-            assertThat(response.isAppointMemberTimeSet()).isTrue();
+            assertThat(response.isAppointmentMemberTimeSet()).isTrue();
         }
 
         @Test
@@ -84,9 +84,9 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
                     appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, savedAppointmentId);
 
             // When
-            List<AppointmentMemberAvailableTimeResponse> availableTimes = response.appointmentScheduleResponse()
-                    .appointmentMemberInfoResponse().get(0)
-                    .appointmentMemberAvailableTimesResponse().appointmentMemberAvailableTimeResponses();
+            List<AppointmentMemberAvailableTimeResponse> availableTimes = response.appointmentSchedule()
+                    .appointmentMembersInfo().get(0)
+                    .appointmentMemberAvailableTimes();
 
             // Then
             assertThat(availableTimes).hasSize(2);
@@ -107,19 +107,19 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImplTest {
             AppointmentMembersAvailableTimesResponse response =
                     appointmentMemberRetrieveAvailableTimesService.retrieveAvailableTimes(savedMemberId, savedAppointmentId);
 
-            List<AppointmentMemberInfoResponse> membersInfo = response.appointmentScheduleResponse().appointmentMemberInfoResponse();
+            List<AppointmentMembersInfoResponse> membersInfo = response.appointmentSchedule().appointmentMembersInfo();
 
             // Then
             assertThat(response).isNotNull();
             assertThat(membersInfo).hasSize(2);
 
             // 두 멤버가 각각의 가능 시간을 가지고 있는지 확인
-            List<Long> memberIds = membersInfo.stream().map(AppointmentMemberInfoResponse::memberId).toList();
+            List<Long> memberIds = membersInfo.stream().map(AppointmentMembersInfoResponse::memberId).toList();
             assertThat(memberIds).containsExactlyInAnyOrder(savedMemberId, secondMemberId);
 
             // 각 멤버가 2개의 가능 시간을 갖고 있는지 확인
-            for (AppointmentMemberInfoResponse memberInfo : membersInfo) {
-                assertThat(memberInfo.appointmentMemberAvailableTimesResponse().appointmentMemberAvailableTimeResponses())
+            for (AppointmentMembersInfoResponse memberInfo : membersInfo) {
+                assertThat(memberInfo.appointmentMemberAvailableTimes())
                         .hasSize(2);
             }
         }

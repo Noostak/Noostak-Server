@@ -1,8 +1,8 @@
 package org.noostak.appointmentmember.dto.response;
 
 public record AppointmentMembersAvailableTimesResponse(
-        boolean isAppointMemberTimeSet,
-        AppointmentScheduleResponse appointmentScheduleResponse
+        boolean isAppointmentMemberTimeSet,
+        AppointmentScheduleResponse appointmentSchedule
 ) {
     public static AppointmentMembersAvailableTimesResponse of(
             boolean isAppointMemberTimeSet,
