@@ -36,6 +36,7 @@ public class GroupOngoingAppointmentServiceImpl implements GroupOngoingAppointme
         List<Appointment> appointments = findAllAppointmentsByGroupId(groupId);
 
         List<OngoingAppointmentResponse> ongoingAppointments = appointments.stream()
+                .filter(Appointment::inProgress) // 진행 중인 약속만 검출하도록 함
                 .map(appointment -> findBestOptionForAppointment(memberId, appointment))
                 .flatMap(Optional::stream)
                 .collect(Collectors.toList());
@@ -79,11 +80,11 @@ public class GroupOngoingAppointmentServiceImpl implements GroupOngoingAppointme
                 appointment.getId(),
                 appointment.getName().value(),
                 recommendedOption.availableMemberCount(),
-                List.of(AppointmentOngoingHostSelectionTimeResponse.of(
+                AppointmentOngoingHostSelectionTimeResponse.of(
                         optionTime.date(),
                         optionTime.startTime(),
                         optionTime.endTime()
-                ))
+                )
         );
     }
 }
