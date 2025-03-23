@@ -5,7 +5,6 @@ import org.noostak.appointmentmember.application.AppointmentMemberRetrieveAvaila
 import org.noostak.appointmentmember.application.AppointmentMemberSaveAvailableTimesService;
 import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
 import org.noostak.appointmentmember.dto.response.AppointmentMembersAvailableTimesResponse;
-import org.noostak.global.config.swagger.AppointmentMemberSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import static org.noostak.appointmentmember.common.success.AppointmentMemberSucc
 @RestController
 @RequestMapping("/api/v1/appointment-members")
 @RequiredArgsConstructor
-public class AppointmentMemberController implements AppointmentMemberSwagger {
+public class AppointmentMemberController {
 
     private final AppointmentMemberSaveAvailableTimesService appointmentMemberSaveAvailableTimesService;
     private final AppointmentMemberRetrieveAvailableTimesService appointmentMemberRetrieveAvailableTimesService;
