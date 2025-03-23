@@ -16,7 +16,7 @@ import org.noostak.auth.domain.vo.RefreshToken;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
 import org.noostak.auth.dto.common.TokenResponse;
-import org.noostak.member.application.MemberService;
+import org.noostak.likes.domain.LikeRepository;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
 import org.noostak.membergroup.domain.MemberGroup;
@@ -38,6 +38,8 @@ public class AuthInfoServiceImpl implements AuthInfoService {
     private final MemberGroupRepository memberGroupRepository;
     private final AppointmentMemberAvailableTimesRepository appointmentMemberAvailableTimesRepository;
     private final AppointmentMemberRepository appointmentMemberRepository;
+    private final LikeRepository likeRepository;
+
 
     @Override
     @Transactional
@@ -76,6 +78,9 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 
         // AppointmentMember 삭제
         List<AppointmentMember> appointmentMembers = appointmentMemberRepository.findByMember(deletedMember);
+
+        // Like 삭제
+        appointmentMembers.forEach(likeRepository::deleteAllByAppointmentMember);
 
         // AppointmentMemberAvailableTime 삭제
         appointmentMembers.forEach(appointmentMemberAvailableTimesRepository::deleteByAppointmentMember);
