@@ -24,6 +24,8 @@ import org.noostak.member.domain.MemberRepository;
 import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.member.MemberRepositoryTest;
+import org.noostak.membergroup.MemberGroupRepositoryTest;
+import org.noostak.membergroup.domain.MemberGroupRepository;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,8 @@ class GroupCreateServiceImplTest {
 
     private GroupRepository groupRepository;
     private MemberRepository memberRepository;
+
+    private MemberGroupRepository memberGroupRepository;
     private GroupCreateServiceImpl groupCreateService;
     private Long savedMemberId;
 
@@ -53,8 +57,8 @@ class GroupCreateServiceImplTest {
 
         groupRepository = new GroupRepositoryTest();
         memberRepository = new MemberRepositoryTest();
-
-        groupCreateService = new GroupCreateServiceImpl(memberRepository, groupRepository, invitationCodeGenerator, s3Service);
+        memberGroupRepository = new MemberGroupRepositoryTest();
+        groupCreateService = new GroupCreateServiceImpl(memberRepository, memberGroupRepository, groupRepository, invitationCodeGenerator, s3Service);
 
         groupRepository.deleteAll();
         memberRepository.deleteAll();

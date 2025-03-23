@@ -58,4 +58,8 @@ public class Group extends BaseTimeEntity {
     public static Group of(final Long groupHostId, final GroupName name, final GroupProfileImageKey key, final String code) {
         return new Group(groupHostId, name, key, code);
     }
+
+    public void increaseCount(){
+        this.count.increase();
+    }
 }

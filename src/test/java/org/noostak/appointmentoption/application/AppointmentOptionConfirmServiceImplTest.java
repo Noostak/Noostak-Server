@@ -5,6 +5,8 @@ import org.junit.jupiter.api.*;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointment.domain.AppointmentRepositoryTest;
 import org.noostak.appointment.domain.vo.AppointmentStatus;
+import org.noostak.appointmentmember.domain.repository.AppointmentMemberAvailableTimesRepositoryTest;
+import org.noostak.appointmentmember.domain.repository.AppointmentMemberRepositoryTest;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
 import org.noostak.appointmentoption.domain.AppointmentOption;
@@ -29,6 +31,9 @@ class AppointmentOptionConfirmServiceImplTest {
     private AppointmentRepositoryTest appointmentRepository;
     private GroupRepositoryTest groupRepository;
 
+    private AppointmentMemberRepositoryTest appointmentMemberRepository;
+    private AppointmentMemberAvailableTimesRepositoryTest appointmentMemberAvailableTimesRepository;
+
     private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2024, 3, 15, 0, 0);
     private static final LocalDateTime FIXED_START_TIME = LocalDateTime.of(2024, 3, 15, 10, 0);
     private static final LocalDateTime FIXED_END_TIME = LocalDateTime.of(2024, 3, 15, 10, 30);
@@ -38,7 +43,13 @@ class AppointmentOptionConfirmServiceImplTest {
         groupRepository = new GroupRepositoryTest();
         appointmentRepository = new AppointmentRepositoryTest();
         appointmentOptionRepository = new AppointmentOptionRepositoryTest();
-        appointmentOptionConfirmService = new AppointmentOptionConfirmServiceImpl(appointmentOptionRepository);
+        appointmentMemberRepository = new AppointmentMemberRepositoryTest();
+        appointmentMemberAvailableTimesRepository = new AppointmentMemberAvailableTimesRepositoryTest();
+        appointmentOptionConfirmService = new AppointmentOptionConfirmServiceImpl(
+                appointmentOptionRepository,
+                appointmentMemberRepository,
+                appointmentMemberAvailableTimesRepository
+                );
     }
 
     @AfterEach
