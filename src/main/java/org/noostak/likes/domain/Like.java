@@ -3,6 +3,8 @@ package org.noostak.likes.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.global.entity.BaseTimeEntity;
@@ -20,10 +22,12 @@ public class Like extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private AppointmentMember appointmentMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_option_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private AppointmentOption appointmentOption;
 
     private Like(AppointmentMember appointmentMember, AppointmentOption appointmentOption) {

@@ -3,6 +3,8 @@ package org.noostak.member.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.global.entity.BaseTimeEntity;
 import org.noostak.member.domain.vo.*;
 

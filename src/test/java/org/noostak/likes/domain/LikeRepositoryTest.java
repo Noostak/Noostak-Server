@@ -1,5 +1,6 @@
 package org.noostak.likes.domain;
 
+import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
@@ -216,5 +217,10 @@ public class LikeRepositoryTest implements LikeRepository {
     @Override
     public <S extends Like, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
+    }
+
+    @Override
+    public void deleteAllByAppointmentMember(AppointmentMember appointmentMember) {
+
     }
 }
