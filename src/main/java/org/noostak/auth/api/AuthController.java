@@ -12,7 +12,6 @@ import org.noostak.auth.domain.AuthInfo;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.*;
-import org.noostak.global.config.swagger.AuthSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.auth.application.AuthInfoService;
 import org.noostak.member.application.MemberService;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
-public class AuthController implements AuthSwagger {
+public class AuthController {
 
     private final OauthServiceFactory oauthServiceFactory;
     private final AuthInfoService authInfoService;

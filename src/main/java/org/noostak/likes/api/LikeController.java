@@ -2,7 +2,6 @@ package org.noostak.likes.api;
 
 
 import lombok.RequiredArgsConstructor;
-import org.noostak.global.config.swagger.LikeSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.likes.application.LikeService;
 import org.noostak.likes.common.success.LikesSuccessCode;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/appointments")
 @RequiredArgsConstructor
-public class LikeController implements LikeSwagger {
+public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/{appointmentId}/appointment-options/{appointmentOptionId}/like")

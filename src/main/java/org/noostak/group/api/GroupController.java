@@ -1,7 +1,6 @@
 package org.noostak.group.api;
 
 import lombok.RequiredArgsConstructor;
-import org.noostak.global.config.swagger.GroupSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.group.application.GroupService;
 import org.noostak.group.dto.request.GroupCreateRequest;
@@ -23,7 +22,7 @@ import static org.noostak.group.common.success.GroupSuccessCode.*;
 @RestController
 @RequestMapping("/api/v1/groups")
 @RequiredArgsConstructor
-public class GroupController implements GroupSwagger {
+public class GroupController {
 
     private final GroupService groupService;
 
