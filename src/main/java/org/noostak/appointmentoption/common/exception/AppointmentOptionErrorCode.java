@@ -12,7 +12,9 @@ public enum AppointmentOptionErrorCode implements ErrorCode {
 
     APPOINTMENT_OPTION_NOT_CONFIRMED(HttpStatus.BAD_REQUEST, "해당 ID의 옵션이 확정되지 않았습니다."),
     APPOINTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 ID의 약속을 찾을 수 없습니다."),
-    APPOINTMENT_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 ID의 약속 멤버를 찾을 수 없습니다.")
+    APPOINTMENT_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 ID의 약속 멤버를 찾을 수 없습니다."),
+
+    CONFIRMED_APPOINTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "확정된 약속를 불러올 수 없습니다. 요청 데이터를 확인해 주세요."),
     ;
 
     public static final String PREFIX = "[APPOINTMENT OPTION ERROR] ";

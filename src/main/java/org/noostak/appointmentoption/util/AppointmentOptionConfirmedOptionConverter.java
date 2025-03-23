@@ -1,4 +1,4 @@
-package org.noostak.appointmentoption.converter;
+package org.noostak.appointmentoption.util;
 
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentmember.domain.AppointmentMember;
