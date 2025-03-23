@@ -1,8 +1,5 @@
 package org.noostak.infra;
 
-import org.noostak.infra.error.S3UploadErrorCode;
-import org.noostak.infra.error.S3UploadException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
