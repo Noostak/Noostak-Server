@@ -39,7 +39,7 @@ public class AppointmentRepositoryImpl implements AppointmentRepositoryCustom {
         return queryFactory
                 .selectFrom(appointment)
                 .where(
-                        appointment.appointmentStatus.eq(AppointmentStatus.CONFIRMED), // 확정된 약속만 조회
+                        appointment.appointmentStatus.eq(AppointmentStatus.CONFIRMED),
                         appointment.group.id.eq(groupId)
                 )
                 .orderBy(appointment.createdAt.desc())

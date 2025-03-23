@@ -56,7 +56,7 @@ public class AppointmentOptionRepositoryImpl implements AppointmentOptionReposit
                         .selectFrom(appointmentOption)
                         .where(
                                 appointmentOption.appointment.id.eq(appointmentId),
-                                appointmentOption.status.eq(AppointmentOptionStatus.CONFIRMED) // 확정된 옵션만 조회
+                                appointmentOption.status.eq(AppointmentOptionStatus.CONFIRMED)
                         )
                         .fetchOne()
         );
