@@ -36,10 +36,10 @@ public class GroupConfirmedAppointmentsServiceImpl implements GroupConfirmedAppo
         GroupConfirmedInfoResponse groupInfoResponse = GroupConfirmedResponseMapper.toGroupConfirmedInfo(group, groupProfileImageUrl);
 
         List<Appointment> confirmedAppointments = getConfirmedAppointments(groupId);
-        List<AppointmentOption> confirmedOptions = getConfirmedAppointmentOptions(confirmedAppointments);
+        List<AppointmentOption> confirmedAppointmentOptions = getConfirmedAppointmentOptions(confirmedAppointments);
 
         List<ConfirmedAppointmentsResponse> confirmedAppointmentsResponse =
-                GroupConfirmedResponseMapper.toConfirmedAppointmentsResponse(confirmedAppointments, confirmedOptions);
+                GroupConfirmedResponseMapper.toConfirmedAppointmentsResponse(confirmedAppointments, confirmedAppointmentOptions);
 
         return GroupConfirmedAppointmentsResponse.of(groupInfoResponse, confirmedAppointmentsResponse);
     }
