@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointment.domain.vo.*;
@@ -22,6 +24,7 @@ public class Appointment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "groups_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Group group;
 
     @Column(name = "appointment_host_id")

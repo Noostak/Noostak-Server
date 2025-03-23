@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.global.entity.BaseTimeEntity;
 
 import java.time.LocalDateTime;
@@ -22,6 +24,7 @@ public class AppointmentMemberAvailableTime extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private AppointmentMember appointmentMember;
 
     @Column(name = "appointment_member_available_date")
