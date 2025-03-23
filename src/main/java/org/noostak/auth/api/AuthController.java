@@ -79,14 +79,12 @@ public class AuthController {
 
     @DeleteMapping("/withdraw")
     public ResponseEntity<SuccessResponse> unlink(
-            @RequestHeader("Authorization") String givenAccessToken,
-            @RequestAttribute Long memberId
+            @RequestHeader("Authorization") String givenAccessToken
     ) {
         String accessToken = JwtToken.extractToken(givenAccessToken);
         AuthInfo authInfo = authInfoService.verify(accessToken);
 
         authInfoService.deleteAuthInfo(authInfo);
-        memberService.deleteMember(memberId);
 
         return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.UNLINK_COMPLETED)));
     }
@@ -97,7 +95,6 @@ public class AuthController {
         String accessToken = JwtToken.extractToken(givenAccessToken);
 
         // TODO: 액세스 토큰 강제 만료 시키기
-
         return ResponseEntity.ok((SuccessResponse.of(AuthSuccessCode.LOGOUT_COMPLETED)));
     }
 }

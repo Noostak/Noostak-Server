@@ -3,6 +3,8 @@ package org.noostak.appointment.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.global.entity.BaseTimeEntity;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ public class AppointmentHostSelectionTime extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "appointment_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Appointment appointment;
 
     @Column(name = "appointment_host_selection_date")

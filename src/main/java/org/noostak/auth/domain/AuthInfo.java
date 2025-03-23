@@ -3,6 +3,8 @@ package org.noostak.auth.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.auth.domain.vo.AuthId;
 import org.noostak.auth.domain.vo.AuthType;
 import org.noostak.auth.domain.vo.RefreshToken;
@@ -32,6 +34,7 @@ public class AuthInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
     public void setRefreshToken(RefreshToken refreshToken){
