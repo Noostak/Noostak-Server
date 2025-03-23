@@ -41,6 +41,9 @@ public class GroupJoinServiceImpl implements GroupJoinService {
         // 그룹 내 진행 중인 약속에 대해, 멤버-약속 관계 형성
         saveAppointmentMemberInProgress(member, group);
 
+        // 그룹 멤버 수 추가
+        group.increaseCount();
+
         return GroupJoinResponse.of(group.getId());
     }
 
