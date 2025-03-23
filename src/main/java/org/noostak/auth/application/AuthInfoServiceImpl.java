@@ -1,6 +1,9 @@
 package org.noostak.auth.application;
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.appointmentmember.domain.AppointmentMember;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
+import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.auth.application.jwt.JwtToken;
 import org.noostak.auth.application.jwt.JwtTokenProvider;
 import org.noostak.auth.common.exception.AuthErrorCode;
@@ -13,9 +16,15 @@ import org.noostak.auth.domain.vo.RefreshToken;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
 import org.noostak.auth.dto.common.TokenResponse;
+import org.noostak.member.application.MemberService;
 import org.noostak.member.domain.Member;
+import org.noostak.member.domain.MemberRepository;
+import org.noostak.membergroup.domain.MemberGroup;
+import org.noostak.membergroup.domain.MemberGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 
 @Service
@@ -24,7 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthInfoServiceImpl implements AuthInfoService {
 
     private final AuthInfoRepository authInfoRepository;
+    private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final MemberGroupRepository memberGroupRepository;
+    private final AppointmentMemberAvailableTimesRepository appointmentMemberAvailableTimesRepository;
+    private final AppointmentMemberRepository appointmentMemberRepository;
 
     @Override
     @Transactional
@@ -52,7 +65,26 @@ public class AuthInfoServiceImpl implements AuthInfoService {
     @Override
     @Transactional
     public void deleteAuthInfo(AuthInfo authInfo) {
+        Member deletedMember = authInfo.getMember();
+
+        // AuthInfo 삭제
         authInfoRepository.delete(authInfo);
+
+        // GroupMember 삭제
+        List<MemberGroup> memberGroups = memberGroupRepository.findByMemberId(deletedMember.getId());
+        memberGroupRepository.deleteAll(memberGroups);
+
+        // AppointmentMember 삭제
+        List<AppointmentMember> appointmentMembers = appointmentMemberRepository.findByMember(deletedMember);
+
+        // AppointmentMemberAvailableTime 삭제
+        appointmentMembers.forEach(appointmentMemberAvailableTimesRepository::deleteByAppointmentMember);
+
+        // AppointmentMember 삭제
+        appointmentMemberRepository.deleteAll(appointmentMembers);
+
+        // Member 삭제
+        memberRepository.delete(deletedMember);
     }
 
     @Override
