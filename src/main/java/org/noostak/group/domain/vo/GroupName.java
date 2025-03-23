@@ -8,7 +8,9 @@ import org.noostak.group.common.exception.GroupException;
 @Embeddable
 @EqualsAndHashCode
 public class GroupName {
-    private static final String NAME_PATTERN = "^[ㄱ-힣a-zA-Z0-9]+$";
+
+//    private static final String NAME_PATTERN = "^[가-힣a-zA-Z0-9]+$";
+
 
     private final String name;
 
@@ -32,7 +34,7 @@ public class GroupName {
     private void validateGroupName(String name) {
         validateEmpty(name);
         validateLength(name);
-        validatePattern(name);
+//        validatePattern(name);
     }
 
     private void validateEmpty(String name) {
@@ -47,11 +49,11 @@ public class GroupName {
         }
     }
 
-    private void validatePattern(String name) {
-        if (!name.matches(NAME_PATTERN)) {
-            throw new GroupException(GroupErrorCode.INVALID_GROUP_NAME_CHARACTER);
-        }
-    }
+//    private void validatePattern(String name) {
+//        if (!name.matches(NAME_PATTERN)) {
+//            throw new GroupException(GroupErrorCode.INVALID_GROUP_NAME_CHARACTER);
+//        }
+//    }
 
     @Override
     public String toString() {
