@@ -2,7 +2,6 @@ package org.noostak.member.api;
 
 
 import lombok.RequiredArgsConstructor;
-import org.noostak.global.config.swagger.MemberSwagger;
 import org.noostak.global.success.SuccessResponse;
 import org.noostak.member.application.MemberService;
 import org.noostak.member.common.success.MemberSuccessCode;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/profile")
 @RequiredArgsConstructor
-public class MemberController implements MemberSwagger {
+public class MemberController{
 
     private final MemberService memberService;
 

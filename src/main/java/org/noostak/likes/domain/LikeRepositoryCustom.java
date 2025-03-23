@@ -6,5 +6,5 @@ public interface LikeRepositoryCustom {
 
     void deleteLikeByAppointmentMemberIdAndOptionId(Long appointmentMemberId, Long optionId);
 
-    boolean getExistsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId);
+    boolean getExistsByAppointmentOptionIdAndMemberId(Long appointmentOptionId, Long memberId);
 }

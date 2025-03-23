@@ -2,6 +2,8 @@ package org.noostak.likes.application;
 
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.appointment.common.exception.AppointmentErrorCode;
+import org.noostak.appointment.common.exception.AppointmentException;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.appointmentoption.domain.AppointmentOption;
@@ -12,6 +14,7 @@ import org.noostak.likes.domain.Like;
 import org.noostak.likes.domain.LikeRepository;
 import org.noostak.likes.dto.DecreaseResponse;
 import org.noostak.likes.dto.IncreaseResponse;
+import org.noostak.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +55,8 @@ public class LikeServiceImpl implements LikeService {
             throw new LikesException(LikesErrorCode.LIKES_NOT_NEGATIVE);
         }
 
+        // TODO: 입력받은 appointmentId와 옵션에 있는 appointmentId가 다를 때
+
         AppointmentMember appointmentMember =
                 appointmentMemberRepository.getByMemberIdAndAppointmentId(memberId, appointmentId);
 
@@ -83,6 +88,11 @@ public class LikeServiceImpl implements LikeService {
     private Like createLike(Long memberId, Long appointmentId, Long appointmentOptionId){
         AppointmentOption appointmentOption = optionRepository.getByAppointmentOptionId(appointmentOptionId);
 
+        // 입력받은 appointmentId와 옵션에 있는 appointmentId가 다를 때
+        if(!appointmentOption.getAppointment().getId().equals(appointmentId)){
+            throw new AppointmentException(AppointmentErrorCode.MEMBER_NOT_CONTAINED);
+        }
+
         AppointmentMember appointmentMember =
                 appointmentMemberRepository.getByMemberIdAndAppointmentId(memberId, appointmentId);
 
@@ -90,10 +100,10 @@ public class LikeServiceImpl implements LikeService {
     }
 
     private boolean hasLike(Like like){
-        AppointmentMember member = like.getAppointmentMember();
+        Member member = like.getAppointmentMember().getMember();
         AppointmentOption option = like.getAppointmentOption();
 
         return likeRepository.
-                getExistsByAppointmentOptionIdAndAppointmentMemberId(member.getId(), option.getId());
+                getExistsByAppointmentOptionIdAndMemberId(option.getId(),member.getId());
     }
 }

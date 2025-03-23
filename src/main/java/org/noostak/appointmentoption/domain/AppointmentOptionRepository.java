@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface AppointmentOptionRepository extends JpaRepository<AppointmentOption, Long>, AppointmentOptionRepositoryCustom {
 
-    default AppointmentOption getByAppointmentOptionId(Long appointmentId){
-        return findById(appointmentId)
+    default AppointmentOption getByAppointmentOptionId(Long appointmentOptionId){
+        return findById(appointmentOptionId)
                 .orElseThrow(() -> new LikesException(LikesErrorCode.OPTION_NOT_FOUND));
     }
 

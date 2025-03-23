@@ -132,10 +132,10 @@ public class LikeRepositoryTest implements LikeRepository {
     }
 
     @Override
-    public boolean getExistsByAppointmentOptionIdAndAppointmentMemberId(Long appointmentOptionId, Long appointmentMemberId) {
+    public boolean getExistsByAppointmentOptionIdAndMemberId(Long appointmentOptionId, Long memberId) {
         return likes.stream()
                 .anyMatch(like -> like.getAppointmentOption().getId().equals(appointmentOptionId) &&
-                        like.getAppointmentMember().getId().equals(appointmentMemberId));
+                        like.getAppointmentMember().getMember().getId().equals(memberId));
     }
 
     @Override

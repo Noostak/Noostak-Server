@@ -1,6 +1,7 @@
 package org.noostak.appointmentoption.application;
 
 import lombok.RequiredArgsConstructor;
+import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
 import org.noostak.appointmentoption.domain.AppointmentOption;
@@ -13,15 +14,23 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AppointmentOptionConfirmServiceImpl implements AppointmentOptionConfirmService {
-
     private final AppointmentOptionRepository appointmentOptionRepository;
 
     @Override
     @Transactional
     public void confirmAppointment(Long appointmentOptionId) {
+        AppointmentOption confirmedAppointmentOption = confirmAppointmentOption(appointmentOptionId);
+        Appointment appointment = confirmedAppointmentOption.getAppointment();
+
+        appointment.confirm();
+    }
+
+    private AppointmentOption confirmAppointmentOption(Long appointmentOptionId){
         AppointmentOption appointmentOption = appointmentOptionRepository.findById(appointmentOptionId)
                 .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
 
         appointmentOption.confirm();
+
+        return appointmentOption;
     }
 }

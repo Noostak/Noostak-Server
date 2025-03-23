@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode
 public class AppointmentName {
     private static final int MAX_LENGTH = 50;
-    private static final Pattern INVALID_PATTERN = Pattern.compile("[^가-힣a-zA-Z0-9\\s]");
+    private static final Pattern INVALID_PATTERN = Pattern.compile("[^ㄱ-힣a-zA-Z0-9\\s]");
 
     private final String name;
 
