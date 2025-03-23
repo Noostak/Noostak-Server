@@ -46,6 +46,10 @@ public class AppointmentMember extends BaseTimeEntity {
         return new AppointmentMember(appointmentAvailability, appointment, member);
     }
 
+    public void setAppointmentAvailability(AppointmentAvailability availability){
+        this.appointmentAvailability = availability;
+    }
+
     public void updateAvailableTimes(List<AppointmentMemberAvailableTime> newTimes) {
         if (!newTimes.isEmpty()) {
             this.appointmentTimeSet = true;
