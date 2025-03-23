@@ -16,6 +16,8 @@ import org.noostak.infra.S3DirectoryPath;
 import org.noostak.infra.S3Service;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
+import org.noostak.membergroup.domain.MemberGroup;
+import org.noostak.membergroup.domain.MemberGroupRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class GroupCreateServiceImpl implements GroupCreateService {
 
     private final MemberRepository memberRepository;
+    private final MemberGroupRepository memberGroupRepository;
     private final GroupRepository groupRepository;
     private final InvitationCodeGenerator invitationCodeGenerator;
     private final S3Service s3Service;
@@ -38,7 +41,7 @@ public class GroupCreateServiceImpl implements GroupCreateService {
 
         Group group = createGroup(groupHost, request.groupName(), response.getKey());
 
-        return saveGroup(group, response.getUrl(), response.getKey());
+        return saveGroupWithHostMember(group, groupHost, response.getUrl(), response.getKey());
     }
 
     private Member findGroupHost(Long memberId) {
@@ -56,9 +59,16 @@ public class GroupCreateServiceImpl implements GroupCreateService {
         );
     }
 
-    private GroupCreateInternalResponse saveGroup(Group group, String imageUrl, String profileImageKey) {
+    private GroupCreateInternalResponse saveGroupWithHostMember(
+            Group group,
+            Member hostMember,
+            String imageUrl,
+            String profileImageKey
+    ) {
         try {
             groupRepository.save(group);
+            MemberGroup memberGroup = MemberGroup.of(hostMember, group);
+            memberGroupRepository.save(memberGroup);
             return GroupCreateInternalResponse.of(group, imageUrl);
         } catch (Exception e) {
             deleteUploadedImageSafely(profileImageKey);
