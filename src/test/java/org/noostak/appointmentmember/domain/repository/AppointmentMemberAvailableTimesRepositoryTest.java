@@ -6,6 +6,7 @@ import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepos
 import org.springframework.data.domain.*;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -54,6 +55,11 @@ public class AppointmentMemberAvailableTimesRepositoryTest implements Appointmen
     public void deleteByAppointmentMember(AppointmentMember appointmentMember) {
         availableTimes.removeIf(time -> time.getAppointmentMember().equals(appointmentMember));
         appointmentIdToTimesMap.values().forEach(list -> list.removeIf(time -> time.getAppointmentMember().equals(appointmentMember)));
+    }
+
+    @Override
+    public boolean existsByAppointmentMemberAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(AppointmentMember appointmentMember, LocalDateTime givenStartTime, LocalDateTime givenEndTime) {
+        return false;
     }
 
     @Override
