@@ -26,9 +26,9 @@ public class GroupConfirmedResponseMapper {
 
     public static List<ConfirmedAppointmentsResponse> toConfirmedAppointmentsResponse(
             List<Appointment> confirmedAppointments,
-            List<AppointmentOption> confirmedOptions
+            List<AppointmentOption> confirmedAppointmentOptions
     ) {
-        Map<Long, AppointmentOption> appointmentOptionMap = mapConfirmedOptionsByAppointmentId(confirmedOptions);
+        Map<Long, AppointmentOption> appointmentOptionMap = mapConfirmedOptionsByAppointmentId(confirmedAppointmentOptions);
 
         return confirmedAppointments.stream()
                 .map(appointment -> toConfirmedAppointmentResponse(appointment, appointmentOptionMap))
@@ -39,13 +39,14 @@ public class GroupConfirmedResponseMapper {
             Appointment appointment,
             Map<Long, AppointmentOption> appointmentOptionMap
     ) {
-        AppointmentOption confirmedOption = findConfirmedOption(appointment.getId(), appointmentOptionMap);
+        AppointmentOption confirmedAppointmentOptions = findConfirmedOption(appointment.getId(), appointmentOptionMap);
 
         return ConfirmedAppointmentsResponse.of(
                 appointment.getId(),
+                confirmedAppointmentOptions.getId(),
                 getAppointmentName(appointment),
                 getAppointmentCategory(appointment),
-                toAppointmentTimeResponse(confirmedOption)
+                toAppointmentTimeResponse(confirmedAppointmentOptions)
         );
     }
 
