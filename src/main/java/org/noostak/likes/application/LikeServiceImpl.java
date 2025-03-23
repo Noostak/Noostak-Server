@@ -14,6 +14,7 @@ import org.noostak.likes.domain.Like;
 import org.noostak.likes.domain.LikeRepository;
 import org.noostak.likes.dto.DecreaseResponse;
 import org.noostak.likes.dto.IncreaseResponse;
+import org.noostak.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,10 +100,10 @@ public class LikeServiceImpl implements LikeService {
     }
 
     private boolean hasLike(Like like){
-        AppointmentMember member = like.getAppointmentMember();
+        Member member = like.getAppointmentMember().getMember();
         AppointmentOption option = like.getAppointmentOption();
 
         return likeRepository.
-                getExistsByAppointmentOptionIdAndMemberId(member.getId(), option.getId());
+                getExistsByAppointmentOptionIdAndMemberId(option.getId(),member.getId());
     }
 }
