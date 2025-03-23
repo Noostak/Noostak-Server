@@ -31,7 +31,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
 
         AppointmentHostSelectionTimesResponse hostSelectionTimesResponse = retrieveHostSelectionTimes(appointmentId);
 
-        List<AppointmentMemberInfoResponse> appointmentMembersInfo = retrieveAppointmentMembersInfo(appointmentId);
+        List<AppointmentMembersInfoResponse> appointmentMembersInfo = retrieveAppointmentMembersInfo(appointmentId);
 
         return assembleAppointmentResponse(appointmentTimeSet, hostSelectionTimesResponse, appointmentMembersInfo);
     }
@@ -54,11 +54,11 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
         return AppointmentHostSelectionTimesResponse.of(hostSelectionTimeDtos);
     }
 
-    private List<AppointmentMemberInfoResponse> retrieveAppointmentMembersInfo(Long appointmentId) {
+    private List<AppointmentMembersInfoResponse> retrieveAppointmentMembersInfo(Long appointmentId) {
         return appointmentMemberRepository.findAllWithAvailableTimes(appointmentId).stream()
                 .map(member -> {
                     List<AppointmentMemberAvailableTimeResponse> availableTimeDtos = retrieveAvailableTimesForMember(member);
-                    return AppointmentMemberInfoResponse.of(
+                    return AppointmentMembersInfoResponse.of(
                             member.getId(),
                             member.getMember().getName().value(),
                             AppointmentMemberAvailableTimesResponse.of(availableTimeDtos)
@@ -80,7 +80,7 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
     private AppointmentMembersAvailableTimesResponse assembleAppointmentResponse(
             boolean appointmentTimeSet,
             AppointmentHostSelectionTimesResponse hostSelectionTimesResponse,
-            List<AppointmentMemberInfoResponse> appointmentMembersInfo) {
+            List<AppointmentMembersInfoResponse> appointmentMembersInfo) {
 
         AppointmentScheduleResponse appointmentScheduleResponse = AppointmentScheduleResponse.of(
                 hostSelectionTimesResponse,

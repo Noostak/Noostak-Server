@@ -8,7 +8,9 @@ import org.noostak.group.common.exception.GroupException;
 @Embeddable
 @EqualsAndHashCode
 public class GroupName {
+
 //    private static final String NAME_PATTERN = "^[가-힣a-zA-Z0-9]+$";
+
 
     private final String name;
 

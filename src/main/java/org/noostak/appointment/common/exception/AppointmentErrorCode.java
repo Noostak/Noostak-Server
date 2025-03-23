@@ -21,7 +21,7 @@ public enum AppointmentErrorCode implements ErrorCode {
 
     GROUP_REQUIRED(HttpStatus.BAD_REQUEST, "약속은 반드시 그룹에 속해야 합니다."),
     MEMBER_NOT_IN_GROUP(HttpStatus.BAD_REQUEST, "해당 그룹에 속한 멤버가 아닙니다."),
-    GROUP_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 그룹을 찾을 수 없습니다."),
+    GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 그룹을 찾을 수 없습니다."),
     APPOINTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 약속을 찾을 수 없습니다."),
 
     APPOINTMENT_NAME_NOT_EMPTY(HttpStatus.BAD_REQUEST, "약속 이름은 null이거나 공백일 수 없습니다."),

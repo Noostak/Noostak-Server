@@ -96,7 +96,7 @@ class AppointmentParticipantQueryServiceTest {
         memberGroupRepository = new MemberGroupRepositoryTest();
         appointmentHostSelectionTimeRepository = new AppointmentHostSelectionTimeRepositoryTest();
 
-        participantQueryService = new AppointmentParticipantQueryServiceImpl(appointmentMemberAvailableTimesRepository);
+        participantQueryService = new AppointmentParticipantQueryServiceImpl(appointmentMemberRepository);
     }
 
     private void initializeTestData() {
