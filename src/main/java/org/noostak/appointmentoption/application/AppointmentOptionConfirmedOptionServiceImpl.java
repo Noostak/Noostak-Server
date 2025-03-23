@@ -7,11 +7,11 @@ import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
-import org.noostak.appointmentoption.converter.AppointmentOptionConfirmedOptionConverter;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.domain.AppointmentOptionRepository;
 import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
 import org.noostak.appointmentoption.dto.response.confirmed.AppointmentConfirmedOptionResponse;
+import org.noostak.appointmentoption.util.AppointmentOptionConfirmedOptionConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
