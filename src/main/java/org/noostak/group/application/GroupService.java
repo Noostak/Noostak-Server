@@ -31,10 +31,6 @@ public class GroupService {
 
     public GroupCreateResponse createGroup(Long memberId, GroupCreateRequest request) throws IOException {
         GroupCreateInternalResponse response = groupCreateService.createGroup(memberId, request);
-
-        String inviteCode = response.group().getCode().value();
-        groupJoinService.join(memberId, inviteCode);
-
         return GroupCreateResponse.of(response.group(), response.groupProfileImageUrl());
     }
 
