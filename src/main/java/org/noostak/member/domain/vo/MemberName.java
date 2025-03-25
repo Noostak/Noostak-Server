@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @EqualsAndHashCode
 public class MemberName {
     private static final int MAX_LENGTH = 10;
-    private static final Pattern INVALID_PATTERN = Pattern.compile("[^\uAC00-\uD7A3a-zA-Z\uD83C-\uDBFF\uDC00-\uDFFF\u200D\uFE0F]");
+    private static final Pattern INVALID_PATTERN = Pattern.compile("[^ㄱ-힣a-zA-Z\uD83C-\uDBFF\uDC00-\uDFFF\u200D\uFE0F]");
 
     private final String name;
 
