@@ -75,9 +75,9 @@ class GroupConfirmedAppointmentsServiceImplTest {
 
             // Then
             assertThat(response).isNotNull();
-            assertThat(response.confirmedAppointmentsResponse()).hasSize(2);
+            assertThat(response.confirmedAppointments()).hasSize(2);
 
-            assertThat(response.confirmedAppointmentsResponse())
+            assertThat(response.confirmedAppointments())
                     .extracting("appointmentId", "appointmentName", "category")
                     .containsExactlyInAnyOrder(
                             Tuple.tuple(appointment1.getId(), "회의", appointment1.getCategory().getMessage()),
@@ -108,7 +108,7 @@ class GroupConfirmedAppointmentsServiceImplTest {
 
             // Then
             assertThat(response).isNotNull();
-            assertThat(response.confirmedAppointmentsResponse()).isEmpty();
+            assertThat(response.confirmedAppointments()).isEmpty();
         }
     }
 
