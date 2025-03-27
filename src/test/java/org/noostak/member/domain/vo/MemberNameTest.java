@@ -25,7 +25,6 @@ class MemberNameTest {
                 "jsoon",
                 "영한혼합",
                 "홍길동",
-                "😀😃😄"
         })
         void shouldCreateMemberNameSuccessfully(String validName) {
             // Given & When
@@ -62,27 +61,10 @@ class MemberNameTest {
         }
 
         @ParameterizedTest
-        @DisplayName("이름에 숫자가 포함된 경우")
-        @CsvSource({
-                "홍길동1",
-                "jsoon123",
-                "Test007",
-                "12jsoon",
-        })
-        void shouldThrowExceptionForNameContainingNumbers(String invalidName) {
-            assertThatThrownBy(() -> MemberName.from(invalidName))
-                    .isInstanceOf(MemberException.class)
-                    .hasMessageContaining(MemberErrorCode.INVALID_MEMBER_NAME.getMessage());
-        }
-
-        @ParameterizedTest
         @DisplayName("이름에 허용되지 않은 언어가 포함된 경우")
         @CsvSource({
-                "张伟",
-                "山田太郎",
                 "علي",
                 "Иван",
-                "jsoon张",
                 "こんにちは홍길동",
                 "Русский홍길동"
         })

@@ -4,7 +4,7 @@ public record GroupOngoingInfoResponse(
         String groupName,
         String groupProfileImageUrl,
         Long groupMemberCount,
-        String groupInviteCode
+        String groupInvitationCode
 ) {
     public static GroupOngoingInfoResponse of(
             String groupName,
