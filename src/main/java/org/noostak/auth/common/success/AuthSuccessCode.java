@@ -13,7 +13,7 @@ public enum AuthSuccessCode implements SuccessCode {
     LOGOUT_COMPLETED(HttpStatus.OK, "로그아웃에 성공하였습니다."),
     UNLINK_COMPLETED(HttpStatus.OK, "회원 탈퇴에 성공하였습니다."),
     AUTHORIZE_COMPLETED(HttpStatus.OK, "소셜 사용자 인증을 성공하였습니다."),
-    TOKEN_REISSUE_COMPLETED(HttpStatus.OK, "토큰 재발급에 성공하였습니다.")
+    TOKEN_REISSUE_COMPLETED(HttpStatus.CREATED, "토큰 재발급에 성공하였습니다.")
     ;
 
     private final HttpStatus status;
