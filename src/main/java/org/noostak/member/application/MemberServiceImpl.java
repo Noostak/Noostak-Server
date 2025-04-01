@@ -11,6 +11,7 @@ import org.noostak.member.domain.vo.MemberName;
 import org.noostak.member.domain.vo.MemberProfileImageKey;
 import org.noostak.auth.dto.common.SignUpRequest;
 import org.noostak.member.dto.GetProfileResponse;
+import org.noostak.member.dto.UpdateProfileRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,17 +64,19 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     @Transactional
-    public void updateMember(Long memberId, String memberName, MultipartFile givenImage) {
+    public void updateMember(Long memberId, UpdateProfileRequest dto) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         String previousProfileKey = member.getKey().value();
 
-        // 이미지 삭제 후 새로운 이미지 업로드
-        s3Service.deleteImage(previousProfileKey);
-        KeyAndUrl keyAndUrl = s3Service.uploadImage(S3DirectoryPath.MEMBER, givenImage);
+        if(dto.isProfileImageUpdated()){
+            // 이미지 삭제 후 새로운 이미지 업로드
+            s3Service.deleteImage(previousProfileKey);
+            KeyAndUrl keyAndUrl = s3Service.uploadImage(S3DirectoryPath.MEMBER, dto.getMemberProfileImage());
+            member.setKey(MemberProfileImageKey.from(keyAndUrl.getKey()));
+        }
 
-        member.setName(MemberName.from(memberName));
-        member.setKey(MemberProfileImageKey.from(keyAndUrl.getKey()));
+        member.setName(MemberName.from(dto.getMemberName()));
     }
 
     @Override
