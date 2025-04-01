@@ -28,7 +28,7 @@ public class MemberController{
             @RequestAttribute Long memberId,
             @ModelAttribute UpdateProfileRequest request
             ){
-        memberService.updateMember(memberId, request.getMemberName(), request.getMemberProfileImage());
+        memberService.updateMember(memberId, request);
         return ResponseEntity.ok(SuccessResponse.of(MemberSuccessCode.MEMBER_UPDATE_COMPLETE));
     }
 }

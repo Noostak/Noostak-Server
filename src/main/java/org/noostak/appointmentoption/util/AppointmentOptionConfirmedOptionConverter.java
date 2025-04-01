@@ -33,7 +33,7 @@ public class AppointmentOptionConfirmedOptionConverter {
 
     private static AppointmentConfirmedOptionMyInfoResponse toMyInfoResponse(AppointmentMember targetMember, int memberIndex) {
         return AppointmentConfirmedOptionMyInfoResponse.of(
-                targetMember.getAppointmentAvailability().name(),
+                targetMember.getAppointmentAvailability().getMessage(),
                 memberIndex,
                 targetMember.getMember().getName().value()
         );
