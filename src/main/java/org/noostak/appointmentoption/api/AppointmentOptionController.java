@@ -8,8 +8,7 @@ import org.noostak.global.success.SuccessResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.noostak.appointment.common.success.AppointmentSuccessCode.APPOINTMENT_CONFIRMED;
-import static org.noostak.appointment.common.success.AppointmentSuccessCode.CONFIRMED_APPOINTMENT_RETRIEVED;
+import static org.noostak.appointment.common.success.AppointmentSuccessCode.*;
 
 @RestController
 @RequestMapping("/api/v1/appointment-options")
@@ -41,6 +40,6 @@ public class AppointmentOptionController {
             @PathVariable Long appointmentOptionId
     ) {
         AppointmentOptionInfoResponse appointmentOptionInfoResponse = appointmentService.getAppointmentOptionInfo(memberId, appointmentOptionId);
-        return ResponseEntity.ok(SuccessResponse.of(CONFIRMED_APPOINTMENT_RETRIEVED, appointmentOptionInfoResponse));
+        return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_OPTION_INFO_RETRIEVED, appointmentOptionInfoResponse));
     }
 }
