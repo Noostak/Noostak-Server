@@ -25,8 +25,7 @@ public enum AppointmentErrorCode implements ErrorCode {
     APPOINTMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 약속을 찾을 수 없습니다."),
 
     APPOINTMENT_NAME_NOT_EMPTY(HttpStatus.BAD_REQUEST, "약속 이름은 null이거나 공백일 수 없습니다."),
-    INVALID_APPOINTMENT_NAME_LENGTH(HttpStatus.BAD_REQUEST, "약속 이름은 최대 50자를 초과할 수 없습니다."),
-    INVALID_APPOINTMENT_NAME_CHARACTER(HttpStatus.BAD_REQUEST, "약속 이름은 한글, 영어, 숫자, 공백만 허용됩니다."),
+    INVALID_APPOINTMENT_NAME_LENGTH(HttpStatus.BAD_REQUEST, "약속 이름은 최대 20자를 초과할 수 없습니다."),
 
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 멤버를 찾을 수 없습니다."),
     MEMBER_NOT_CONTAINED(HttpStatus.BAD_REQUEST, "해당 약속에 멤버가 포함되어 있지 않습니다."),
