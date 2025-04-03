@@ -10,8 +10,7 @@ import java.util.regex.Pattern;
 @Embeddable
 @EqualsAndHashCode
 public class AppointmentName {
-    private static final int MAX_LENGTH = 50;
-    private static final Pattern INVALID_PATTERN = Pattern.compile("[^ㄱ-힣a-zA-Z0-9\\s]");
+    private static final int MAX_LENGTH = 20;
 
     private final String name;
 
@@ -35,7 +34,6 @@ public class AppointmentName {
     private void validateAppointmentName(String name) {
         validateNotEmptyOrBlank(name);
         validateLength(name);
-        validateInvalidCharacters(name);
     }
 
     private void validateNotEmptyOrBlank(String name) {
@@ -47,12 +45,6 @@ public class AppointmentName {
     private void validateLength(String name) {
         if (name.length() > MAX_LENGTH) {
             throw new AppointmentException(AppointmentErrorCode.INVALID_APPOINTMENT_NAME_LENGTH);
-        }
-    }
-
-    private void validateInvalidCharacters(String name) {
-        if (INVALID_PATTERN.matcher(name).find()) {
-            throw new AppointmentException(AppointmentErrorCode.INVALID_APPOINTMENT_NAME_CHARACTER);
         }
     }
 
