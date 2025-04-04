@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.noostak.appointment.common.success.AppointmentSuccessCode.APPOINTMENT_CREATED;
+import static org.noostak.appointment.common.success.AppointmentSuccessCode.APPOINTMENT_RECOMMENDED_OPTIONS_RETRIEVED;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -34,6 +35,6 @@ public class AppointmentController {
             @PathVariable(name = "appointmentId") Long appointmentId
     ) {
         AppointmentRecommendedOptionsResponse response = appointmentService.getRecommendedAppointmentOptions(memberId, appointmentId);
-        return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_CREATED, response));
+        return ResponseEntity.ok(SuccessResponse.of(APPOINTMENT_RECOMMENDED_OPTIONS_RETRIEVED, response));
     }
 }
