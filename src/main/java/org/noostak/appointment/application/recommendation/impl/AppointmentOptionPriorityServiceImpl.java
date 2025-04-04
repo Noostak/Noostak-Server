@@ -13,6 +13,7 @@ import org.noostak.likes.domain.LikeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,12 +53,20 @@ public class AppointmentOptionPriorityServiceImpl implements AppointmentOptionPr
     }
 
     private Map<Long, List<AppointmentOption>> categorizeOptionsByPriority(
-            Map<AppointmentOption, Long> availabilityMap
-    ) {
+            Map<AppointmentOption, Long> availabilityMap) {
         return availabilityMap.entrySet().stream()
                 .collect(Collectors.groupingBy(
                         Map.Entry::getValue,
-                        Collectors.mapping(Map.Entry::getKey, Collectors.toList())
+                        Collectors.mapping(
+                                Map.Entry::getKey,
+                                Collectors.collectingAndThen(
+                                        Collectors.toList(),
+                                        list -> {
+                                            list.sort(Comparator.comparing(AppointmentOption::getStartTime));
+                                            return list;
+                                        }
+                                )
+                        )
                 ));
     }
 
