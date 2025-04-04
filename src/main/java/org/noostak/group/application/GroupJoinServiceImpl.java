@@ -42,7 +42,8 @@ public class GroupJoinServiceImpl implements GroupJoinService {
         saveAppointmentMemberInProgress(member, group);
 
         // 그룹 멤버 수 추가
-        group.increaseCount();
+        Long countedInGroup = memberGroupRepository.countAllByGroup(group);
+        group.setCount(countedInGroup);
 
         return GroupJoinResponse.of(group.getId());
     }

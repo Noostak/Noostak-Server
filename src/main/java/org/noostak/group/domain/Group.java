@@ -61,7 +61,7 @@ public class Group extends BaseTimeEntity {
         return new Group(groupHostId, name, key, code);
     }
 
-    public void increaseCount(){
-        this.count.increase();
+    public void setCount(Long count){
+        this.count = GroupMemberCount.from(count);
     }
 }
