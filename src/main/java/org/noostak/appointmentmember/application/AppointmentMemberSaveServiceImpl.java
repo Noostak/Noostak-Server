@@ -30,7 +30,7 @@ public class AppointmentMemberSaveServiceImpl implements AppointmentMemberSaveSe
     @Transactional
     public void saveAppointmentMember(Appointment appointment, Member member) {
         AppointmentMember newAppointmentMember = AppointmentMember.of(
-                AppointmentAvailability.NOT_SELECTED,
+                AppointmentAvailability.UNAVAILABLE,
                 appointment,
                 member);
 
