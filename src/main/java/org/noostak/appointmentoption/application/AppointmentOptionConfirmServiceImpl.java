@@ -39,13 +39,14 @@ public class AppointmentOptionConfirmServiceImpl implements AppointmentOptionCon
         List<AppointmentMember> appointmentMembers =
                 appointmentMemberRepository.findByAppointmentId(appointment.getId());
 
-        appointmentMembers.forEach(appointmentMember -> {
-            if(isAvailable(option, appointmentMember)){
+        for (AppointmentMember appointmentMember : appointmentMembers) {
+            if (isAvailable(option, appointmentMember)) {
                 appointmentMember.setAppointmentAvailability(AppointmentAvailability.AVAILABLE);
-            }else {
-                appointmentMember.setAppointmentAvailability(AppointmentAvailability.UNAVAILABLE);
+                continue;
             }
-        });
+
+            appointmentMember.setAppointmentAvailability(AppointmentAvailability.UNAVAILABLE);
+        }
     }
 
     private boolean isAvailable(AppointmentOption option, AppointmentMember appointmentMember) {

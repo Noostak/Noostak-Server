@@ -47,7 +47,7 @@ public class AppointmentOptionInfoServiceImpl implements AppointmentOptionInfoSe
 
     private AppointmentOption findConfirmedAppointmentOption(Long appointmentOptionId) {
         return appointmentOptionRepository.findById(appointmentOptionId)
-                .filter(option -> option.getStatus().equals(AppointmentOptionStatus.UNCONFIRMED))
+                .filter(option -> option.getStatus().equals(AppointmentOptionStatus.CONFIRMED))
                 .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
     }
 
