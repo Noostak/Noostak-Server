@@ -1,8 +1,8 @@
 package org.noostak.appointmentoption.domain;
 
 import org.noostak.appointment.domain.Appointment;
-import org.noostak.likes.common.exception.LikesErrorCode;
-import org.noostak.likes.common.exception.LikesException;
+import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
+import org.noostak.appointmentoption.common.exception.AppointmentOptionException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public interface AppointmentOptionRepository extends JpaRepository<AppointmentOp
 
     default AppointmentOption getByAppointmentOptionId(Long appointmentOptionId){
         return findById(appointmentOptionId)
-                .orElseThrow(() -> new LikesException(LikesErrorCode.OPTION_NOT_FOUND));
+                .orElseThrow(() -> new AppointmentOptionException(AppointmentOptionErrorCode.APPOINTMENT_OPTION_NOT_FOUND));
     }
 
     Optional<AppointmentOption> findFirstByAppointmentAndStartTimeAndEndTime

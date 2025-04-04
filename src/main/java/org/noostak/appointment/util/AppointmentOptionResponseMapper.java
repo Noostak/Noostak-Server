@@ -11,6 +11,7 @@ import org.noostak.likes.domain.LikeRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class AppointmentOptionResponseMapper {
 
@@ -23,7 +24,7 @@ public class AppointmentOptionResponseMapper {
             GroupRepository groupRepository
     ) {
         List<Long> availableMembers = findAvailableMembers(option, memberAvailability);
-        List<Long> unavailableMembers = findUnavailableMembers(memberAvailability, availableMembers);
+        List<Long> unavailableMembers = findUnavailableMembers(availableMembers, memberNames);
         String myName = findMemberName(memberId, memberNames);
         boolean isAvailable = availableMembers.contains(memberId);
         Long position = findMemberPosition(isAvailable, memberId, availableMembers, unavailableMembers);
@@ -52,10 +53,14 @@ public class AppointmentOptionResponseMapper {
     }
 
     private static List<Long> findUnavailableMembers(
-            Map<Long, List<AppointmentMemberAvailableTime>> memberAvailability,
-            List<Long> availableMembers
+            List<Long> availableMembers,
+            Map<Long, String> allMemberNames // TODO: 약속에 관계된 모든 Member의 이름 (선택자 + 미선택자 포함) 로직 변경 시 지우기
     ) {
-        return memberAvailability.keySet().stream()
+
+        // 시간을 선택하지 않은 멤버들도 불가능한 약속에 포함
+        Set<Long> allMembersId = allMemberNames.keySet();
+
+        return allMembersId.stream()
                 .filter(id -> !availableMembers.contains(id))
                 .toList();
     }

@@ -2,7 +2,11 @@ package org.noostak.appointmentoption.application.info;
 
 import lombok.RequiredArgsConstructor;
 import org.noostak.appointment.domain.Appointment;
+import org.noostak.appointment.util.AppointmentAvailabilityMatcher;
+import org.noostak.appointment.util.TimeSlot;
 import org.noostak.appointmentmember.domain.AppointmentMember;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
+import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.common.exception.AppointmentOptionErrorCode;
@@ -26,23 +30,63 @@ public class AppointmentOptionInfoServiceImpl implements AppointmentOptionInfoSe
 
     private final AppointmentOptionRepository appointmentOptionRepository;
     private final AppointmentMemberRepository appointmentMemberRepository;
+    private final AppointmentMemberAvailableTimesRepository availableTimesRepository;
 
     @Override
     public AppointmentOptionInfoResponse getAppointmentOptionInfo(Long memberId, Long appointmentOptionId) {
-        AppointmentOption appointmentOption = findConfirmedAppointmentOption(appointmentOptionId);
+        AppointmentOption appointmentOption = findByAppointmentOptionId(appointmentOptionId);
         Appointment appointment = appointmentOption.getAppointment();
         List<AppointmentMember> appointmentMembers = findAppointmentMembers(appointment.getId());
         AppointmentMember targetMember = findTargetMember(appointmentMembers, memberId);
 
-        Map<AppointmentAvailability, List<String>> groupedMembers = groupMembersByAvailability(appointmentMembers);
-        List<String> availableMemberNames = groupedMembers.getOrDefault(AppointmentAvailability.AVAILABLE, List.of());
-        List<String> unavailableMemberNames = groupedMembers.getOrDefault(AppointmentAvailability.UNAVAILABLE, List.of());
+        List<String> availableMemberNames =
+                getAvailableMemberNames(appointmentOption, appointmentMembers);
+
+        List<String> unavailableMemberNames =
+                getUnavailableMembers(appointmentMembers, availableMemberNames);
 
         int memberIndex = findMemberIndexInLists(targetMember.getMember().getName().value(), availableMemberNames, unavailableMemberNames);
 
         return AppointmentOptionInfoOptionConverter.toResponse(
                 appointmentOption, appointment, targetMember, availableMemberNames, unavailableMemberNames, memberIndex
         );
+    }
+
+    private static List<String> getUnavailableMembers(List<AppointmentMember> appointmentMembers,
+                                                      List<String> availableMemberNames) {
+        return appointmentMembers.stream()
+                .filter(appointmentMember -> !availableMemberNames.contains(appointmentMember.getMember().getName().value()))
+                .map(appointmentMember -> appointmentMember.getMember().getName().value())
+                .toList();
+    }
+
+    private List<String> getAvailableMemberNames(AppointmentOption appointmentOption,
+                                                 List<AppointmentMember> appointmentMembers) {
+        return appointmentMembers.stream()
+                .filter(appointmentMember -> isAvailableMember(appointmentOption, appointmentMember))
+                .map(appointmentMember -> appointmentMember.getMember().getName().value())
+                .toList();
+    }
+
+    private boolean isAvailableMember(AppointmentOption option, AppointmentMember appointmentMember){
+        // 약속 멤버에 대한 가능한 시간 약속들을 조회
+        List<AppointmentMemberAvailableTime> memberTimes =
+                availableTimesRepository.findByAppointmentMember(appointmentMember);
+
+        // 가능한 시간이 입력되지 않은 상태이거나, 가능한 시간이 비어있다면 해당 옵션에서 불가능한 멤버로 판단
+        if(!appointmentMember.isAppointmentTimeSet() || memberTimes.isEmpty()){
+            return false;
+        }
+
+        // 옵션에 대해 시간을 만족하는지 확인
+        return AppointmentAvailabilityMatcher
+                .satisfiesDuration(
+                        memberTimes,
+                        TimeSlot.of(option.getDate(), option.getStartTime(), option.getEndTime()));
+    }
+
+    private AppointmentOption findByAppointmentOptionId(Long appointmentOptionId) {
+        return appointmentOptionRepository.getByAppointmentOptionId(appointmentOptionId);
     }
 
     private AppointmentOption findConfirmedAppointmentOption(Long appointmentOptionId) {
