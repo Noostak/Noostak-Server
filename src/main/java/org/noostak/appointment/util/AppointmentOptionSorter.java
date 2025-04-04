@@ -31,18 +31,29 @@ public class AppointmentOptionSorter {
     }
 
     private static List<AppointmentOption> groupByAvailability(Map<AppointmentOption, Integer> availabilityCounts) {
-        return availabilityCounts.entrySet().stream()
+        // TreeMap을 사용해 가용성 카운트를 내림차순으로 정렬
+        TreeMap<Integer, Set<AppointmentOption>> grouped = new TreeMap<>(Comparator.reverseOrder());
+
+        // 그룹화 작업 수행
+        Map<Integer, Set<AppointmentOption>> tempGrouped = availabilityCounts.entrySet().stream()
                 .collect(Collectors.groupingBy(
                         Map.Entry::getValue,
-                        TreeMap::new,
-                        Collectors.mapping(Map.Entry::getKey, Collectors.toList())
-                ))
-                .descendingMap()
-                .values().stream()
-                .flatMap(List::stream)
+                        Collectors.mapping(
+                                Map.Entry::getKey,
+                                Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(AppointmentOption::getStartTime)))
+                        )
+                ));
+
+        // 정렬된 TreeMap에 추가
+        grouped.putAll(tempGrouped);
+
+        return grouped.values().stream()
+                .flatMap(Collection::stream)
                 .limit(MAX_RESULTS)
-                .toList();
+                .collect(Collectors.toList());
     }
+
+
 
     private static int calculateAvailableMembers(AppointmentOption option,
                                                  Map<Long, List<AppointmentMemberAvailableTime>> memberAvailability) {
