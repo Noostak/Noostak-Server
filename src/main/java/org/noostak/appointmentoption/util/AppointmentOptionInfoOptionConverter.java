@@ -2,6 +2,7 @@ package org.noostak.appointmentoption.util;
 
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentmember.domain.AppointmentMember;
+import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.dto.response.info.*;
 
@@ -17,7 +18,7 @@ public class AppointmentOptionInfoOptionConverter {
                 toTimeResponse(appointmentOption),
                 appointment.getCategory().getMessage(),
                 appointment.getName().value(),
-                toMyInfoResponse(targetMember, memberIndex),
+                toMyInfoResponse(availableMemberNames, targetMember, memberIndex),
                 toAvailableFriendsResponse(availableMemberNames),
                 toUnavailableFriendsResponse(unavailableMemberNames)
         );
@@ -31,11 +32,22 @@ public class AppointmentOptionInfoOptionConverter {
         );
     }
 
-    private static AppointmentOptionInfoMyInfoResponse toMyInfoResponse(AppointmentMember targetMember, int memberIndex) {
+    private static AppointmentOptionInfoMyInfoResponse toMyInfoResponse(
+            List<String> availableMemberNames,
+            AppointmentMember targetMember,
+            int memberIndex) {
+        String targetMemberName = targetMember.getMember().getName().value();
+        AppointmentAvailability appointmentAvailability = targetMember.getAppointmentAvailability();
+
+        // 만약, 가능한 멤버에 속해있다면 AVAILABLE로 반환하기
+        if(availableMemberNames.contains(targetMemberName)){
+            appointmentAvailability = AppointmentAvailability.AVAILABLE;
+        }
+
         return AppointmentOptionInfoMyInfoResponse.of(
-                targetMember.getAppointmentAvailability().getMessage(),
+                appointmentAvailability.getMessage(),
                 memberIndex,
-                targetMember.getMember().getName().value()
+                targetMemberName
         );
     }
 
