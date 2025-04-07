@@ -1,4 +1,4 @@
-package org.noostak.likes.domain;
+package org.noostak.like.domain;
 
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.springframework.data.domain.*;

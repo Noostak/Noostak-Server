@@ -28,7 +28,8 @@ public class AppointmentRecommendationFacade {
 
     @Transactional
     public List<AppointmentPriorityGroupResponse> getRecommendedOptions(Long memberId, Long appointmentId, Appointment appointment) {
-        List<TimeSlot> timeSlots = appointmentHostSelectedTimeQueryService.splitHostSelectedTimeSlots(appointmentId, 60L);
+        List<TimeSlot> timeSlots = appointmentHostSelectedTimeQueryService
+                .splitHostSelectedTimeSlots(appointmentId, appointment.getDuration().value());
 
         Map<Long, List<AppointmentMemberAvailableTime>> memberAvailability = appointmentMemberAvailabilityQueryService.findAvailableTimeSlotsByAppointmentId(appointmentId);
 

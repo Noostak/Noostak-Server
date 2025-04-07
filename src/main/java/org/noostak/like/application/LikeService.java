@@ -1,7 +1,7 @@
-package org.noostak.likes.application;
+package org.noostak.like.application;
 
-import org.noostak.likes.dto.DecreaseResponse;
-import org.noostak.likes.dto.IncreaseResponse;
+import org.noostak.like.dto.DecreaseResponse;
+import org.noostak.like.dto.IncreaseResponse;
 
 public interface LikeService {
     IncreaseResponse increase(Long memberId, Long appointmentId, Long appointmentOptionId);
