@@ -6,13 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.global.entity.BaseTimeEntity;
+import org.noostak.global.utils.TimeEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class AppointmentHostSelectionTime extends BaseTimeEntity {
+public class AppointmentHostSelectionTime extends BaseTimeEntity implements TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
