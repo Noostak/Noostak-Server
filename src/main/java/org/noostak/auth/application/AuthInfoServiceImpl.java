@@ -16,7 +16,7 @@ import org.noostak.auth.domain.vo.RefreshToken;
 import org.noostak.auth.dto.SignUpResponse;
 import org.noostak.auth.dto.common.SignInResponse;
 import org.noostak.auth.dto.common.TokenResponse;
-import org.noostak.likes.domain.LikeRepository;
+import org.noostak.like.domain.LikeRepository;
 import org.noostak.member.domain.Member;
 import org.noostak.member.domain.MemberRepository;
 import org.noostak.membergroup.domain.MemberGroup;

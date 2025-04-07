@@ -1,4 +1,4 @@
-package org.noostak.likes.domain;
+package org.noostak.like.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;

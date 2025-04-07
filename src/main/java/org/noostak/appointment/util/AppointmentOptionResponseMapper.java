@@ -7,7 +7,7 @@ import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.group.domain.GroupRepository;
-import org.noostak.likes.domain.LikeRepository;
+import org.noostak.like.domain.LikeRepository;
 
 import java.util.List;
 import java.util.Map;

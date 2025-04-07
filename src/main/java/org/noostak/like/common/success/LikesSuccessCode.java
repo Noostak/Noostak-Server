@@ -1,4 +1,4 @@
-package org.noostak.likes.common.success;
+package org.noostak.like.common.success;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
