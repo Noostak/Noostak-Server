@@ -58,7 +58,7 @@ class AppointmentHostSelectedTimeQueryServiceImplTest {
         @DisplayName("1️⃣ 호스트 선택 시간이 정상적으로 분할된다.")
         void shouldSplitHostSelectedTimeSlotsSuccessfully() {
             // Given
-            Long duration = 30L;
+            Long duration = 60L;
 
             // When
             List<TimeSlot> timeSlots = queryService.splitHostSelectedTimeSlots(savedAppointmentId, duration);

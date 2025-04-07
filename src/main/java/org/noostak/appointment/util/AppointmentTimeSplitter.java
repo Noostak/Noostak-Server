@@ -19,12 +19,13 @@ public class AppointmentTimeSplitter {
 
         while (slotStart.isBefore(endTime)) {
             LocalDateTime slotEnd = slotStart.plusMinutes(durationMinutes);
-            if (slotEnd.isAfter(endTime)) {
-                slotEnd = endTime;
+
+            if(slotEnd.isAfter(endTime)) {
+                return timeSlots;
             }
 
             timeSlots.add(TimeSlot.of(date, slotStart, slotEnd));
-            slotStart = slotEnd;
+            slotStart = slotStart.plusMinutes(60L);
         }
 
         return timeSlots;
