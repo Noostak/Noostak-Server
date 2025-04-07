@@ -1,4 +1,4 @@
-package org.noostak.likes.common.exception;
+package org.noostak.like.common.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

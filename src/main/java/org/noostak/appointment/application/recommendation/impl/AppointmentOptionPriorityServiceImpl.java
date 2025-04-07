@@ -9,7 +9,7 @@ import org.noostak.appointment.util.AppointmentOptionResponseMapper;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.group.domain.GroupRepository;
-import org.noostak.likes.domain.LikeRepository;
+import org.noostak.like.domain.LikeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,9 +1,9 @@
-package org.noostak.likes.domain;
+package org.noostak.like.domain;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
-import static org.noostak.likes.domain.QLike.like;
+import static org.noostak.like.domain.QLike.like;
 
 @RequiredArgsConstructor
 public class LikeRepositoryImpl implements LikeRepositoryCustom {

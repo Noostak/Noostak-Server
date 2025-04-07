@@ -1,4 +1,4 @@
-package org.noostak.likes.domain;
+package org.noostak.like.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -12,10 +12,10 @@ import org.noostak.appointment.common.exception.AppointmentErrorCode;
 import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentoption.domain.AppointmentOption;
-import org.noostak.likes.common.exception.LikesErrorCode;
-import org.noostak.likes.common.exception.LikesException;
-import org.noostak.likes.dto.DecreaseResponse;
-import org.noostak.likes.dto.IncreaseResponse;
+import org.noostak.like.common.exception.LikesErrorCode;
+import org.noostak.like.common.exception.LikesException;
+import org.noostak.like.dto.DecreaseResponse;
+import org.noostak.like.dto.IncreaseResponse;
 
 import java.util.Optional;
 

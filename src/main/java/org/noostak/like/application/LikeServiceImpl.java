@@ -1,4 +1,4 @@
-package org.noostak.likes.application;
+package org.noostak.like.application;
 
 
 import lombok.RequiredArgsConstructor;
@@ -8,12 +8,12 @@ import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.noostak.appointmentoption.domain.AppointmentOption;
 import org.noostak.appointmentoption.domain.AppointmentOptionRepository;
-import org.noostak.likes.common.exception.LikesErrorCode;
-import org.noostak.likes.common.exception.LikesException;
-import org.noostak.likes.domain.Like;
-import org.noostak.likes.domain.LikeRepository;
-import org.noostak.likes.dto.DecreaseResponse;
-import org.noostak.likes.dto.IncreaseResponse;
+import org.noostak.like.common.exception.LikesErrorCode;
+import org.noostak.like.common.exception.LikesException;
+import org.noostak.like.domain.Like;
+import org.noostak.like.domain.LikeRepository;
+import org.noostak.like.dto.DecreaseResponse;
+import org.noostak.like.dto.IncreaseResponse;
 import org.noostak.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

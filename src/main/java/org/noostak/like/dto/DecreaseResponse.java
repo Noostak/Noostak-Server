@@ -1,4 +1,4 @@
-package org.noostak.likes.dto;
+package org.noostak.like.dto;
 
 
 import lombok.AllArgsConstructor;
