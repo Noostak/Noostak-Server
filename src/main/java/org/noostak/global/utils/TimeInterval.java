@@ -5,13 +5,13 @@ import org.noostak.global.error.core.TimeEntityException;
 
 import java.time.LocalDateTime;
 
-public interface TimeEntity {
-    default boolean conflictsWith(TimeEntity otherEntity) {
+public interface TimeInterval {
+    default boolean conflictsWith(TimeInterval otherEntity) {
         return containsTimeEntity(otherEntity)
                 || containsTimeEntity(this);
     }
 
-    default boolean containsTimeEntity(TimeEntity otherEntity){
+    default boolean containsTimeEntity(TimeInterval otherEntity){
         return this.containsTime(otherEntity.getStartTime())
                 || this.containsTime(otherEntity.getEndTime());
     }
@@ -33,8 +33,6 @@ public interface TimeEntity {
                 (startTime.isBefore(this.getEndTime())
                         && (endTime.isAfter(this.getEndTime()) || endTime.isEqual(this.getEndTime())));
     }
-
-    Number getId();
 
     LocalDateTime getStartTime();
 
