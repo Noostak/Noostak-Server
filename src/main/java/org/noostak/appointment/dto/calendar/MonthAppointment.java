@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class MonthAppointment implements Comparable<MonthAppointment>{
-    Long id;
+    Long appointmentId;
+    Long optionId;
     String name;
     LocalDateTime date;
     LocalDateTime startTime;
@@ -29,6 +30,7 @@ public class MonthAppointment implements Comparable<MonthAppointment>{
 
         return new MonthAppointment(
                 appointment.getId(),
+                appointmentOption.getId(),
                 appointment.getName().value(),
                 appointmentOption.getDate(),
                 appointmentOption.getStartTime(),
