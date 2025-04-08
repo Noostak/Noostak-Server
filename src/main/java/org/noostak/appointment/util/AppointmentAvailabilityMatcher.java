@@ -30,6 +30,8 @@ public class AppointmentAvailabilityMatcher {
 
     public static boolean satisfiesDuration(List<AppointmentMemberAvailableTime> memberTimes, TimeSlot slot) {
         return memberTimes.stream()
-                .anyMatch(time -> time.isFullyContainedIn(slot.start(),slot.end()));
+                .anyMatch(time ->
+                        time.isFullyContainedIn(slot.start(),slot.end())
+                        || slot.isFullyContainedIn(time.getStartTime(),time.getEndTime()));
     }
 }
