@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.global.entity.BaseTimeEntity;
-import org.noostak.global.utils.TimeEntity;
+import org.noostak.global.utils.TimeInterval;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class AppointmentMemberAvailableTime extends BaseTimeEntity implements TimeEntity {
+public class AppointmentMemberAvailableTime extends BaseTimeEntity implements TimeInterval {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,14 +8,14 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.noostak.appointment.domain.Appointment;
 import org.noostak.appointmentoption.domain.vo.AppointmentOptionStatus;
 import org.noostak.global.entity.BaseTimeEntity;
-import org.noostak.global.utils.TimeEntity;
+import org.noostak.global.utils.TimeInterval;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @RequiredArgsConstructor
-public class AppointmentOption extends BaseTimeEntity implements TimeEntity {
+public class AppointmentOption extends BaseTimeEntity implements TimeInterval {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
