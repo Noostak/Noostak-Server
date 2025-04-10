@@ -28,12 +28,13 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
         AppointmentMember appointmentMember = getAppointmentMemberOrThrow(memberId, appointmentId);
 
         boolean appointmentTimeSet = appointmentMember.isAppointmentTimeSet();
+        Long duration = appointmentMember.getAppointment().getDuration().value();
 
         AppointmentHostSelectionTimesResponse hostSelectionTimesResponse = retrieveHostSelectionTimes(appointmentId);
 
         List<AppointmentMembersInfoResponse> appointmentMembersInfo = retrieveAppointmentMembersInfo(appointmentId);
 
-        return assembleAppointmentResponse(appointmentTimeSet, hostSelectionTimesResponse, appointmentMembersInfo);
+        return assembleAppointmentResponse(duration,appointmentTimeSet, hostSelectionTimesResponse, appointmentMembersInfo);
     }
 
     private AppointmentMember getAppointmentMemberOrThrow(Long memberId, Long appointmentId) {
@@ -78,11 +79,13 @@ public class AppointmentMemberRetrieveAvailableTimesServiceImpl implements Appoi
     }
 
     private AppointmentMembersAvailableTimesResponse assembleAppointmentResponse(
+            Long duration,
             boolean appointmentTimeSet,
             AppointmentHostSelectionTimesResponse hostSelectionTimesResponse,
             List<AppointmentMembersInfoResponse> appointmentMembersInfo) {
 
         AppointmentScheduleResponse appointmentScheduleResponse = AppointmentScheduleResponse.of(
+                duration,
                 hostSelectionTimesResponse,
                 appointmentMembersInfo
         );
