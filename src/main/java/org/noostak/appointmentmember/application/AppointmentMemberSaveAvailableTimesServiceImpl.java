@@ -29,6 +29,8 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
         AppointmentMember appointmentMember = findAppointmentMember(memberId, appointmentId);
         List<AppointmentMemberAvailableTime> newTimes = createNewAvailableTimes(appointmentMember, request);
 
+        validate(newTimes);
+
         refreshAvailableTimes(appointmentMember, newTimes);
     }
 
@@ -64,5 +66,13 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
 
     private void markAppointmentTimeIfNecessary(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
         appointmentMember.updateAvailableTimes(newTimes);
+    }
+
+    private void validate(List<AppointmentMemberAvailableTime> newTimes) {
+        boolean hasInvalidTimes = newTimes.stream().anyMatch(time -> time.getEndTime() == null);
+
+        if(hasInvalidTimes){
+            throw new AppointmentMemberException(AppointmentMemberErrorCode.DURATION_NOT_SATISFIED);
+        }
     }
 }
