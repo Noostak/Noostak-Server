@@ -158,7 +158,7 @@ class AppointmentParticipantQueryServiceTest {
         List<AppointmentMemberAvailableTime> availableTimes = createAvailableTimes(appointmentMember);
 
         appointmentMemberAvailableTimesRepository.saveAll(availableTimes);
-        appointmentMember.updateAvailableTimes(availableTimes);
+        appointmentMember.updateAvailableTimes();
     }
 
     private AppointmentMember createAppointmentMember(AppointmentAvailability availability, Long memberId, Long appointmentId) {

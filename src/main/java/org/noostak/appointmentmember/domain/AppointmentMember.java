@@ -10,8 +10,6 @@ import org.noostak.appointmentmember.domain.vo.AppointmentAvailability;
 import org.noostak.global.entity.BaseTimeEntity;
 import org.noostak.member.domain.Member;
 
-import java.util.List;
-
 @Entity
 @Getter
 @RequiredArgsConstructor
@@ -54,9 +52,7 @@ public class AppointmentMember extends BaseTimeEntity {
         this.appointmentAvailability = availability;
     }
 
-    public void updateAvailableTimes(List<AppointmentMemberAvailableTime> newTimes) {
-        if (!newTimes.isEmpty()) {
-            this.appointmentTimeSet = true;
-        }
+    public void updateAvailableTimes() {
+        this.appointmentTimeSet = true;
     }
 }
