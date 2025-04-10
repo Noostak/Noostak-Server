@@ -11,6 +11,7 @@ import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
         AppointmentMember appointmentMember = findAppointmentMember(memberId, appointmentId);
         List<AppointmentMemberAvailableTime> newTimes = createNewAvailableTimes(appointmentMember, request);
 
-        validate(newTimes);
+        validate(appointmentMember.getAppointment().getDuration().value(),newTimes);
 
         refreshAvailableTimes(appointmentMember, newTimes);
     }
@@ -46,12 +47,12 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
     }
 
     private void refreshAvailableTimes(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
-        if (!isTimeUpdateRequired(appointmentMember, newTimes)) {
+        if (!newTimes.isEmpty() && !isTimeUpdateRequired(appointmentMember, newTimes)) {
             return;
         }
 
         updateAvailableTimes(appointmentMember, newTimes);
-        markAppointmentTimeIfNecessary(appointmentMember, newTimes);
+        markAppointmentTime(appointmentMember);
     }
 
     private boolean isTimeUpdateRequired(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
@@ -64,12 +65,13 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
         appointmentMemberAvailableTimesRepository.saveAll(newTimes);
     }
 
-    private void markAppointmentTimeIfNecessary(AppointmentMember appointmentMember, List<AppointmentMemberAvailableTime> newTimes) {
-        appointmentMember.updateAvailableTimes(newTimes);
+    private void markAppointmentTime(AppointmentMember appointmentMember) {
+        appointmentMember.updateAvailableTimes();
     }
 
-    private void validate(List<AppointmentMemberAvailableTime> newTimes) {
-        boolean hasInvalidTimes = newTimes.stream().anyMatch(time -> time.getEndTime() == null);
+    private void validate(Long duration, List<AppointmentMemberAvailableTime> newTimes) {
+        boolean hasInvalidTimes = newTimes.stream()
+                .anyMatch(time -> Duration.between(time.getStartTime(), time.getEndTime()).toMinutes() < duration);
 
         if(hasInvalidTimes){
             throw new AppointmentMemberException(AppointmentMemberErrorCode.DURATION_NOT_SATISFIED);
