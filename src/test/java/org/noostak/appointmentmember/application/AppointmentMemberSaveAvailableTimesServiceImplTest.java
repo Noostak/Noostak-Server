@@ -115,9 +115,9 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
 
             AppointmentMemberAvailableTimesRequest newRequest = new AppointmentMemberAvailableTimesRequest(List.of(
                     AppointmentMemberAvailableTimeRequest.of(
-                            LocalDateTime.of(2024, 3, 15, 11, 30),
+                            LocalDateTime.of(2024, 3, 15, 0, 0),
                             LocalDateTime.of(2024, 3, 15, 12, 0),
-                            LocalDateTime.of(2024, 3, 15, 12, 30)
+                            LocalDateTime.of(2024, 3, 15, 13, 0)
                     )
             ));
 
@@ -229,12 +229,12 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
                 AppointmentMemberAvailableTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 0, 0),
                         LocalDateTime.of(2024, 3, 15, 10, 0),
-                        LocalDateTime.of(2024, 3, 15, 10, 30)
+                        LocalDateTime.of(2024, 3, 15, 11, 0)
                 ),
                 AppointmentMemberAvailableTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 0, 0),
                         LocalDateTime.of(2024, 3, 15, 11, 0),
-                        LocalDateTime.of(2024, 3, 15, 11, 30)
+                        LocalDateTime.of(2024, 3, 15, 12, 0)
                 )
         ));
     }
