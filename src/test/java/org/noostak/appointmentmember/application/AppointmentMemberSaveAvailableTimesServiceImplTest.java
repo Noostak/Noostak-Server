@@ -78,12 +78,15 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
         void shouldSaveMultipleAvailableTimesSuccessfully() {
             AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
+            List<AppointmentMemberAvailableTimeRequest> combinedRequest =
+                    AppointmentMemberAvailableTimesRequest.combineContinuousTimes(request);
+
             appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
             List<AppointmentMemberAvailableTime> savedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
-            assertThat(savedTimes).hasSize(request.appointmentMemberAvailableTimes().size());
+            assertThat(savedTimes).hasSize(combinedRequest.size());
         }
 
         @Test
