@@ -150,7 +150,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
         }
 
         @Test
-        @DisplayName("가능 시간이 없는 경우 appointmentTimeSet이 true로 변경되지 않는다.")
+        @DisplayName("시간을 입력할 경우 appointmentTimeSet을 true로 변경한다.")
         void shouldNotSetAppointmentTimeSetWhenNoNewTimes() {
             AppointmentMemberAvailableTimesRequest emptyRequest = new AppointmentMemberAvailableTimesRequest(List.of());
 
@@ -159,7 +159,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
             AppointmentMember updatedMember = appointmentMemberRepository.findByMemberIdAndAppointmentId(savedMemberId, savedAppointmentId)
                     .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
 
-            assertThat(updatedMember.isAppointmentTimeSet()).isFalse();
+            assertThat(updatedMember.isAppointmentTimeSet()).isTrue();
         }
     }
 
