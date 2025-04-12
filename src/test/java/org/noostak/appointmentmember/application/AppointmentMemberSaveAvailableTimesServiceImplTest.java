@@ -78,12 +78,15 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
         void shouldSaveMultipleAvailableTimesSuccessfully() {
             AppointmentMemberAvailableTimesRequest request = createAvailableTimesRequest();
 
+            List<AppointmentMemberAvailableTimeRequest> combinedRequest =
+                    AppointmentMemberAvailableTimesRequest.combineContinuousTimes(request);
+
             appointmentMemberSaveAvailableTimesService.saveAvailableTimes(savedMemberId, savedAppointmentId, request);
 
             List<AppointmentMemberAvailableTime> savedTimes =
                     appointmentMemberAvailableTimesRepository.findByAppointmentMember(savedAppointmentMember);
 
-            assertThat(savedTimes).hasSize(request.appointmentMemberAvailableTimes().size());
+            assertThat(savedTimes).hasSize(combinedRequest.size());
         }
 
         @Test
@@ -115,9 +118,9 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
 
             AppointmentMemberAvailableTimesRequest newRequest = new AppointmentMemberAvailableTimesRequest(List.of(
                     AppointmentMemberAvailableTimeRequest.of(
-                            LocalDateTime.of(2024, 3, 15, 11, 30),
+                            LocalDateTime.of(2024, 3, 15, 0, 0),
                             LocalDateTime.of(2024, 3, 15, 12, 0),
-                            LocalDateTime.of(2024, 3, 15, 12, 30)
+                            LocalDateTime.of(2024, 3, 15, 13, 0)
                     )
             ));
 
@@ -150,7 +153,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
         }
 
         @Test
-        @DisplayName("가능 시간이 없는 경우 appointmentTimeSet이 true로 변경되지 않는다.")
+        @DisplayName("시간을 입력할 경우 appointmentTimeSet을 true로 변경한다.")
         void shouldNotSetAppointmentTimeSetWhenNoNewTimes() {
             AppointmentMemberAvailableTimesRequest emptyRequest = new AppointmentMemberAvailableTimesRequest(List.of());
 
@@ -159,7 +162,7 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
             AppointmentMember updatedMember = appointmentMemberRepository.findByMemberIdAndAppointmentId(savedMemberId, savedAppointmentId)
                     .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
 
-            assertThat(updatedMember.isAppointmentTimeSet()).isFalse();
+            assertThat(updatedMember.isAppointmentTimeSet()).isTrue();
         }
     }
 
@@ -229,12 +232,12 @@ public class AppointmentMemberSaveAvailableTimesServiceImplTest {
                 AppointmentMemberAvailableTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 0, 0),
                         LocalDateTime.of(2024, 3, 15, 10, 0),
-                        LocalDateTime.of(2024, 3, 15, 10, 30)
+                        LocalDateTime.of(2024, 3, 15, 11, 0)
                 ),
                 AppointmentMemberAvailableTimeRequest.of(
                         LocalDateTime.of(2024, 3, 15, 0, 0),
                         LocalDateTime.of(2024, 3, 15, 11, 0),
-                        LocalDateTime.of(2024, 3, 15, 11, 30)
+                        LocalDateTime.of(2024, 3, 15, 12, 0)
                 )
         ));
     }

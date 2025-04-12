@@ -5,6 +5,7 @@ import org.noostak.appointmentmember.common.exception.AppointmentMemberErrorCode
 import org.noostak.appointmentmember.common.exception.AppointmentMemberException;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTime;
 import org.noostak.appointmentmember.domain.AppointmentMemberAvailableTimesRepository;
+import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimeRequest;
 import org.noostak.appointmentmember.dto.request.AppointmentMemberAvailableTimesRequest;
 import org.noostak.appointmentmember.domain.AppointmentMember;
 import org.noostak.appointmentmember.domain.AppointmentMemberRepository;
@@ -40,8 +41,13 @@ public class AppointmentMemberSaveAvailableTimesServiceImpl implements Appointme
                 .orElseThrow(() -> new AppointmentMemberException(AppointmentMemberErrorCode.APPOINTMENT_MEMBER_NOT_FOUND));
     }
 
-    private List<AppointmentMemberAvailableTime> createNewAvailableTimes(AppointmentMember appointmentMember, AppointmentMemberAvailableTimesRequest request) {
-        return request.appointmentMemberAvailableTimes().stream()
+    private List<AppointmentMemberAvailableTime> createNewAvailableTimes
+            (AppointmentMember appointmentMember, AppointmentMemberAvailableTimesRequest request) {
+
+        List<AppointmentMemberAvailableTimeRequest> requestTimes =
+                AppointmentMemberAvailableTimesRequest.combineContinuousTimes(request);
+
+        return requestTimes.stream()
                 .map(time -> AppointmentMemberAvailableTime.of(appointmentMember, time.date(), time.startTime(), time.endTime()))
                 .collect(Collectors.toList());
     }
